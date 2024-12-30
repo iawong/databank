@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Databank</string>
+    <string name="add_account">Add Account</string>
+    <string name="save">Save</string>
+    <string name="account_name">Enter account name</string>
+    <string name="account_balance">Enter account balance</string>
+    <string name="add_transaction">Add Transaction</string>
+    <string name="transaction_amount">Enter transaction amount</string>
+    <string name="back">Back</string>
+    <string name="transaction_description">Enter transaction description</string>
+    <string name="transaction_date">Enter transaction date</string>
+    <string name="save_changes">Save changes</string>
+    <string name="new_account_name">New account name</string>
+    <string name="new_account_balance">New account balance</string>
+    <string name="delete_account">Delete account</string>
+    <string name="new_transaction_amount">New transaction amount</string>
+    <string name="new_transaction_description">New transaction description</string>
+    <string name="new_transaction_date">New transaction date</string>
+    <string name="delete_transaction">Delete transaction</string>
+</resources>
