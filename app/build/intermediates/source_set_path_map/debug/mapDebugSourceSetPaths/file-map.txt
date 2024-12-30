@@ -1,0 +1,34 @@
+com.example.databank.app-core-1.9.0-0 C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\res
+com.example.databank.app-coordinatorlayout-1.1.0-1 C:\Users\Ian Wong\.gradle\caches\transforms-4\04e20c26169d9c974deff5e4d67b6963\transformed\coordinatorlayout-1.1.0\res
+com.example.databank.app-fragment-1.3.6-2 C:\Users\Ian Wong\.gradle\caches\transforms-4\083e4c627756544c6d1ede43d837f169\transformed\fragment-1.3.6\res
+com.example.databank.app-cardview-1.0.0-3 C:\Users\Ian Wong\.gradle\caches\transforms-4\23f9707189fe3967458a337a4b9ac749\transformed\cardview-1.0.0\res
+com.example.databank.app-material-1.10.0-4 C:\Users\Ian Wong\.gradle\caches\transforms-4\24c04846bc4d0035c76dbc86c823ba27\transformed\material-1.10.0\res
+com.example.databank.app-lifecycle-process-2.6.1-5 C:\Users\Ian Wong\.gradle\caches\transforms-4\258199a6311f99f43ae540e6c030680c\transformed\lifecycle-process-2.6.1\res
+com.example.databank.app-lifecycle-viewmodel-2.6.1-6 C:\Users\Ian Wong\.gradle\caches\transforms-4\26baffe873e35a38f9a9fcbcbb0ff6dc\transformed\lifecycle-viewmodel-2.6.1\res
+com.example.databank.app-lifecycle-runtime-2.6.1-7 C:\Users\Ian Wong\.gradle\caches\transforms-4\33984e70bf9025b2350220ad4398f733\transformed\lifecycle-runtime-2.6.1\res
+com.example.databank.app-transition-1.2.0-8 C:\Users\Ian Wong\.gradle\caches\transforms-4\4d9160d906c948b451881ca0e9a0a024\transformed\transition-1.2.0\res
+com.example.databank.app-lifecycle-viewmodel-savedstate-2.6.1-9 C:\Users\Ian Wong\.gradle\caches\transforms-4\5a97eef6b92a5540c43953f9ea054fa4\transformed\lifecycle-viewmodel-savedstate-2.6.1\res
+com.example.databank.app-recyclerview-1.1.0-10 C:\Users\Ian Wong\.gradle\caches\transforms-4\5b296a09cf5cd101c96102e5ca6b9fc4\transformed\recyclerview-1.1.0\res
+com.example.databank.app-appcompat-resources-1.6.1-11 C:\Users\Ian Wong\.gradle\caches\transforms-4\63c5e873e9dc087e7c59c4c9d5494378\transformed\appcompat-resources-1.6.1\res
+com.example.databank.app-profileinstaller-1.3.0-12 C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\res
+com.example.databank.app-startup-runtime-1.1.1-13 C:\Users\Ian Wong\.gradle\caches\transforms-4\6c74dedf04f98a2bd6e21c8038f42a9f\transformed\startup-runtime-1.1.1\res
+com.example.databank.app-lifecycle-livedata-2.6.1-14 C:\Users\Ian Wong\.gradle\caches\transforms-4\6cb77d8faaa805279a4292ec4c6247e3\transformed\lifecycle-livedata-2.6.1\res
+com.example.databank.app-drawerlayout-1.1.1-15 C:\Users\Ian Wong\.gradle\caches\transforms-4\6e4cca7fa382c546163ff8745f684444\transformed\drawerlayout-1.1.1\res
+com.example.databank.app-constraintlayout-2.1.4-16 C:\Users\Ian Wong\.gradle\caches\transforms-4\85e583c1cf56a3ebea40379df7e76655\transformed\constraintlayout-2.1.4\res
+com.example.databank.app-lifecycle-livedata-core-2.6.1-17 C:\Users\Ian Wong\.gradle\caches\transforms-4\8635c8479b6b0d74b4aab8f9052f3bcb\transformed\lifecycle-livedata-core-2.6.1\res
+com.example.databank.app-annotation-experimental-1.3.0-18 C:\Users\Ian Wong\.gradle\caches\transforms-4\9ab56c2e986f6b8131e7c6fa90f81877\transformed\annotation-experimental-1.3.0\res
+com.example.databank.app-appcompat-1.6.1-19 C:\Users\Ian Wong\.gradle\caches\transforms-4\9c0ecd9a2345677371c4b84f59c8dfff\transformed\appcompat-1.6.1\res
+com.example.databank.app-viewpager2-1.0.0-20 C:\Users\Ian Wong\.gradle\caches\transforms-4\c17dff2d5a406aaeeff3123106927b84\transformed\viewpager2-1.0.0\res
+com.example.databank.app-savedstate-1.2.1-21 C:\Users\Ian Wong\.gradle\caches\transforms-4\c64c9d39f81437b099bf18d29c3a4ece\transformed\savedstate-1.2.1\res
+com.example.databank.app-emoji2-views-helper-1.2.0-22 C:\Users\Ian Wong\.gradle\caches\transforms-4\c8c1e6b945662a8831e8c34e3b1dfc81\transformed\emoji2-views-helper-1.2.0\res
+com.example.databank.app-core-runtime-2.2.0-23 C:\Users\Ian Wong\.gradle\caches\transforms-4\ca78b60e19c197d7870a64156a8413a2\transformed\core-runtime-2.2.0\res
+com.example.databank.app-activity-1.8.0-24 C:\Users\Ian Wong\.gradle\caches\transforms-4\d09a8b77e1ca2105268b20be7f807da9\transformed\activity-1.8.0\res
+com.example.databank.app-core-ktx-1.9.0-25 C:\Users\Ian Wong\.gradle\caches\transforms-4\e49d697b952e82df0e48e7b493f462b3\transformed\core-ktx-1.9.0\res
+com.example.databank.app-emoji2-1.2.0-26 C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\res
+com.example.databank.app-pngs-27 E:\Android\AndroidStudioProjects\databank\app\build\generated\res\pngs\debug
+com.example.databank.app-resValues-28 E:\Android\AndroidStudioProjects\databank\app\build\generated\res\resValues\debug
+com.example.databank.app-packageDebugResources-29 E:\Android\AndroidStudioProjects\databank\app\build\intermediates\incremental\debug\packageDebugResources\merged.dir
+com.example.databank.app-packageDebugResources-30 E:\Android\AndroidStudioProjects\databank\app\build\intermediates\incremental\debug\packageDebugResources\stripped.dir
+com.example.databank.app-debug-31 E:\Android\AndroidStudioProjects\databank\app\build\intermediates\merged_res\debug\mergeDebugResources
+com.example.databank.app-debug-32 E:\Android\AndroidStudioProjects\databank\app\src\debug\res
+com.example.databank.app-main-33 E:\Android\AndroidStudioProjects\databank\app\src\main\res

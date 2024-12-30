@@ -1,0 +1,172 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.databank"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="25"
+9        android:targetSdkVersion="34" />
+10
+11    <permission
+11-->[androidx.core:core:1.9.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+12        android:name="com.example.databank.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+12-->[androidx.core:core:1.9.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+13        android:protectionLevel="signature" />
+13-->[androidx.core:core:1.9.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+14
+15    <uses-permission android:name="com.example.databank.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+15-->[androidx.core:core:1.9.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+15-->[androidx.core:core:1.9.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+16
+17    <application
+17-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:5:5-45:19
+18        android:allowBackup="true"
+18-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:6:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.9.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\01a5867c148493f721038b527153ebe4\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+20        android:dataExtractionRules="@xml/data_extraction_rules"
+20-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:7:9-65
+21        android:debuggable="true"
+22        android:extractNativeLibs="false"
+23        android:fullBackupContent="@xml/backup_rules"
+23-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:8:9-54
+24        android:icon="@mipmap/ic_launcher"
+24-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:9:9-43
+25        android:label="@string/app_name"
+25-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:10:9-41
+26        android:roundIcon="@mipmap/ic_launcher_round"
+26-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:11:9-54
+27        android:supportsRtl="true"
+27-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:12:9-35
+28        android:testOnly="true"
+29        android:theme="@style/Theme.Databank" >
+29-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:13:9-46
+30        <activity
+30-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:15:9-17:40
+31            android:name="com.example.databank.ChangeTransactionActivity"
+31-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:16:13-54
+32            android:exported="false" />
+32-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:17:13-37
+33        <activity
+33-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:18:9-20:40
+34            android:name="com.example.databank.ChangeAccountActivity"
+34-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:19:13-50
+35            android:exported="false" />
+35-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:20:13-37
+36        <activity
+36-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:21:9-25:65
+37            android:name="com.example.databank.NewTransactionActivity"
+37-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:22:13-51
+38            android:exported="false"
+38-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:23:13-37
+39            android:label="Add Transaction"
+39-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:24:13-44
+40            android:parentActivityName="com.example.databank.TransactionActivity" />
+40-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:25:13-62
+41        <activity
+41-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:26:9-30:58
+42            android:name="com.example.databank.TransactionActivity"
+42-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:27:13-48
+43            android:exported="false"
+43-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:28:13-37
+44            android:label="Transactions"
+44-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:29:13-41
+45            android:parentActivityName="com.example.databank.MainActivity" />
+45-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:30:13-55
+46        <activity
+46-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:31:9-40:20
+47            android:name="com.example.databank.MainActivity"
+47-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:32:13-41
+48            android:exported="true"
+48-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:33:13-36
+49            android:label="Accounts" >
+49-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:34:13-37
+50            <intent-filter>
+50-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:35:13-39:29
+51                <action android:name="android.intent.action.MAIN" />
+51-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:36:17-69
+51-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:36:25-66
+52
+53                <category android:name="android.intent.category.LAUNCHER" />
+53-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:38:17-77
+53-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:38:27-74
+54            </intent-filter>
+55        </activity>
+56        <activity
+56-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:41:9-44:58
+57            android:name="com.example.databank.NewAccountActivity"
+57-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:42:13-47
+58            android:label="Add Account"
+58-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:43:13-40
+59            android:parentActivityName="com.example.databank.MainActivity" />
+59-->E:\Android\AndroidStudioProjects\databank\app\src\main\AndroidManifest.xml:44:13-55
+60
+61        <provider
+61-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+62            android:name="androidx.startup.InitializationProvider"
+62-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+63            android:authorities="com.example.databank.androidx-startup"
+63-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+64            android:exported="false" >
+64-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+65            <meta-data
+65-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+66                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+66-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+67                android:value="androidx.startup" />
+67-->[androidx.emoji2:emoji2:1.2.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\f6774fd7c637ed8960b9e39ce8413c22\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+68            <meta-data
+68-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Ian Wong\.gradle\caches\transforms-4\258199a6311f99f43ae540e6c030680c\transformed\lifecycle-process-2.6.1\AndroidManifest.xml:29:13-31:52
+69                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+69-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Ian Wong\.gradle\caches\transforms-4\258199a6311f99f43ae540e6c030680c\transformed\lifecycle-process-2.6.1\AndroidManifest.xml:30:17-78
+70                android:value="androidx.startup" />
+70-->[androidx.lifecycle:lifecycle-process:2.6.1] C:\Users\Ian Wong\.gradle\caches\transforms-4\258199a6311f99f43ae540e6c030680c\transformed\lifecycle-process-2.6.1\AndroidManifest.xml:31:17-49
+71            <meta-data
+71-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:29:13-31:52
+72                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+72-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:30:17-85
+73                android:value="androidx.startup" />
+73-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:31:17-49
+74        </provider>
+75
+76        <receiver
+76-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:34:9-52:20
+77            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+77-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:35:13-76
+78            android:directBootAware="false"
+78-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:36:13-44
+79            android:enabled="true"
+79-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:37:13-35
+80            android:exported="true"
+80-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:38:13-36
+81            android:permission="android.permission.DUMP" >
+81-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:39:13-57
+82            <intent-filter>
+82-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:40:13-42:29
+83                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:17-91
+83-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:41:25-88
+84            </intent-filter>
+85            <intent-filter>
+85-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:43:13-45:29
+86                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+86-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:17-85
+86-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:44:25-82
+87            </intent-filter>
+88            <intent-filter>
+88-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:46:13-48:29
+89                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:17-88
+89-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:47:25-85
+90            </intent-filter>
+91            <intent-filter>
+91-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:49:13-51:29
+92                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:17-95
+92-->[androidx.profileinstaller:profileinstaller:1.3.0] C:\Users\Ian Wong\.gradle\caches\transforms-4\681c8a3d15e2900bf1977719163ea102\transformed\profileinstaller-1.3.0\AndroidManifest.xml:50:25-92
+93            </intent-filter>
+94        </receiver>
+95    </application>
+96
+97</manifest>
