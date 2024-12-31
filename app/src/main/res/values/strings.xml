@@ -17,4 +17,5 @@
     <string name="new_transaction_description">New transaction description</string>
     <string name="new_transaction_date">New transaction date</string>
     <string name="delete_transaction">Delete transaction</string>
+    <string name="default_currency">$0.00</string>
 </resources>

@@ -59,6 +59,7 @@ string add_account
 string add_transaction
 string app_name
 string back
+string default_currency
 string delete_account
 string delete_transaction
 string new_account_balance

@@ -3821,6 +3821,7 @@ string character_counter_content_description
 string character_counter_overflowed_content_description
 string character_counter_pattern
 string clear_text_end_icon_content_description
+string default_currency
 string delete_account
 string delete_transaction
 string error_a11y_label

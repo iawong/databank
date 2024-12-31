@@ -42,6 +42,7 @@
             android:id="@+id/newTransactionDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
             android:hint="@string/transaction_description" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -60,6 +61,7 @@
             android:id="@+id/newTransactionDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="date"
             android:hint="@string/transaction_date"/>
 
     </com.google.android.material.textfield.TextInputLayout>
