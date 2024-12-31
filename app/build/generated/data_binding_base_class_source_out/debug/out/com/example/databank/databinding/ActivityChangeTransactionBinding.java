@@ -22,6 +22,9 @@ public final class ActivityChangeTransactionBinding implements ViewBinding {
   private final ConstraintLayout rootView;
 
   @NonNull
+  public final Button backButton;
+
+  @NonNull
   public final Button changeTransaction;
 
   @NonNull
@@ -49,13 +52,15 @@ public final class ActivityChangeTransactionBinding implements ViewBinding {
   public final TextInputLayout textInputChangeTransactionDescription;
 
   private ActivityChangeTransactionBinding(@NonNull ConstraintLayout rootView,
-      @NonNull Button changeTransaction, @NonNull TextInputEditText changeTransactionAmount,
+      @NonNull Button backButton, @NonNull Button changeTransaction,
+      @NonNull TextInputEditText changeTransactionAmount,
       @NonNull TextInputEditText changeTransactionDate,
       @NonNull TextInputEditText changeTransactionDescription, @NonNull Button deleteTransaction,
       @NonNull ConstraintLayout main, @NonNull TextInputLayout textInputChangeTransactionAmount,
       @NonNull TextInputLayout textInputChangeTransactionDate,
       @NonNull TextInputLayout textInputChangeTransactionDescription) {
     this.rootView = rootView;
+    this.backButton = backButton;
     this.changeTransaction = changeTransaction;
     this.changeTransactionAmount = changeTransactionAmount;
     this.changeTransactionDate = changeTransactionDate;
@@ -94,6 +99,12 @@ public final class ActivityChangeTransactionBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.backButton;
+      Button backButton = ViewBindings.findChildViewById(rootView, id);
+      if (backButton == null) {
+        break missingId;
+      }
+
       id = R.id.changeTransaction;
       Button changeTransaction = ViewBindings.findChildViewById(rootView, id);
       if (changeTransaction == null) {
@@ -144,10 +155,10 @@ public final class ActivityChangeTransactionBinding implements ViewBinding {
         break missingId;
       }
 
-      return new ActivityChangeTransactionBinding((ConstraintLayout) rootView, changeTransaction,
-          changeTransactionAmount, changeTransactionDate, changeTransactionDescription,
-          deleteTransaction, main, textInputChangeTransactionAmount, textInputChangeTransactionDate,
-          textInputChangeTransactionDescription);
+      return new ActivityChangeTransactionBinding((ConstraintLayout) rootView, backButton,
+          changeTransaction, changeTransactionAmount, changeTransactionDate,
+          changeTransactionDescription, deleteTransaction, main, textInputChangeTransactionAmount,
+          textInputChangeTransactionDate, textInputChangeTransactionDescription);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

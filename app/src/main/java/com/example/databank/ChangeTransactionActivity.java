@@ -129,5 +129,15 @@ public class ChangeTransactionActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Button back = binding.backButton;
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnToTransactions = new Intent();
+                setResult(RESULT_OK, returnToTransactions);
+                finish();
+            }
+        });
     }
 }

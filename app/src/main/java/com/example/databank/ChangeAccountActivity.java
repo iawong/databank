@@ -123,5 +123,15 @@ public class ChangeAccountActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        Button back = binding.backButton;
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent returnToAccounts = new Intent();
+                setResult(RESULT_OK, returnToAccounts);
+                finish();
+            }
+        });
     }
 }
