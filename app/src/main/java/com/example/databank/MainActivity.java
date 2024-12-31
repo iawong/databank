@@ -23,7 +23,6 @@ import java.util.ArrayList;
  * This is the account activity
  * 12/31/24 notes
  * TODO: in some scenarios, deleting a transaction is causing the main account balance to overflow the decimal numbers
- * TODO: changing account details and changing transaction details needs a back button
  * TODO: changing transaction balance of the same transaction, should not add to the total balance
  * TODO: resolve other TODOs around and create new list of items/features
  */
