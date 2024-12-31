@@ -2,8 +2,11 @@ package com.example.databank;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.databank.databinding.ActivityNewTransactionBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
     ActivityNewTransactionBinding binding;
@@ -29,27 +35,64 @@ public class NewTransactionActivity extends AppCompatActivity {
         TextInputEditText newTransDesc = binding.newTransactionDescription;
         TextInputEditText newTransDate = binding.newTransactionDate;
 
+        newTransAmt.setText(getString(R.string.default_currency));
+
+        newTransAmt.addTextChangedListener(new TextWatcher() {
+            private String current = "";
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (!s.toString().equals(current)) {
+                    newTransAmt.removeTextChangedListener(this);
+
+                    String cleanString = s.toString().replaceAll("[$,.]", "");
+
+                    // Parse as cents (integer)
+                    if (!cleanString.isEmpty()) {
+                        double parsed = Double.parseDouble(cleanString) / 100;
+                        String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(parsed);
+                        current = formatted;
+                        newTransAmt.setText(formatted);
+                        newTransAmt.setSelection(formatted.length()); // Move cursor to end
+                    } else {
+                        current = getString(R.string.default_currency);
+                        newTransAmt.setText(current);
+                        newTransAmt.setSelection(current.length());
+                    }
+
+                    newTransAmt.addTextChangedListener(this);
+                }
+            }
+        });
+
         Button saveNewTransaction = binding.saveTransaction;
         saveNewTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String strAmount = newTransAmt.getText().toString();
-                String strDescription = newTransDesc.getText().toString();
-                String strDate = newTransDate.getText().toString();
+                String strAmount = newTransAmt.getText().toString().trim();
+                String strDescription = newTransDesc.getText().toString().trim();
+                String strDate = newTransDate.getText().toString().trim();
 
                 if (strAmount.isEmpty()) {
                     textInputTransactionAmount.setError("Please enter a transaction amount");
+                    return;
                 } else {
                     textInputTransactionAmount.setError(null);
                 }
 
                 double amount = 0;
 
-                // TODO: that sout ain't gonna work
                 try {
-                    amount = Double.parseDouble(strAmount);
+                    amount = Double.parseDouble(strAmount.replaceAll("[$,]", ""));
                 } catch (NumberFormatException e) {
-                    System.out.println("Invalid number format: " + strAmount);
+                    Toast.makeText(NewTransactionActivity.this, "Exception: " + e, Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 int accountId = getIntent().getIntExtra("accountId", -1);
@@ -73,17 +116,5 @@ public class NewTransactionActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    // TODO: use this method to validate the transaction values the user enters
-    private void validateTransactionValues() {
-
-//
-//            Intent returnIntent = new Intent();
-//
-//            returnIntent.putExtra("transAmount", amount);
-//            returnIntent.putExtra("transDescription", strDescription);
-//            setResult(RESULT_OK, returnIntent);
-//        }
     }
 }

@@ -37,6 +37,7 @@ public class NewAccountActivity extends AppCompatActivity {
 
         newAccountBalance.addTextChangedListener(new TextWatcher() {
             private String current = "";
+
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -75,6 +76,7 @@ public class NewAccountActivity extends AppCompatActivity {
 
                 if (strAccountName.isEmpty()) {
                     textInputAccountName.setError("Please enter an account name");
+                    return;
                 } else {
                     textInputAccountName.setError(null);
                 }
@@ -87,6 +89,7 @@ public class NewAccountActivity extends AppCompatActivity {
                         accountBalance = Double.parseDouble(strAccountBalance.replaceAll("[$,]", ""));
                     } catch (Exception e) {
                         Toast.makeText(NewAccountActivity.this, "Exception: " + e, Toast.LENGTH_SHORT).show();
+                        return;
                     }
                 }
 

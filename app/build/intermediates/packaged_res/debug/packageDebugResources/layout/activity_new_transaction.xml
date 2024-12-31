@@ -24,6 +24,8 @@
             android:id="@+id/newTransactionAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="number"
+            android:maxLength="15"
             android:hint="@string/transaction_amount" />
     </com.google.android.material.textfield.TextInputLayout>
 

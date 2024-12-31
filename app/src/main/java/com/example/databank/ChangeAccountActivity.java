@@ -34,6 +34,13 @@ public class ChangeAccountActivity extends AppCompatActivity {
         TextInputEditText newAccName = binding.changeAccountName;
         TextInputEditText newAccBalance = binding.changeAccountBalance;
 
+        int accountId = getIntent().getIntExtra("accountId", -1);
+
+        if (accountId == -1) {
+            Toast.makeText(this, "Error: Invalid account ID", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
         String accountName = getIntent().getStringExtra("accountName");
         double accountBalance = getIntent().getDoubleExtra("accountBalance", 0);
 
@@ -71,13 +78,6 @@ public class ChangeAccountActivity extends AppCompatActivity {
                 newAccBalance.addTextChangedListener(this);
             }
         });
-
-        int accountId = getIntent().getIntExtra("accountId", -1);
-
-        if (accountId == -1) {
-            Toast.makeText(this, "Error: Invalid account ID", Toast.LENGTH_SHORT).show();
-            finish();
-        }
 
         Button saveChanges = binding.changeAccount;
         saveChanges.setOnClickListener(new View.OnClickListener() {
