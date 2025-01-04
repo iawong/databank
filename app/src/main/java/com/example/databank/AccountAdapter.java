@@ -12,7 +12,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * custom adapter for an account object
@@ -51,7 +53,9 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull AccountAdapter.ViewHolder holder, int position) {
         holder.accountName.setText(String.valueOf(accountNames.get(position)));
-        holder.accountBalance.setText(String.valueOf(accountBalances.get(position)));
+
+        String formattedBalance = NumberFormat.getCurrencyInstance(Locale.US).format(accountBalances.get(position));
+        holder.accountBalance.setText(formattedBalance);
 
         holder.accountName.setOnClickListener(new View.OnClickListener() {
             @Override

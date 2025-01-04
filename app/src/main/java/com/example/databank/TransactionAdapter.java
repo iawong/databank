@@ -11,7 +11,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * custom adapter for a transaction object
@@ -52,7 +54,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TransactionAdapter.ViewHolder holder, int position) {
-        holder.transactionAmount.setText(String.valueOf(transactionAmounts.get(position)));
+        String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(transactionAmounts.get(position));
+
+        holder.transactionAmount.setText(formattedAmount);
         holder.transactionDescription.setText(String.valueOf(transactionDescriptions.get(position)));
         holder.transactionDate.setText(String.valueOf(transactionDates.get(position)));
 
