@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -70,7 +71,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.transactionDescription.setText(descriptionPreview);
         holder.transactionDate.setText(String.valueOf(transactionDates.get(position)));
 
-        holder.transactionAmount.setOnClickListener(new View.OnClickListener() {
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent changeTransactionDetails = new Intent(context, ChangeTransactionActivity.class);
@@ -91,6 +92,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView transactionAmount, transactionDescription, transactionDate;
+        ImageButton editButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +100,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             transactionAmount = itemView.findViewById(R.id.transactionAmount);
             transactionDescription = itemView.findViewById(R.id.transactionDescription);
             transactionDate = itemView.findViewById(R.id.transactionDate);
+            editButton = itemView.findViewById(R.id.editTransaction);
         }
     }
 }

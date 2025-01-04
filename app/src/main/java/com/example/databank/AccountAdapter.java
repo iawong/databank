@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -57,7 +58,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         String formattedBalance = NumberFormat.getCurrencyInstance(Locale.US).format(accountBalances.get(position));
         holder.accountBalance.setText(formattedBalance);
 
-        holder.accountName.setOnClickListener(new View.OnClickListener() {
+        holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent changeAccountDetails = new Intent(context, ChangeAccountActivity.class);
@@ -84,12 +85,14 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView accountName, accountBalance;
+        ImageButton editButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             accountName = itemView.findViewById(R.id.accountName);
             accountBalance = itemView.findViewById(R.id.accountBalance);
+            editButton = itemView.findViewById(R.id.editAccount);
         }
     }
 }

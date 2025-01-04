@@ -21,9 +21,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="40sp"
+                android:textSize="25sp"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/accountBalance"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
 
@@ -31,8 +31,20 @@
                 android:id="@+id/accountBalance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30sp"
+                android:textSize="15sp"
                 android:textColor="@color/black"
+                app:layout_constraintTop_toBottomOf="@+id/accountName"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageButton
+                android:id="@+id/editAccount"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/edit_button"
+                android:contentDescription="@string/edit_account_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>

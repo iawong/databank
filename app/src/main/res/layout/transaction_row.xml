@@ -21,23 +21,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
-                android:textSize="40sp"
+                android:textSize="25sp"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="$9,999,999.99"
+                app:layout_constraintBottom_toTopOf="@+id/transactionDate"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
-
-            <TextView
-                android:id="@+id/transactionDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:textColor="@color/black"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/transactionAmount"
-                app:layout_constraintEnd_toStartOf="@id/transactionDate"
-                />
 
             <TextView
                 android:id="@+id/transactionDate"
@@ -45,6 +34,30 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="@color/black"
+                android:text="10/23/2025"
+                app:layout_constraintTop_toBottomOf="@+id/transactionAmount"
+                app:layout_constraintBottom_toTopOf="@+id/transactionDescription"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <TextView
+                android:id="@+id/transactionDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:text="01234567890123456789..."
+                app:layout_constraintTop_toBottomOf="@+id/transactionDate"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <ImageButton
+                android:id="@+id/editTransaction"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/edit_button"
+                android:contentDescription="@string/edit_transaction_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/black"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
