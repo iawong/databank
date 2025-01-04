@@ -57,7 +57,17 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(transactionAmounts.get(position));
 
         holder.transactionAmount.setText(formattedAmount);
-        holder.transactionDescription.setText(String.valueOf(transactionDescriptions.get(position)));
+
+        String description = String.valueOf(transactionDescriptions.get(position));
+        String descriptionPreview = "";
+
+        if (description.length() >= 20) {
+            descriptionPreview = description.substring(0, 20) + "...";
+        } else {
+            descriptionPreview = description;
+        }
+
+        holder.transactionDescription.setText(descriptionPreview);
         holder.transactionDate.setText(String.valueOf(transactionDates.get(position)));
 
         holder.transactionAmount.setOnClickListener(new View.OnClickListener() {
