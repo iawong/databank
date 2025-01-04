@@ -1,6 +1,5 @@
 package com.example.databank;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -27,19 +26,22 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     private ArrayList<Double> accountBalances;
     private ActivityResultLauncher<Intent> transactionResultLauncher;
     private ActivityResultLauncher<Intent> accountChangeResultLauncher;
+    private OnDeleteListener deleteListener;
 
     public AccountAdapter (Context context,
                            ArrayList<Integer> accountIds,
                            ArrayList<String> accountNames,
                            ArrayList<Double> accountBalances,
                            ActivityResultLauncher<Intent> transactionResultLauncher,
-                           ActivityResultLauncher<Intent> accountChangeResultLauncher) {
+                           ActivityResultLauncher<Intent> accountChangeResultLauncher,
+                           OnDeleteListener deleteListener) {
         this.context = context;
         this.accountIds = accountIds;
         this.accountNames = accountNames;
         this.accountBalances = accountBalances;
         this.transactionResultLauncher = transactionResultLauncher;
         this.accountChangeResultLauncher = accountChangeResultLauncher;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -68,6 +70,13 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             }
         });
 
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteListener.onAccountDelete(holder.getAdapterPosition(), accountIds.get(holder.getAdapterPosition()));
+            }
+        });
+
         holder.accountBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +94,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView accountName, accountBalance;
-        ImageButton editButton;
+        ImageButton editButton, deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -93,6 +102,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             accountName = itemView.findViewById(R.id.accountName);
             accountBalance = itemView.findViewById(R.id.accountBalance);
             editButton = itemView.findViewById(R.id.editAccount);
+            deleteButton = itemView.findViewById(R.id.removeAccount);
         }
     }
 }

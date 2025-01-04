@@ -1,5 +1,7 @@
 package com.example.databank;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -20,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class TransactionActivity extends AppCompatActivity {
+public class TransactionActivity extends AppCompatActivity implements OnDeleteListener{
     TransactionAdapter transactionAdapter;
     ActivityTransactionBinding binding;
     RecyclerView transactionRecyclerView;
@@ -117,7 +119,14 @@ public class TransactionActivity extends AppCompatActivity {
 
         storeTransactionData();
 
-        transactionAdapter = new TransactionAdapter(TransactionActivity.this, accountId, transactionIds, transactionAmounts, transactionDescriptions, transactionDates, transactionChangeResultLauncher);
+        transactionAdapter = new TransactionAdapter(TransactionActivity.this,
+                                                    accountId,
+                                                    transactionIds,
+                                                    transactionAmounts,
+                                                    transactionDescriptions,
+                                                    transactionDates,
+                                                    transactionChangeResultLauncher,
+                                                    TransactionActivity.this);
         transactionRecyclerView.setAdapter(transactionAdapter);
         transactionRecyclerView.setLayoutManager(new LinearLayoutManager(TransactionActivity.this));
     }
@@ -159,5 +168,51 @@ public class TransactionActivity extends AppCompatActivity {
         if (db != null) {
             db.close();
         }
+    }
+
+    /**
+     * Not using this
+     * @param position position of account
+     * @param accountId account id
+     */
+    @Override
+    public void onAccountDelete(int position, int accountId) {
+
+    }
+
+    /**
+     * delete the transaction
+     * @param position transaction position
+     * @param accountId account id
+     * @param transactionId transaction id
+     */
+    @Override
+    public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {
+        new AlertDialog.Builder(TransactionActivity.this)
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete this transaction? This cannot be undone.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        db = new DatabaseHelper(TransactionActivity.this);
+
+                        db.deleteTransaction(accountId, transactionId, amount);
+
+                        transactionIds.remove(position);
+                        transactionAmounts.remove(position);
+                        transactionDescriptions.remove(position);
+                        transactionDates.remove(position);
+
+                        transactionAdapter.notifyItemRemoved(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
 }

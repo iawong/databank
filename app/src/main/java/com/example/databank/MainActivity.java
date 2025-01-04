@@ -26,7 +26,7 @@ import java.util.ArrayList;
  * 12/31/24 notes
  * TODO: resolve other TODOs around and create new list of items/features
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements OnDeleteListener {
     RecyclerView accountRecyclerView;
     AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
     DatabaseHelper db;
@@ -134,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
                                             accounts,
                                             accountBalances,
                                             transactionResultLauncher,
-                                            accountChangeResultLauncher);
+                                            accountChangeResultLauncher,
+                                            MainActivity.this);
         accountRecyclerView.setAdapter(accountAdapter);
         accountRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
 
@@ -203,6 +204,9 @@ public class MainActivity extends AppCompatActivity {
         accountAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * close the database when closing the app
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -211,5 +215,43 @@ public class MainActivity extends AppCompatActivity {
         if (db != null) {
             db.close();
         }
+    }
+
+    /**
+     * delete account
+     * @param position account position
+     * @param accountId account id
+     */
+    @Override
+    public void onAccountDelete(int position, int accountId) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setTitle("Confirm Delete")
+                .setMessage("Are you sure you want to delete this account? This cannot be undone.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        db = new DatabaseHelper(MainActivity.this);
+
+                        db.deleteAccount(accountId);
+
+                        accountIds.remove(position);
+                        accounts.remove(position);
+                        accountBalances.remove(position);
+                        accountAdapter.notifyItemRemoved(position);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setCancelable(false)
+                .show();
+    }
+
+    @Override
+    public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {
+
     }
 }

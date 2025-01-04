@@ -2,8 +2,6 @@ package com.example.databank;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -13,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.databank.databinding.ActivityChangeAccountBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 public class ChangeAccountActivity extends AppCompatActivity {
     ActivityChangeAccountBinding binding;
@@ -58,19 +53,6 @@ public class ChangeAccountActivity extends AppCompatActivity {
 
                 db = new DatabaseHelper(ChangeAccountActivity.this);
                 db.updateAccount(accountId, changedAccName);
-
-                Intent returnIntent = new Intent();
-                setResult(RESULT_OK, returnIntent);
-                finish();
-            }
-        });
-
-        Button deleteAccount = binding.deleteAccount;
-        deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db = new DatabaseHelper(ChangeAccountActivity.this);
-                db.deleteAccount(accountId);
 
                 Intent returnIntent = new Intent();
                 setResult(RESULT_OK, returnIntent);

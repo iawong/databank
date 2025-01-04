@@ -23,7 +23,6 @@
                 android:textStyle="bold"
                 android:textSize="25sp"
                 android:textColor="@color/black"
-                android:text="$9,999,999.99"
                 app:layout_constraintBottom_toTopOf="@+id/transactionDate"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -34,7 +33,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:text="10/23/2025"
                 app:layout_constraintTop_toBottomOf="@+id/transactionAmount"
                 app:layout_constraintBottom_toTopOf="@+id/transactionDescription"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -45,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:text="01234567890123456789..."
                 app:layout_constraintTop_toBottomOf="@+id/transactionDate"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -56,6 +53,18 @@
                 android:layout_height="50dp"
                 android:src="@drawable/edit_button"
                 android:contentDescription="@string/edit_transaction_button"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/black"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/removeTransaction"/>
+
+            <ImageButton
+                android:id="@+id/removeTransaction"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/delete_button"
+                android:contentDescription="@string/delete_transaction"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 app:tint="@color/black"
                 app:layout_constraintTop_toTopOf="parent"

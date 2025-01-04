@@ -27,6 +27,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private ArrayList<String> transactionDescriptions;
     private ArrayList<String> transactionDates;
     private ActivityResultLauncher<Intent> transactionChangeResultLauncher;
+    private OnDeleteListener deleteListener;
 
     public TransactionAdapter (Context context,
                                int accountId,
@@ -34,7 +35,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                                ArrayList<Double> transactionAmounts,
                                ArrayList<String> transactionDescriptions,
                                ArrayList<String> transactionDates,
-                               ActivityResultLauncher<Intent> transactionChangeResultLauncher) {
+                               ActivityResultLauncher<Intent> transactionChangeResultLauncher,
+                               OnDeleteListener deleteListener) {
         this.context = context;
         this.accountId = accountId;
         this.transactionIds = transactionIds;
@@ -42,6 +44,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.transactionDescriptions = transactionDescriptions;
         this.transactionDates = transactionDates;
         this.transactionChangeResultLauncher = transactionChangeResultLauncher;
+        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -83,6 +86,16 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 transactionChangeResultLauncher.launch(changeTransactionDetails);
             }
         });
+
+        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteListener.onTransactionDelete(holder.getAdapterPosition(),
+                                                   accountId,
+                                                   transactionIds.get(holder.getAdapterPosition()),
+                                                   transactionAmounts.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
     @Override
@@ -92,7 +105,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         TextView transactionAmount, transactionDescription, transactionDate;
-        ImageButton editButton;
+        ImageButton editButton, deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,6 +114,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             transactionDescription = itemView.findViewById(R.id.transactionDescription);
             transactionDate = itemView.findViewById(R.id.transactionDate);
             editButton = itemView.findViewById(R.id.editTransaction);
+            deleteButton = itemView.findViewById(R.id.removeTransaction);
         }
     }
 }
