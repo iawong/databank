@@ -27,13 +27,18 @@ public final class ActivityMainBinding implements ViewBinding {
   public final FloatingActionButton addAccountButton;
 
   @NonNull
+  public final FloatingActionButton deleteAllButton;
+
+  @NonNull
   public final ConstraintLayout main;
 
   private ActivityMainBinding(@NonNull ConstraintLayout rootView, @NonNull RecyclerView accountList,
-      @NonNull FloatingActionButton addAccountButton, @NonNull ConstraintLayout main) {
+      @NonNull FloatingActionButton addAccountButton, @NonNull FloatingActionButton deleteAllButton,
+      @NonNull ConstraintLayout main) {
     this.rootView = rootView;
     this.accountList = accountList;
     this.addAccountButton = addAccountButton;
+    this.deleteAllButton = deleteAllButton;
     this.main = main;
   }
 
@@ -76,10 +81,16 @@ public final class ActivityMainBinding implements ViewBinding {
         break missingId;
       }
 
+      id = R.id.deleteAllButton;
+      FloatingActionButton deleteAllButton = ViewBindings.findChildViewById(rootView, id);
+      if (deleteAllButton == null) {
+        break missingId;
+      }
+
       ConstraintLayout main = (ConstraintLayout) rootView;
 
       return new ActivityMainBinding((ConstraintLayout) rootView, accountList, addAccountButton,
-          main);
+          deleteAllButton, main);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

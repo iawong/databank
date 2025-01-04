@@ -20,16 +20,12 @@
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\layout\\activity_main.xml"
     },
     {
-        "merged": "com.example.databank.app-mergeDebugResources-30:/layout/activity_change_transaction.xml",
-        "source": "com.example.databank.app-main-33:/layout/activity_change_transaction.xml"
+        "merged": "com.example.databank.app-mergeDebugResources-30:/layout/activity_main.xml",
+        "source": "com.example.databank.app-main-33:/layout/activity_main.xml"
     },
     {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-mergeDebugResources-30:\\layout\\activity_new_transaction.xml",
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\layout\\activity_new_transaction.xml"
-    },
-    {
-        "merged": "com.example.databank.app-mergeDebugResources-30:/layout/activity_change_account.xml",
-        "source": "com.example.databank.app-main-33:/layout/activity_change_account.xml"
     },
     {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-mergeDebugResources-30:\\layout\\transaction_row.xml",

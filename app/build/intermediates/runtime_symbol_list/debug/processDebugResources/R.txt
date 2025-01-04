@@ -2948,6 +2948,7 @@ int drawable btn_radio_off_mtrl 0x7f070080
 int drawable btn_radio_off_to_on_mtrl_animation 0x7f070081
 int drawable btn_radio_on_mtrl 0x7f070082
 int drawable btn_radio_on_to_off_mtrl_animation 0x7f070083
+int drawable delete_all_button 0x7f0700e2
 int drawable design_fab_background 0x7f070084
 int drawable design_ic_visibility 0x7f070085
 int drawable design_ic_visibility_off 0x7f070086
@@ -3198,6 +3199,7 @@ int id decelerateAndComplete 0x7f080098
 int id decor_content_parent 0x7f080099
 int id default_activity_button 0x7f08009a
 int id deleteAccount 0x7f08009b
+int id deleteAllButton 0x7f080213
 int id deleteTransaction 0x7f08009c
 int id deltaRelative 0x7f08009d
 int id dependency_ordering 0x7f08009e
@@ -3822,6 +3824,7 @@ int string character_counter_pattern 0x7f0f002b
 int string clear_text_end_icon_content_description 0x7f0f002c
 int string default_currency 0x7f0f00b1
 int string delete_account 0x7f0f002d
+int string delete_all 0x7f0f00b2
 int string delete_transaction 0x7f0f002e
 int string error_a11y_label 0x7f0f002f
 int string error_icon_content_description 0x7f0f0030

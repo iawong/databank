@@ -173,7 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     void deleteAccountTransactions(int accountId) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int resultCode = db.delete(TABLE_NAME_TRANSACTION, COLUMN_TRANSACTION_ID + " = ?", new String[]{String.valueOf(accountId)});
+        int resultCode = db.delete(TABLE_NAME_TRANSACTION, COLUMN_ACCOUNT_ID + " = ?", new String[]{String.valueOf(accountId)});
 
         if (resultCode == -1) {
             Toast.makeText(context, "Failed to delete all account transactions", Toast.LENGTH_SHORT).show();

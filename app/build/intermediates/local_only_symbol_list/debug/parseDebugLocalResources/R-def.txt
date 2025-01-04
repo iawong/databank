@@ -4,6 +4,7 @@ color black
 color white
 drawable add_account_button
 drawable add_transaction_button
+drawable delete_all_button
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 id accountBalance
@@ -20,6 +21,7 @@ id changeTransactionAmount
 id changeTransactionDate
 id changeTransactionDescription
 id deleteAccount
+id deleteAllButton
 id deleteTransaction
 id main
 id newAccountBalance
@@ -61,6 +63,7 @@ string app_name
 string back
 string default_currency
 string delete_account
+string delete_all
 string delete_transaction
 string new_account_balance
 string new_account_name

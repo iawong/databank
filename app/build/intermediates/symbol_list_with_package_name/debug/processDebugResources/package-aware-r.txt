@@ -2949,6 +2949,7 @@ drawable btn_radio_off_mtrl
 drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
+drawable delete_all_button
 drawable design_fab_background
 drawable design_ic_visibility
 drawable design_ic_visibility_off
@@ -3199,6 +3200,7 @@ id decelerateAndComplete
 id decor_content_parent
 id default_activity_button
 id deleteAccount
+id deleteAllButton
 id deleteTransaction
 id deltaRelative
 id dependency_ordering
@@ -3823,6 +3825,7 @@ string character_counter_pattern
 string clear_text_end_icon_content_description
 string default_currency
 string delete_account
+string delete_all
 string delete_transaction
 string error_a11y_label
 string error_icon_content_description

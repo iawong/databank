@@ -1,5 +1,7 @@
 package com.example.databank;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -129,9 +131,43 @@ public class MainActivity extends AppCompatActivity {
 
         storeAccountData();
 
-        accountAdapter = new AccountAdapter(MainActivity.this, accountIds, accounts, accountBalances, transactionResultLauncher, accountChangeResultLauncher);
+        accountAdapter = new AccountAdapter(MainActivity.this,
+                                            accountIds,
+                                            accounts,
+                                            accountBalances,
+                                            transactionResultLauncher,
+                                            accountChangeResultLauncher);
         accountRecyclerView.setAdapter(accountAdapter);
         accountRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+
+        FloatingActionButton deleteAllButton = binding.deleteAllButton;
+        deleteAllButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // alert dialog to confirm if the user wants to delete all
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Confirm Delete")
+                        .setMessage("Are you sure you want to delete all accounts and transactions? This cannot be undone.")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                db.deleteAll();
+                                accountIds.clear();
+                                accounts.clear();
+                                accountBalances.clear();
+                                accountAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
+        });
     }
 
     /**
