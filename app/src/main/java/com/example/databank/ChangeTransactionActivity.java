@@ -95,6 +95,7 @@ public class ChangeTransactionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String changedTransAmt = newTransAmt.getText().toString().trim();
+                System.out.println("changed trans amt: " + changedTransAmt);
                 String changedTransDesc = newTransDesc.getText().toString().trim();
                 String changedTransDate = newTransDate.getText().toString().trim();
 
@@ -106,6 +107,8 @@ public class ChangeTransactionActivity extends AppCompatActivity {
                     Toast.makeText(ChangeTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                System.out.println("parsedDouble amount: " + parsedDouble);
 
                 // TODO: handle errors if double can't be parsed
                 db = new DatabaseHelper(ChangeTransactionActivity.this);

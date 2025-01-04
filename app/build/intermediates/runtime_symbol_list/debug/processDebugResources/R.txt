@@ -2936,8 +2936,7 @@ int drawable abc_textfield_search_activated_mtrl_alpha 0x7f070074
 int drawable abc_textfield_search_default_mtrl_alpha 0x7f070075
 int drawable abc_textfield_search_material 0x7f070076
 int drawable abc_vector_test 0x7f070077
-int drawable add_account_button 0x7f070078
-int drawable add_transaction_button 0x7f070079
+int drawable add_button 0x7f0700e3
 int drawable avd_hide_password 0x7f07007a
 int drawable avd_show_password 0x7f07007b
 int drawable btn_checkbox_checked_mtrl 0x7f07007c
@@ -2948,7 +2947,7 @@ int drawable btn_radio_off_mtrl 0x7f070080
 int drawable btn_radio_off_to_on_mtrl_animation 0x7f070081
 int drawable btn_radio_on_mtrl 0x7f070082
 int drawable btn_radio_on_to_off_mtrl_animation 0x7f070083
-int drawable delete_all_button 0x7f0700e2
+int drawable delete_button 0x7f0700e4
 int drawable design_fab_background 0x7f070084
 int drawable design_ic_visibility 0x7f070085
 int drawable design_ic_visibility_off 0x7f070086
@@ -3161,7 +3160,6 @@ int id chain 0x7f080072
 int id chain2 0x7f080073
 int id chains 0x7f080074
 int id changeAccount 0x7f080075
-int id changeAccountBalance 0x7f080076
 int id changeAccountName 0x7f080077
 int id changeTransaction 0x7f080078
 int id changeTransactionAmount 0x7f080079
@@ -3368,7 +3366,6 @@ int id navigation_header_container 0x7f080140
 int id never 0x7f080141
 int id neverCompleteToEnd 0x7f080142
 int id neverCompleteToStart 0x7f080143
-int id newAccountBalance 0x7f080144
 int id newAccountName 0x7f080145
 int id newTransactionAmount 0x7f080146
 int id newTransactionDate 0x7f080147
@@ -3509,9 +3506,7 @@ int id tag_window_insets_animation_callback 0x7f0801cd
 int id text 0x7f0801ce
 int id text2 0x7f0801cf
 int id textEnd 0x7f0801d0
-int id textInputAccountBalance 0x7f0801d1
 int id textInputAccountName 0x7f0801d2
-int id textInputChangeAccountBalance 0x7f0801d3
 int id textInputChangeAccountName 0x7f0801d4
 int id textInputChangeTransactionAmount 0x7f0801d5
 int id textInputChangeTransactionDate 0x7f0801d6

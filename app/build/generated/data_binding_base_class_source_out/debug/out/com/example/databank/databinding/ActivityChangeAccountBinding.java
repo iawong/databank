@@ -28,32 +28,23 @@ public final class ActivityChangeAccountBinding implements ViewBinding {
   public final Button changeAccount;
 
   @NonNull
-  public final TextInputEditText changeAccountBalance;
-
-  @NonNull
   public final TextInputEditText changeAccountName;
 
   @NonNull
   public final Button deleteAccount;
 
   @NonNull
-  public final TextInputLayout textInputChangeAccountBalance;
-
-  @NonNull
   public final TextInputLayout textInputChangeAccountName;
 
   private ActivityChangeAccountBinding(@NonNull ConstraintLayout rootView,
       @NonNull Button backButton, @NonNull Button changeAccount,
-      @NonNull TextInputEditText changeAccountBalance, @NonNull TextInputEditText changeAccountName,
-      @NonNull Button deleteAccount, @NonNull TextInputLayout textInputChangeAccountBalance,
+      @NonNull TextInputEditText changeAccountName, @NonNull Button deleteAccount,
       @NonNull TextInputLayout textInputChangeAccountName) {
     this.rootView = rootView;
     this.backButton = backButton;
     this.changeAccount = changeAccount;
-    this.changeAccountBalance = changeAccountBalance;
     this.changeAccountName = changeAccountName;
     this.deleteAccount = deleteAccount;
-    this.textInputChangeAccountBalance = textInputChangeAccountBalance;
     this.textInputChangeAccountName = textInputChangeAccountName;
   }
 
@@ -96,12 +87,6 @@ public final class ActivityChangeAccountBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.changeAccountBalance;
-      TextInputEditText changeAccountBalance = ViewBindings.findChildViewById(rootView, id);
-      if (changeAccountBalance == null) {
-        break missingId;
-      }
-
       id = R.id.changeAccountName;
       TextInputEditText changeAccountName = ViewBindings.findChildViewById(rootView, id);
       if (changeAccountName == null) {
@@ -114,12 +99,6 @@ public final class ActivityChangeAccountBinding implements ViewBinding {
         break missingId;
       }
 
-      id = R.id.textInputChangeAccountBalance;
-      TextInputLayout textInputChangeAccountBalance = ViewBindings.findChildViewById(rootView, id);
-      if (textInputChangeAccountBalance == null) {
-        break missingId;
-      }
-
       id = R.id.textInputChangeAccountName;
       TextInputLayout textInputChangeAccountName = ViewBindings.findChildViewById(rootView, id);
       if (textInputChangeAccountName == null) {
@@ -127,8 +106,7 @@ public final class ActivityChangeAccountBinding implements ViewBinding {
       }
 
       return new ActivityChangeAccountBinding((ConstraintLayout) rootView, backButton,
-          changeAccount, changeAccountBalance, changeAccountName, deleteAccount,
-          textInputChangeAccountBalance, textInputChangeAccountName);
+          changeAccount, changeAccountName, deleteAccount, textInputChangeAccountName);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

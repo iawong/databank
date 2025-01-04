@@ -2,9 +2,8 @@ R_DEF: Internal format may change without notice
 local
 color black
 color white
-drawable add_account_button
-drawable add_transaction_button
-drawable delete_all_button
+drawable add_button
+drawable delete_button
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 id accountBalance
@@ -14,7 +13,6 @@ id addAccountButton
 id addTransactionButton
 id backButton
 id changeAccount
-id changeAccountBalance
 id changeAccountName
 id changeTransaction
 id changeTransactionAmount
@@ -24,16 +22,13 @@ id deleteAccount
 id deleteAllButton
 id deleteTransaction
 id main
-id newAccountBalance
 id newAccountName
 id newTransactionAmount
 id newTransactionDate
 id newTransactionDescription
 id saveAccount
 id saveTransaction
-id textInputAccountBalance
 id textInputAccountName
-id textInputChangeAccountBalance
 id textInputChangeAccountName
 id textInputChangeTransactionAmount
 id textInputChangeTransactionDate

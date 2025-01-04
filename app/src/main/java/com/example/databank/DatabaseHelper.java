@@ -44,11 +44,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String CREATE_TRANSACTIONS_TABLE =
             "CREATE TABLE " + TABLE_NAME_TRANSACTION + " (" +
-                    COLUMN_TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_ACCOUNT_ID + " INTEGER NOT NULL, " +
-                    COLUMN_TRANSACTION_AMOUNT + " REAL NOT NULL, " +
-                    COLUMN_TRANSACTION_DESCRIPTION + " TEXT, " +
-                    COLUMN_TRANSACTION_DATE + " TEXT NOT NULL, " +
+            COLUMN_TRANSACTION_AMOUNT + " REAL NOT NULL, " +
+            COLUMN_TRANSACTION_DESCRIPTION + " TEXT, " +
+            COLUMN_TRANSACTION_DATE + " TEXT NOT NULL, " +
             "FOREIGN KEY (" + COLUMN_ACCOUNT_ID + ") REFERENCES " + TABLE_NAME_ACCOUNT + " (" + COLUMN_ACCOUNT_ID + "));";
 
         db.execSQL(CREATE_ACCOUNTS_TABLE);
@@ -62,12 +62,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    protected void addAccount(String name, double balance) {
+    protected void addAccount(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_ACCOUNT_NAME, name);
-        values.put(COLUMN_ACCOUNT_BALANCE, balance);
+        values.put(COLUMN_ACCOUNT_BALANCE, 0);
 
         long resultCode = db.insert(TABLE_NAME_ACCOUNT, null, values);
 
@@ -102,12 +102,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         updateAccountBalance(accountId, balance);
     }
 
-    void updateAccount(int accountId, String name, double balance) {
+    void updateAccount(int accountId, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         values.put(COLUMN_ACCOUNT_NAME, name);
-        values.put(COLUMN_ACCOUNT_BALANCE, balance);
 
         int resultCode = db.update(TABLE_NAME_ACCOUNT, values, COLUMN_ACCOUNT_ID + " = ?", new String[]{String.valueOf(accountId)});
 
@@ -133,11 +132,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void updateTransaction(int accountId, int transactionId, double amount, String description, String date) {
+    void updateTransaction(int accountId, int transactionId, double newAmount, String description, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        Cursor transaction = getTransactionAmount(accountId, transactionId);
 
-        values.put(COLUMN_TRANSACTION_AMOUNT, amount);
+        transaction.moveToFirst();
+        double curAmount = transaction.getDouble(0);
+
+        values.put(COLUMN_TRANSACTION_AMOUNT, newAmount);
         values.put(COLUMN_TRANSACTION_DESCRIPTION, description);
         values.put(COLUMN_TRANSACTION_DATE, date);
 
@@ -149,10 +152,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Updated transaction", Toast.LENGTH_SHORT).show();
         }
 
-        // grab the account row by accountId and add transaction amount to the account balance
+        // grab the account row by accountId and add transaction newAmount to the account balance
         Cursor account = getAccount(accountId);
         account.moveToFirst();
-        double balance = account.getDouble(2) + amount;
+        double balance = account.getDouble(2) + newAmount - curAmount;
         updateAccountBalance(accountId, balance);
     }
 
@@ -261,9 +264,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    Cursor getTransaction(int transactionId) {
-        String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION +
-                " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId;
+    Cursor getTransactionAmount(int accountId, int transactionId) {
+        String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT + " FROM " + TABLE_NAME_TRANSACTION +
+                " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId +
+                " AND " + COLUMN_ACCOUNT_ID + " = " + accountId;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;

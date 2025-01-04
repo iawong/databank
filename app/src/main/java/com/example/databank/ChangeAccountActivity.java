@@ -30,9 +30,7 @@ public class ChangeAccountActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         TextInputLayout textInputChangeAccountName = binding.textInputChangeAccountName;
-        TextInputLayout textInputChangeAccountBalance = binding.textInputChangeAccountBalance;
         TextInputEditText newAccName = binding.changeAccountName;
-        TextInputEditText newAccBalance = binding.changeAccountBalance;
 
         int accountId = getIntent().getIntExtra("accountId", -1);
 
@@ -42,49 +40,14 @@ public class ChangeAccountActivity extends AppCompatActivity {
         }
 
         String accountName = getIntent().getStringExtra("accountName");
-        double accountBalance = getIntent().getDoubleExtra("accountBalance", 0);
 
         newAccName.setText(accountName);
-        newAccBalance.setText(NumberFormat.getCurrencyInstance(Locale.US).format(accountBalance));
-
-        newAccBalance.addTextChangedListener(new TextWatcher() {
-            private String current = "";
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!s.toString().equals(current)) {
-                    newAccBalance.removeTextChangedListener(this);
-
-                    String cleanString = s.toString().replaceAll("[$,.]", "");
-
-                    if (!cleanString.isEmpty()) {
-                        double parsed = Double.parseDouble(cleanString) / 100;
-                        String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(parsed);
-                        newAccBalance.setText(formatted);
-                        newAccBalance.setSelection(formatted.length()); // Move cursor to the end
-                    } else {
-                        current = getString(R.string.default_currency);
-                        newAccBalance.setText(current);
-                        newAccBalance.setSelection(current.length());
-                    }
-                }
-
-                newAccBalance.addTextChangedListener(this);
-            }
-        });
 
         Button saveChanges = binding.changeAccount;
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String changedAccName = newAccName.getText().toString();
-                String changedAccBalance = newAccBalance.getText().toString();
 
                 if (changedAccName.isEmpty()) {
                     textInputChangeAccountName.setError("Please enter an account name");
@@ -93,17 +56,8 @@ public class ChangeAccountActivity extends AppCompatActivity {
                     textInputChangeAccountName.setError(null);
                 }
 
-                double parsedBalance = 0;
-
-                try {
-                    parsedBalance = Double.parseDouble(changedAccBalance.replaceAll("[$,]", ""));
-                } catch (NumberFormatException e) {
-                    Toast.makeText(ChangeAccountActivity.this, "Invalid balance entered", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
                 db = new DatabaseHelper(ChangeAccountActivity.this);
-                db.updateAccount(accountId, changedAccName, parsedBalance);
+                db.updateAccount(accountId, changedAccName);
 
                 Intent returnIntent = new Intent();
                 setResult(RESULT_OK, returnIntent);

@@ -4,6 +4,10 @@
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\mipmap-xxxhdpi\\ic_launcher.webp"
     },
     {
+        "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\drawable_delete_button.xml.flat",
+        "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\drawable\\delete_button.xml"
+    },
+    {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\layout_activity_new_transaction.xml.flat",
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\layout\\activity_new_transaction.xml"
     },
@@ -40,10 +44,6 @@
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\drawable\\ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.databank.app-debug-31:/drawable_delete_all_button.xml.flat",
-        "source": "com.example.databank.app-main-33:/drawable/delete_all_button.xml"
-    },
-    {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\drawable_ic_launcher_foreground.xml.flat",
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\drawable\\ic_launcher_foreground.xml"
     },
@@ -54,6 +54,10 @@
     {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\drawable_add_account_button.xml.flat",
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\drawable\\add_account_button.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\drawable_add_button.xml.flat",
+        "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\drawable\\add_button.xml"
     },
     {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\mipmap-mdpi_ic_launcher.webp.flat",
@@ -68,10 +72,6 @@
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\mipmap-anydpi-v26\\ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.databank.app-debug-31:/layout_activity_main.xml.flat",
-        "source": "com.example.databank.app-main-33:/layout/activity_main.xml"
-    },
-    {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\layout_activity_new_account.xml.flat",
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\layout\\activity_new_account.xml"
     },
@@ -82,6 +82,14 @@
     {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\xml_data_extraction_rules.xml.flat",
         "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\xml\\data_extraction_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\drawable_delete_all_button.xml.flat",
+        "source": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-main-33:\\drawable\\delete_all_button.xml"
+    },
+    {
+        "merged": "com.example.databank.app-debug-31:/layout_activity_new_transaction.xml.flat",
+        "source": "com.example.databank.app-main-33:/layout/activity_new_transaction.xml"
     },
     {
         "merged": "C:\\Users\\Ian Wong\\.gradle\\daemon\\8.7\\com.example.databank.app-debug-31:\\mipmap-hdpi_ic_launcher.webp.flat",

@@ -2937,8 +2937,7 @@ drawable abc_textfield_search_activated_mtrl_alpha
 drawable abc_textfield_search_default_mtrl_alpha
 drawable abc_textfield_search_material
 drawable abc_vector_test
-drawable add_account_button
-drawable add_transaction_button
+drawable add_button
 drawable avd_hide_password
 drawable avd_show_password
 drawable btn_checkbox_checked_mtrl
@@ -2949,7 +2948,7 @@ drawable btn_radio_off_mtrl
 drawable btn_radio_off_to_on_mtrl_animation
 drawable btn_radio_on_mtrl
 drawable btn_radio_on_to_off_mtrl_animation
-drawable delete_all_button
+drawable delete_button
 drawable design_fab_background
 drawable design_ic_visibility
 drawable design_ic_visibility_off
@@ -3162,7 +3161,6 @@ id chain
 id chain2
 id chains
 id changeAccount
-id changeAccountBalance
 id changeAccountName
 id changeTransaction
 id changeTransactionAmount
@@ -3369,7 +3367,6 @@ id navigation_header_container
 id never
 id neverCompleteToEnd
 id neverCompleteToStart
-id newAccountBalance
 id newAccountName
 id newTransactionAmount
 id newTransactionDate
@@ -3510,9 +3507,7 @@ id tag_window_insets_animation_callback
 id text
 id text2
 id textEnd
-id textInputAccountBalance
 id textInputAccountName
-id textInputChangeAccountBalance
 id textInputChangeAccountName
 id textInputChangeTransactionAmount
 id textInputChangeTransactionDate
