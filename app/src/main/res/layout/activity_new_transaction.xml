@@ -63,6 +63,7 @@
             android:id="@+id/newTransactionDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="text"
             android:maxLength="255"
             android:hint="@string/transaction_description" />
     </com.google.android.material.textfield.TextInputLayout>

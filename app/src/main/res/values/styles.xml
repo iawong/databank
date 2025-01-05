@@ -4,6 +4,6 @@
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:background">@color/toolbar</item>
+        <item name="android:background">@color/appbar</item>
     </style>
 </resources>
