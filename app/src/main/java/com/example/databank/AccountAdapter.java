@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
@@ -77,7 +78,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             }
         });
 
-        holder.accountBalance.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent viewTransactions = new Intent(context, TransactionActivity.class);
@@ -93,12 +94,14 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
         TextView accountName, accountBalance;
         ImageButton editButton, deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            cardView = itemView.findViewById(R.id.accountCardView);
             accountName = itemView.findViewById(R.id.accountName);
             accountBalance = itemView.findViewById(R.id.accountBalance);
             editButton = itemView.findViewById(R.id.editAccount);
