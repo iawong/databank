@@ -1,5 +1,6 @@
 package com.example.databank;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -15,6 +16,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class ChangeTransactionActivity extends AppCompatActivity {
@@ -35,6 +37,29 @@ public class ChangeTransactionActivity extends AppCompatActivity {
         TextInputEditText newTransAmt = binding.changeTransactionAmount;
         TextInputEditText newTransDesc = binding.changeTransactionDescription;
         TextInputEditText newTransDate = binding.changeTransactionDate;
+
+        newTransDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                // Create and show the DatePickerDialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        ChangeTransactionActivity.this,
+                        (view, selectedYear, selectedMonth, selectedDay) -> {
+                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
+                            String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            newTransDate.setText(formattedDate);
+                        },
+                        year, month, day
+                );
+
+                datePickerDialog.show();
+            }
+        });
 
         int accountId = getIntent().getIntExtra("accountId", -1);
 
