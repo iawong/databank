@@ -23,7 +23,10 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 12/31/24 notes
+ * 1/4/25 notes
+ * TODO: fix transaction description max length
+ * TODO: validate transaction date
+ * TODO: add back button to toolbars
  * TODO: resolve other TODOs around and create new list of items/features
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
