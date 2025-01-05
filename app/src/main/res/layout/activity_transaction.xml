@@ -12,6 +12,7 @@
         android:id="@+id/transactionAppbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/appbar"
         android:elevation="4dp"
         android:title="@string/transaction_appbar"
         android:titleTextAppearance="@style/AppbarTitle"
