@@ -15,7 +15,8 @@
         android:layout_marginTop="100dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
-        android:background="@color/rowItem"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/saveAccount"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +27,7 @@
             android:id="@+id/newAccountName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:background="@color/rowItem"
             android:hint="@string/account_name"/>
     </com.google.android.material.textfield.TextInputLayout>
 

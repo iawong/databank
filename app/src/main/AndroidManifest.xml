@@ -10,14 +10,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:theme="@style/Theme.Material3.Dark.NoActionBar"
         tools:targetApi="31">
         <activity
             android:name=".ChangeTransactionActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".TransactionActivity"/>
         <activity
             android:name=".ChangeAccountActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".NewTransactionActivity"
             android:exported="false"
@@ -37,7 +39,6 @@
         </activity>
         <activity
             android:name=".NewAccountActivity"
-            android:label="Add Account"
             android:parentActivityName=".MainActivity" />
     </application>
 
