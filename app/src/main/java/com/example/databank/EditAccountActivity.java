@@ -2,6 +2,7 @@ package com.example.databank;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,6 +28,7 @@ public class EditAccountActivity extends AppCompatActivity {
         TextInputLayout textInputChangeAccountName = binding.textInputChangeAccountName;
         TextInputEditText newAccName = binding.changeAccountName;
 
+
         int accountId = getIntent().getIntExtra("accountId", -1);
 
         if (accountId == -1) {
@@ -37,6 +39,9 @@ public class EditAccountActivity extends AppCompatActivity {
         String accountName = getIntent().getStringExtra("accountName");
 
         newAccName.setText(accountName);
+
+        // make sure account name does not exceed 20 characters otherwise it overflows
+        newAccName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
         Button saveChanges = binding.saveEditAccountButton;
         saveChanges.setOnClickListener(new View.OnClickListener() {

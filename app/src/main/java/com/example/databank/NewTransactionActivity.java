@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
@@ -111,6 +112,9 @@ public class NewTransactionActivity extends AppCompatActivity {
                 datePickerDialog.show();
             }
         });
+
+        // makes sure transaction description doesn't exceed 255 characters
+        newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
 
         Button saveNewTransaction = binding.saveNewTransactionButton;
         saveNewTransaction.setOnClickListener(new View.OnClickListener() {

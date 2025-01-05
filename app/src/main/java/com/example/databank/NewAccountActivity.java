@@ -2,6 +2,7 @@ package com.example.databank;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.widget.Button;
 
@@ -24,6 +25,9 @@ public class NewAccountActivity extends AppCompatActivity {
 
         TextInputLayout textInputAccountName = binding.textInputAccountName;
         TextInputEditText newAccountName = binding.newAccountName;
+
+        // makes sure account name does not exceed 20 characters otherwise it overflows
+        newAccountName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
 
         Button saveNewAccount = binding.saveNewAccountButton;
         saveNewAccount.setOnClickListener(new View.OnClickListener() {
