@@ -23,8 +23,7 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/4/25 notes
- * TODO: fix transaction description max length
+ * 1/5/25 notes
  * TODO: resolve other TODOs around and create new list of items/features
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
