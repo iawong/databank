@@ -6,7 +6,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".ChangeAccountActivity">
+    tools:context=".EditAccountActivity">
+
+    <Toolbar
+        android:id="@+id/changeAccountAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/appbar"
+        android:elevation="4dp"
+        android:title="@string/edit_account_appbar"
+        android:titleTextAppearance="@style/AppbarTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputChangeAccountName"
@@ -18,7 +30,7 @@
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/changeAccount"
+        app:layout_constraintBottom_toTopOf="@+id/saveEditAccountButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_chainStyle="packed">
@@ -34,26 +46,28 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/changeAccount"
+        android:id="@+id/saveEditAccountButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/save_changes"
+        android:text="@string/save"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
         android:backgroundTint="@color/rowItem"
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/textInputChangeAccountName"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancelEditAccountButton"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/cancelEditAccountButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back"
+        android:text="@string/cancel"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="50dp"
         android:backgroundTint="@color/rowItem"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/red"
+        app:layout_constraintEnd_toStartOf="@+id/saveEditAccountButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/changeAccount"/>
+        app:layout_constraintTop_toBottomOf="@+id/textInputChangeAccountName"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

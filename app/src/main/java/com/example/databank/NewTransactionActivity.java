@@ -112,7 +112,7 @@ public class NewTransactionActivity extends AppCompatActivity {
             }
         });
 
-        Button saveNewTransaction = binding.saveTransaction;
+        Button saveNewTransaction = binding.saveNewTransactionButton;
         saveNewTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +148,7 @@ public class NewTransactionActivity extends AppCompatActivity {
             }
         });
 
-        Button back = binding.backButton;
+        Button back = binding.cancelNewTransactionButton;
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

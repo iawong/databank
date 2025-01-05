@@ -25,7 +25,7 @@ public class NewAccountActivity extends AppCompatActivity {
         TextInputLayout textInputAccountName = binding.textInputAccountName;
         TextInputEditText newAccountName = binding.newAccountName;
 
-        Button saveNewAccount = binding.saveAccount;
+        Button saveNewAccount = binding.saveNewAccountButton;
         saveNewAccount.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String strAccountName = newAccountName.getText().toString().trim();
@@ -48,7 +48,7 @@ public class NewAccountActivity extends AppCompatActivity {
             }
         });
 
-        Button back = binding.backButton;
+        Button back = binding.cancelNewAccountButton;
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

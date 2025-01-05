@@ -23,4 +23,9 @@
     <string name="edit_transaction_button">Edit transaction</string>
     <string name="account_appbar">Accounts</string>
     <string name="transaction_appbar">Transactions</string>
+    <string name="edit_account_appbar">Edit Account</string>
+    <string name="cancel">Cancel</string>
+    <string name="new_account_appbar">New Account</string>
+    <string name="new_transaction_appbar">New Transaction</string>
+    <string name="edit_transaction_appbar">Edit Transaction</string>
 </resources>

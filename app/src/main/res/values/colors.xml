@@ -5,7 +5,7 @@
     <color name="colorPrimary">#1E2124</color>
     <color name="colorPrimaryVariant">#282B30</color>
     <color name="background">#23272a</color>
-    <color name="toolbar">#2c2f33</color>
+    <color name="appbar">#2c2f33</color>
     <color name="rowItem">#40444b</color>
     <color name="editDelete">#424549</color>
     <color name="red">#C30000</color>

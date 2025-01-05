@@ -5,13 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.databank.databinding.ActivityChangeTransactionBinding;
+import com.example.databank.databinding.ActivityEditTransactionBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -19,8 +21,8 @@ import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class ChangeTransactionActivity extends AppCompatActivity {
-    ActivityChangeTransactionBinding binding;
+public class EditTransactionActivity extends AppCompatActivity {
+    ActivityEditTransactionBinding binding;
     // TODO: maybe declare and initialize the database outside to avoid repetition
     DatabaseHelper db;
 
@@ -28,8 +30,21 @@ public class ChangeTransactionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityChangeTransactionBinding.inflate(getLayoutInflater());
+        binding = ActivityEditTransactionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Find the root view
+        View rootView = binding.getRoot();
+
+        //  Set touch listener to clear focus when clicking outside of a text box
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyboard();
+                rootView.clearFocus();
+                return false;
+            }
+        });
 
         TextInputLayout textInputChangeTransactionAmount = binding.textInputChangeTransactionAmount;
         TextInputLayout textInputChangeTransactionDescription = binding.textInputChangeTransactionDescription;
@@ -48,7 +63,7 @@ public class ChangeTransactionActivity extends AppCompatActivity {
 
                 // Create and show the DatePickerDialog
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        ChangeTransactionActivity.this,
+                        EditTransactionActivity.this,
                         (view, selectedYear, selectedMonth, selectedDay) -> {
                             // Update the TextInputEditText with the selected date in MM/DD/YYYY format
                             String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
@@ -115,7 +130,7 @@ public class ChangeTransactionActivity extends AppCompatActivity {
             }
         });
 
-        Button saveChanges = binding.changeTransaction;
+        Button saveChanges = binding.saveEditTransactionButton;
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,14 +144,14 @@ public class ChangeTransactionActivity extends AppCompatActivity {
                 try {
                     parsedDouble = Double.parseDouble(changedTransAmt.replaceAll("[$,]", ""));
                 } catch (Exception e) {
-                    Toast.makeText(ChangeTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 System.out.println("parsedDouble amount: " + parsedDouble);
 
                 // TODO: handle errors if double can't be parsed
-                db = new DatabaseHelper(ChangeTransactionActivity.this);
+                db = new DatabaseHelper(EditTransactionActivity.this);
                 db.updateTransaction(accountId, transactionId, parsedDouble, changedTransDesc, changedTransDate);
 
                 Intent returnIntent = new Intent();
@@ -145,20 +160,7 @@ public class ChangeTransactionActivity extends AppCompatActivity {
             }
         });
 
-        Button deleteTransaction = binding.deleteTransaction;
-        deleteTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db = new DatabaseHelper(ChangeTransactionActivity.this);
-                db.deleteTransaction(accountId, transactionId, transAmt);
-
-                Intent returnIntent = new Intent();
-                setResult(RESULT_OK, returnIntent);
-                finish();
-            }
-        });
-
-        Button back = binding.backButton;
+        Button back = binding.cancelEditTransactionButton;
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,5 +169,13 @@ public class ChangeTransactionActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

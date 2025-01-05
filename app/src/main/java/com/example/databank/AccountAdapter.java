@@ -64,7 +64,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent changeAccountDetails = new Intent(context, ChangeAccountActivity.class);
+                Intent changeAccountDetails = new Intent(context, EditAccountActivity.class);
                 changeAccountDetails.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
                 changeAccountDetails.putExtra("accountName", accountNames.get(holder.getAdapterPosition()));
                 accountChangeResultLauncher.launch(changeAccountDetails);

@@ -9,13 +9,12 @@
     tools:context=".TransactionActivity">
 
     <Toolbar
-        android:id="@+id/transactionToolbar"
+        android:id="@+id/transactionAppbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
-        style="@style/ToolbarTitle"
         android:title="@string/transaction_appbar"
-        android:titleTextAppearance="@style/ToolbarTitle"
+        android:titleTextAppearance="@style/AppbarTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -41,13 +40,13 @@
         android:layout_height="0px"
         android:scrollbars="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/backButton"
+        app:layout_constraintBottom_toTopOf="@+id/backToAccountsButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </androidx.recyclerview.widget.RecyclerView>
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/backToAccountsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/back"

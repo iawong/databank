@@ -77,7 +77,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent changeTransactionDetails = new Intent(context, ChangeTransactionActivity.class);
+                Intent changeTransactionDetails = new Intent(context, EditTransactionActivity.class);
                 changeTransactionDetails.putExtra("accountId", accountId);
                 changeTransactionDetails.putExtra("transactionId", transactionIds.get(holder.getAdapterPosition()));
                 changeTransactionDetails.putExtra("transactionAmount", transactionAmounts.get(holder.getAdapterPosition()));

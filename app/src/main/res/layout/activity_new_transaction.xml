@@ -8,11 +8,23 @@
     android:background="@color/background"
     tools:context=".NewTransactionActivity">
 
+    <Toolbar
+        android:id="@+id/newTransactionAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/appbar"
+        android:elevation="4dp"
+        android:title="@string/new_transaction_appbar"
+        android:titleTextAppearance="@style/AppbarTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputTransactionAmount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="100dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:background="@color/rowItem"
@@ -81,27 +93,29 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/saveTransaction"
+        android:id="@+id/saveNewTransactionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/save"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
         android:textColor="@color/white"
         android:backgroundTint="@color/rowItem"
         app:layout_constraintTop_toBottomOf="@id/textInputTransactionDate"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cancelNewTransactionButton"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
-        android:id="@+id/backButton"
+        android:id="@+id/cancelNewTransactionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/back"
+        android:text="@string/cancel"
         android:layout_marginTop="20dp"
-        android:textColor="@color/white"
+        android:layout_marginStart="50dp"
+        android:textColor="@color/red"
         android:backgroundTint="@color/rowItem"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/saveNewTransactionButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saveTransaction"/>
+        app:layout_constraintTop_toBottomOf="@id/textInputTransactionDate"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

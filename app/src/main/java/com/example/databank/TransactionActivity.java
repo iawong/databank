@@ -102,7 +102,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
 
         // back button to go back to the main activity aka
         // where all the accounts are
-        Button back = binding.backButton;
+        Button back = binding.backToAccountsButton;
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent returnToAccounts = new Intent();

@@ -8,12 +8,12 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.databank.databinding.ActivityChangeAccountBinding;
+import com.example.databank.databinding.ActivityEditAccountBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-public class ChangeAccountActivity extends AppCompatActivity {
-    ActivityChangeAccountBinding binding;
+public class EditAccountActivity extends AppCompatActivity {
+    ActivityEditAccountBinding binding;
     // TODO: maybe declare and initialize the database outside to avoid repetition
     DatabaseHelper db;
 
@@ -21,7 +21,7 @@ public class ChangeAccountActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityChangeAccountBinding.inflate(getLayoutInflater());
+        binding = ActivityEditAccountBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         TextInputLayout textInputChangeAccountName = binding.textInputChangeAccountName;
@@ -38,7 +38,7 @@ public class ChangeAccountActivity extends AppCompatActivity {
 
         newAccName.setText(accountName);
 
-        Button saveChanges = binding.changeAccount;
+        Button saveChanges = binding.saveEditAccountButton;
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -51,7 +51,7 @@ public class ChangeAccountActivity extends AppCompatActivity {
                     textInputChangeAccountName.setError(null);
                 }
 
-                db = new DatabaseHelper(ChangeAccountActivity.this);
+                db = new DatabaseHelper(EditAccountActivity.this);
                 db.updateAccount(accountId, changedAccName);
 
                 Intent returnIntent = new Intent();
@@ -60,7 +60,7 @@ public class ChangeAccountActivity extends AppCompatActivity {
             }
         });
 
-        Button back = binding.backButton;
+        Button back = binding.cancelEditAccountButton;
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
