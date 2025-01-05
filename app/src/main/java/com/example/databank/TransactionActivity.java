@@ -1,7 +1,6 @@
 package com.example.databank;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -188,31 +187,42 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
      */
     @Override
     public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {
-        new AlertDialog.Builder(TransactionActivity.this)
-                .setTitle("Confirm Delete")
-                .setMessage("Are you sure you want to delete this transaction? This cannot be undone.")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        db = new DatabaseHelper(TransactionActivity.this);
+        View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
 
-                        db.deleteTransaction(accountId, transactionId, amount);
+        Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
+        Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
 
-                        transactionIds.remove(position);
-                        transactionAmounts.remove(position);
-                        transactionDescriptions.remove(position);
-                        transactionDates.remove(position);
-
-                        transactionAdapter.notifyItemRemoved(position);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+        AlertDialog dialog = new AlertDialog.Builder(TransactionActivity.this)
+                .setView(alertView)
                 .setCancelable(false)
-                .show();
+                .create();
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db = new DatabaseHelper(TransactionActivity.this);
+
+                db.deleteTransaction(accountId, transactionId, amount);
+
+                transactionIds.remove(position);
+                transactionAmounts.remove(position);
+                transactionDescriptions.remove(position);
+                transactionDates.remove(position);
+
+                transactionAdapter.notifyItemRemoved(position);
+
+                dialog.dismiss();
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 }

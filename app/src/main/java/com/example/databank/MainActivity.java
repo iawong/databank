@@ -1,11 +1,11 @@
 package com.example.databank;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -143,28 +143,39 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         deleteAllButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
+
+                Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
+                Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
+
                 // alert dialog to confirm if the user wants to delete all
-                new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Confirm Delete")
-                        .setMessage("Are you sure you want to delete all accounts and transactions? This cannot be undone.")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                db.deleteAll();
-                                accountIds.clear();
-                                accounts.clear();
-                                accountBalances.clear();
-                                accountAdapter.notifyDataSetChanged();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
+                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                        .setView(alertView)
                         .setCancelable(false)
                         .show();
+
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        db.deleteAll();
+                        accountIds.clear();
+                        accounts.clear();
+                        accountBalances.clear();
+                        accountAdapter.notifyDataSetChanged();
+
+                        dialog.dismiss();
+                    }
+                });
+
+                negativeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             }
         });
     }
@@ -224,30 +235,41 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      */
     @Override
     public void onAccountDelete(int position, int accountId) {
-        new AlertDialog.Builder(MainActivity.this)
-                .setTitle("Confirm Delete")
-                .setMessage("Are you sure you want to delete this account? This cannot be undone.")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        db = new DatabaseHelper(MainActivity.this);
+        View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
 
-                        db.deleteAccount(accountId);
+        Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
+        Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
 
-                        accountIds.remove(position);
-                        accounts.remove(position);
-                        accountBalances.remove(position);
-                        accountAdapter.notifyItemRemoved(position);
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                .setView(alertView)
                 .setCancelable(false)
-                .show();
+                .create();
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                db = new DatabaseHelper(MainActivity.this);
+
+                db.deleteAccount(accountId);
+
+                accountIds.remove(position);
+                accounts.remove(position);
+                accountBalances.remove(position);
+                accountAdapter.notifyItemRemoved(position);
+
+                dialog.dismiss();
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
     }
 
     @Override
