@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
+    <color name="colorPrimary">#1E2124</color>
+    <color name="colorPrimaryVariant">#282B30</color>
+    <color name="background">#23272a</color>
+    <color name="toolbar">#2c2f33</color>
+    <color name="rowItem">#40444b</color>
+    <color name="editDelete">#424549</color>
+    <color name="red">#C30000</color>
+    <color name="discordBlue">#7289da</color>
+    <color name="lightGrey">#99aab5</color>
 </resources>

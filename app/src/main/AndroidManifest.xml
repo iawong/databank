@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Databank"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
         <activity
             android:name=".ChangeTransactionActivity"
@@ -21,17 +21,14 @@
         <activity
             android:name=".NewTransactionActivity"
             android:exported="false"
-            android:label="Add Transaction"
             android:parentActivityName=".TransactionActivity" />
         <activity
             android:name=".TransactionActivity"
             android:exported="false"
-            android:label="Transactions"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:label="Accounts">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

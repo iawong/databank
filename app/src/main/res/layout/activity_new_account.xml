@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".NewAccountActivity">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -14,6 +15,7 @@
         android:layout_marginTop="100dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:background="@color/rowItem"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/saveAccount"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,6 +26,7 @@
             android:id="@+id/newAccountName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:hint="@string/account_name"/>
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -33,6 +36,8 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/rowItem"
         app:layout_constraintTop_toBottomOf="@id/textInputAccountName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -43,6 +48,8 @@
         android:layout_height="wrap_content"
         android:text="@string/back"
         android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/rowItem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/saveAccount"/>

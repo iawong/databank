@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".NewTransactionActivity">
 
     <com.google.android.material.textfield.TextInputLayout
@@ -14,6 +15,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:background="@color/rowItem"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/textInputTransactionDescription"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +28,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:maxLength="15"
+            android:textColor="@color/white"
             android:hint="@string/transaction_amount" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -36,6 +39,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:background="@color/rowItem"
         app:layout_constraintTop_toBottomOf="@id/textInputTransactionAmount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -45,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLength="255"
-            android:hint="@string/transaction_description" />
+            android:hint="@string/transaction_description"
+            android:textColor="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -55,6 +60,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:background="@color/rowItem"
         app:layout_constraintTop_toBottomOf="@id/textInputTransactionDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -64,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="date"
-            android:hint="@string/transaction_date"/>
+            android:hint="@string/transaction_date"
+            android:textColor="@color/white"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -75,6 +82,8 @@
         android:layout_gravity="center"
         android:text="@string/save"
         android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/rowItem"
         app:layout_constraintTop_toBottomOf="@id/textInputTransactionDate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -85,6 +94,8 @@
         android:layout_height="wrap_content"
         android:text="@string/back"
         android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/rowItem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/saveTransaction"/>

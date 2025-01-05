@@ -14,7 +14,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
+            android:padding="12dp"
+            android:background="@color/rowItem">
 
             <TextView
                 android:id="@+id/transactionAmount"
@@ -22,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="25sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/transactionDate"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -32,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@+id/transactionAmount"
                 app:layout_constraintBottom_toTopOf="@+id/transactionDescription"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -42,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@+id/transactionDate"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"/>
@@ -54,7 +55,7 @@
                 android:src="@drawable/edit_button"
                 android:contentDescription="@string/edit_transaction_button"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/black"
+                app:tint="@color/white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/removeTransaction"/>
@@ -66,7 +67,7 @@
                 android:src="@drawable/delete_button"
                 android:contentDescription="@string/delete_transaction"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/black"
+                app:tint="@color/red"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>

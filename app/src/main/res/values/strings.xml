@@ -21,4 +21,6 @@
     <string name="delete_all">Delete all</string>
     <string name="edit_account_button">Edit account</string>
     <string name="edit_transaction_button">Edit transaction</string>
+    <string name="account_appbar">Accounts</string>
+    <string name="transaction_appbar">Transactions</string>
 </resources>

@@ -6,7 +6,21 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     tools:context=".MainActivity">
+
+    <Toolbar
+        android:id="@+id/accountToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/toolbar"
+        android:elevation="4dp"
+        style="@style/ToolbarTitle"
+        android:title="@string/account_appbar"
+        android:titleTextAppearance="@style/ToolbarTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addAccountButton"
@@ -15,6 +29,8 @@
         android:layout_margin="30dp"
         android:contentDescription="@string/add_account"
         android:focusable="true"
+        app:tint="@color/white"
+        app:backgroundTint="@color/rowItem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/add_button">
@@ -27,6 +43,8 @@
         android:layout_margin="30dp"
         android:contentDescription="@string/delete_all"
         android:focusable="true"
+        app:tint="@color/red"
+        app:backgroundTint="@color/rowItem"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/delete_button">
