@@ -36,7 +36,6 @@ public class NewAccountActivity extends AppCompatActivity {
         Button saveNewAccount = binding.saveNewAccountButton;
         saveNewAccount.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
                 if (newAccountName.getText() == null) {
                     // kick out of saving since user needs to enter something
                     return;

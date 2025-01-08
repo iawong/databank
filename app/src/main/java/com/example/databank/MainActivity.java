@@ -90,9 +90,12 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
                         if (position == -1) {
                             Toast.makeText(MainActivity.this, "Account to change not found", Toast.LENGTH_SHORT).show();
-                        } else {
-                            reloadAccounts();
+                            return;
                         }
+
+                        String changedAccountName = data.getStringExtra("accountName");
+
+                        updateAccount(position, changedAccountName);
                     }
                 }
             }
@@ -254,6 +257,17 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         // Notify the adapter of the changes
         // accountIds size - 1 should be the position/index of the new account
         accountAdapter.notifyItemInserted(accountIds.size() - 1);
+    }
+
+    /**
+     * Update the account name
+     * @param position position of the account to update
+     * @param changedAccName the changed account name
+     */
+    private void updateAccount(int position, String changedAccName) {
+        accountNames.set(position, changedAccName);
+
+        accountAdapter.notifyItemChanged(position);
     }
 
     /**

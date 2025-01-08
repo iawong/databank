@@ -3,6 +3,7 @@ package com.example.databank;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -52,20 +53,34 @@ public class EditAccountActivity extends AppCompatActivity {
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String changedAccName = newAccName.getText().toString();
+                if (newAccName.getText() == null) {
+                    // kick out of saving since user needs to enter something
+                    return;
+                }
+
+                String changedAccName = newAccName.getText().toString().trim();
 
                 if (changedAccName.isEmpty()) {
                     textInputChangeAccountName.setError("Please enter an account name");
                     return;
+                } else if (changedAccName.equals(accountName)) {
+                    textInputChangeAccountName.setError("Account name is the same");
+                    return;
                 } else {
                     textInputChangeAccountName.setError(null);
                 }
-                DatabaseHelper db = new DatabaseHelper(EditAccountActivity.this);
-                db.updateAccount(accountId, changedAccName);
+
+                try (DatabaseHelper db = new DatabaseHelper(EditAccountActivity.this)) {
+                    db.updateAccount(accountId, changedAccName);
+                } catch (Exception e) {
+                    Log.e("EditAccountActivity", "Error editing account", e);
+                    Toast.makeText(EditAccountActivity.this, "Failed to edit account. Please try again", Toast.LENGTH_SHORT).show();
+                }
 
                 Intent returnIntent = new Intent();
                 // position of the account we're editing from the account adapter
                 returnIntent.putExtra("position", getIntent().getIntExtra("position", -1));
+                returnIntent.putExtra("accountName", changedAccName);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
