@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -33,26 +34,23 @@ public class NewTransactionActivity extends AppCompatActivity {
         binding = ActivityNewTransactionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Find the root view
-        View rootView = binding.getRoot();
-
-        //  Set touch listener to clear focus when clicking outside of a text box
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                rootView.clearFocus();
-                return false;
-            }
-        });
-
-
         TextInputLayout textInputTransactionAmount = binding.textInputTransactionAmount;
         TextInputLayout textInputTransactionDescription = binding.textInputTransactionDescription;
         TextInputLayout textInputTransactionDate = binding.textInputTransactionDate;
         TextInputEditText newTransAmt = binding.newTransactionAmount;
+        newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         TextInputEditText newTransDesc = binding.newTransactionDescription;
-
+        newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         newTransAmt.setText(getString(R.string.default_currency));
 
         newTransAmt.addTextChangedListener(new TextWatcher() {
@@ -89,29 +87,7 @@ public class NewTransactionActivity extends AppCompatActivity {
             }
         });
 
-        TextInputEditText newTransDate = binding.newTransactionDate;
-        newTransDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                // Create and show the DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        NewTransactionActivity.this,
-                        (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
-                            newTransDate.setText(formattedDate);
-                        },
-                        year, month, day
-                );
-
-                datePickerDialog.show();
-            }
-        });
+        TextInputEditText newTransDate = getTextInputEditText();
 
         // makes sure transaction description doesn't exceed 255 characters
         newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
@@ -163,11 +139,45 @@ public class NewTransactionActivity extends AppCompatActivity {
         });
     }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
+    private @NonNull TextInputEditText getTextInputEditText() {
+        TextInputEditText newTransDate = binding.newTransactionDate;
+
+        newTransDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                // Create and show the DatePickerDialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        NewTransactionActivity.this,
+                        (view, selectedYear, selectedMonth, selectedDay) -> {
+                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
+                            String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            newTransDate.setText(formattedDate);
+                        },
+                        year, month, day
+                );
+
+                datePickerDialog.show();
+            }
+        });
+
+        newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+        return newTransDate;
+    }
+
+    private void hideKeyboard(View v) {
+        if (v != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(NewTransactionActivity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
 }

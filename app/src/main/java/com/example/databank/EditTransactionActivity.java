@@ -36,23 +36,30 @@ public class EditTransactionActivity extends AppCompatActivity {
         View rootView = binding.getRoot();
         setContentView(rootView);
 
-
-        //  Set touch listener to clear focus when clicking outside of a text box
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                rootView.clearFocus();
-                return false;
-            }
-        });
-
         TextInputLayout textInputChangeTransactionAmount = binding.textInputChangeTransactionAmount;
         TextInputLayout textInputChangeTransactionDescription = binding.textInputChangeTransactionDescription;
         TextInputLayout textInputChangeTransactionDate = binding.textInputChangeTransactionDate;
         TextInputEditText newTransAmt = binding.changeTransactionAmount;
+        newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         TextInputEditText newTransDesc = binding.changeTransactionDescription;
+        newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
         TextInputEditText newTransDate = binding.changeTransactionDate;
+        newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
 
         newTransDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -175,11 +182,10 @@ public class EditTransactionActivity extends AppCompatActivity {
         });
     }
 
-    private void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
+    private void hideKeyboard(View v) {
+        if (v != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
 }
