@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
     DatabaseHelper db;
     ArrayList<Integer> accountIds;
-    ArrayList<String> accounts;
+    ArrayList<String> accountNames;
     ArrayList<Double> accountBalances;
 
     // the name of this class "ActivityMainBinding" literally comes from the fact that
@@ -51,34 +51,17 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                     int resultCode = activityResult.getResultCode();
 
                     if (resultCode == RESULT_OK) {
-                        // Reload account data when returning from NewAccountActivity
                         Intent data = activityResult.getData();
 
-                        assert data != null;
+                        if (data == null) {
+                            Toast.makeText(MainActivity.this, "Account could not be added", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                        reloadAccounts();
-                    }
-                }
-            }
-    );
+                        long accountId = data.getLongExtra("accountId", -1);
+                        String accountName = data.getStringExtra("accountName");
 
-    /**
-     * ActivityResultLauncher for adding transactions
-     * Will come back and update the account balances if the transactions have changed
-     */
-    ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
-
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
-
-                        assert data != null;
-
-                        reloadAccounts();
+                        insertItemIntoAccounts((int) accountId, accountName);
                     }
                 }
             }
@@ -89,6 +72,37 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      * Will come back and update the account name/balances if changes were made
      */
     ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult activityResult) {
+                    int resultCode = activityResult.getResultCode();
+
+                    if (resultCode == RESULT_OK) {
+                        Intent data = activityResult.getData();
+
+                        if (data == null) {
+                            Toast.makeText(MainActivity.this, "Account changed data not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        int position = data.getIntExtra("position", -1);
+
+                        if (position == -1) {
+                            Toast.makeText(MainActivity.this, "Account to change not found", Toast.LENGTH_SHORT).show();
+                        } else {
+                            reloadAccounts();
+                        }
+                    }
+                }
+            }
+    );
+
+    /**
+     * ActivityResultLauncher for adding transactions
+     * Will come back and update the account balances if the transactions have changed
+     */
+    ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -126,14 +140,14 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
         db = new DatabaseHelper(MainActivity.this);
         accountIds = new ArrayList<>();
-        accounts = new ArrayList<>();
+        accountNames = new ArrayList<>();
         accountBalances = new ArrayList<>();
 
         storeAccountData();
 
         accountAdapter = new AccountAdapter(MainActivity.this,
                                             accountIds,
-                                            accounts,
+                                            accountNames,
                                             accountBalances,
                                             transactionResultLauncher,
                                             accountChangeResultLauncher,
@@ -162,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                     public void onClick(View v) {
                         db.deleteAll();
                         accountIds.clear();
-                        accounts.clear();
+                        accountNames.clear();
                         accountBalances.clear();
                         // using this instead of a more specific notify because we're
                         // deleting all accounts
@@ -190,7 +204,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     }
 
     /**
-     * this sets the account data so that it can be viewed as the most up to date
+     * this queries the account table and fills up the account
+     * arraylists with the account data so that it can be viewed as
+     * the most up to date information
      */
     private void storeAccountData() {
         Cursor cursor = db.getAllAccounts();
@@ -201,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         } else {
             while (cursor.moveToNext()) {
                 accountIds.add(cursor.getInt(0));
-                accounts.add(cursor.getString(1));
+                accountNames.add(cursor.getString(1));
                 accountBalances.add(cursor.getDouble(2));
             }
         }
@@ -214,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      */
     private void reloadAccounts() {
         accountIds.clear();
-        accounts.clear();
+        accountNames.clear();
         accountBalances.clear();
 
         // Reload data from the database
@@ -223,6 +239,21 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         // Notify the adapter of the changes
         // TODO: find better way to notify item change instead
         accountAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Inserts the new account
+     * @param accountId account id of new account
+     * @param accountName account name of new account
+     */
+    private void insertItemIntoAccounts(int accountId, String accountName) {
+        accountIds.add(accountId);
+        accountNames.add(accountName);
+        accountBalances.add(0.0);
+
+        // Notify the adapter of the changes
+        // accountIds size - 1 should be the position/index of the new account
+        accountAdapter.notifyItemInserted(accountIds.size() - 1);
     }
 
     /**
@@ -261,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 db.deleteAccount(accountId);
 
                 accountIds.remove(position);
-                accounts.remove(position);
+                accountNames.remove(position);
                 accountBalances.remove(position);
                 accountAdapter.notifyItemRemoved(position);
 

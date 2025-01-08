@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -15,8 +16,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class EditAccountActivity extends AppCompatActivity {
     ActivityEditAccountBinding binding;
-    // TODO: maybe declare and initialize the database outside to avoid repetition
-    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +27,12 @@ public class EditAccountActivity extends AppCompatActivity {
         TextInputLayout textInputChangeAccountName = binding.textInputChangeAccountName;
         TextInputEditText newAccName = binding.changeAccountName;
 
+        newAccName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
 
         int accountId = getIntent().getIntExtra("accountId", -1);
 
@@ -55,24 +60,36 @@ public class EditAccountActivity extends AppCompatActivity {
                 } else {
                     textInputChangeAccountName.setError(null);
                 }
-
-                db = new DatabaseHelper(EditAccountActivity.this);
+                DatabaseHelper db = new DatabaseHelper(EditAccountActivity.this);
                 db.updateAccount(accountId, changedAccName);
 
                 Intent returnIntent = new Intent();
+                // position of the account we're editing from the account adapter
+                returnIntent.putExtra("position", getIntent().getIntExtra("position", -1));
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
         });
 
-        Button back = binding.cancelEditAccountButton;
-        back.setOnClickListener(new View.OnClickListener() {
+        Button cancel = binding.cancelEditAccountButton;
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent returnToAccounts = new Intent();
-                setResult(RESULT_OK, returnToAccounts);
+                setResult(RESULT_CANCELED, returnToAccounts);
                 finish();
             }
         });
+    }
+
+    /**
+     * Used to hide the keyboard when user clicks away from the view passed in
+     * @param v view passed in
+     */
+    private void hideKeyboard(View v) {
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

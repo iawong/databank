@@ -67,6 +67,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
                 Intent changeAccountDetails = new Intent(context, EditAccountActivity.class);
                 changeAccountDetails.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
                 changeAccountDetails.putExtra("accountName", accountNames.get(holder.getAdapterPosition()));
+                changeAccountDetails.putExtra("position", holder.getAdapterPosition());
                 accountChangeResultLauncher.launch(changeAccountDetails);
             }
         });

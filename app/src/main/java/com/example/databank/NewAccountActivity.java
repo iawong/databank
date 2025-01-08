@@ -3,9 +3,11 @@ package com.example.databank;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +17,9 @@ import com.example.databank.databinding.ActivityNewAccountBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+/**
+ * Activity for creating a new account
+ */
 public class NewAccountActivity extends AppCompatActivity {
     ActivityNewAccountBinding binding;
 
@@ -31,11 +36,12 @@ public class NewAccountActivity extends AppCompatActivity {
         Button saveNewAccount = binding.saveNewAccountButton;
         saveNewAccount.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String strAccountName = "";
 
-                if (newAccountName.getText() != null) {
-                    strAccountName = newAccountName.getText().toString().trim();
+                if (newAccountName.getText() == null) {
+                    // kick out of saving since user needs to enter something
+                    return;
                 }
+                String strAccountName = newAccountName.getText().toString().trim();
 
                 if (strAccountName.isEmpty()) {
                     textInputAccountName.setError("Please enter an account name");
@@ -44,11 +50,23 @@ public class NewAccountActivity extends AppCompatActivity {
                     textInputAccountName.setError(null);
                 }
 
-                DatabaseHelper db = new DatabaseHelper(NewAccountActivity.this);
-                db.addAccount(strAccountName);
-                // TODO: close database?
+                long accountId = -1;
+
+                try (DatabaseHelper db = new DatabaseHelper(NewAccountActivity.this)) {
+                    accountId = db.addAccount(strAccountName);
+
+                    if (accountId == -1) {
+                        // failed to add account, try again
+                        return;
+                    }
+                } catch (Exception e) {
+                    Log.e("NewAccountActivity", "Error adding account", e);
+                    Toast.makeText(NewAccountActivity.this, "Failed to add account. Please try again.", Toast.LENGTH_SHORT).show();
+                }
 
                 Intent returnIntent = new Intent();
+                returnIntent.putExtra("accountId", accountId);
+                returnIntent.putExtra("accountName", strAccountName);
                 setResult(RESULT_OK, returnIntent);
 
                 finish();
@@ -60,12 +78,16 @@ public class NewAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnToAccounts = new Intent();
-                setResult(RESULT_OK, returnToAccounts);
+                setResult(RESULT_CANCELED, returnToAccounts);
                 finish();
             }
         });
     }
 
+    /**
+     * Get account name from user
+     * @return TextInputEditText with new account name
+     */
     private @NonNull TextInputEditText getTextInputEditText() {
         TextInputEditText newAccountName = binding.newAccountName;
 
@@ -82,6 +104,10 @@ public class NewAccountActivity extends AppCompatActivity {
         return newAccountName;
     }
 
+    /**
+     * Used to hide the keyboard when user clicks away from the view passed in
+     * @param v view passed in
+     */
     private void hideKeyboard(View v) {
         if (v != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);

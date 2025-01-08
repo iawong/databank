@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    protected void addAccount(String name) {
+    protected long addAccount(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -76,6 +76,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Added account: " + name, Toast.LENGTH_SHORT).show();
         }
+
+        return resultCode;
     }
 
     void addTransaction(int accountId, double amount, String description, String date) {
