@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,15 +26,16 @@ public class NewAccountActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         TextInputLayout textInputAccountName = binding.textInputAccountName;
-        TextInputEditText newAccountName = binding.newAccountName;
-
-        // makes sure account name does not exceed 20 characters otherwise it overflows
-        newAccountName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        TextInputEditText newAccountName = getTextInputEditText();
 
         Button saveNewAccount = binding.saveNewAccountButton;
         saveNewAccount.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                String strAccountName = newAccountName.getText().toString().trim();
+                String strAccountName = "";
+
+                if (newAccountName.getText() != null) {
+                    strAccountName = newAccountName.getText().toString().trim();
+                }
 
                 if (strAccountName.isEmpty()) {
                     textInputAccountName.setError("Please enter an account name");
@@ -61,5 +64,28 @@ public class NewAccountActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private @NonNull TextInputEditText getTextInputEditText() {
+        TextInputEditText newAccountName = binding.newAccountName;
+
+        // makes sure account name does not exceed 20 characters otherwise it overflows
+        newAccountName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
+        // hides the keyboard if clicking outside of the edit text
+        newAccountName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+
+        return newAccountName;
+    }
+
+    private void hideKeyboard(View v) {
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

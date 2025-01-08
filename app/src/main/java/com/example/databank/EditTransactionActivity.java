@@ -32,10 +32,10 @@ public class EditTransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityEditTransactionBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
         // Find the root view
         View rootView = binding.getRoot();
+        setContentView(rootView);
+
 
         //  Set touch listener to clear focus when clicking outside of a text box
         rootView.setOnTouchListener(new View.OnTouchListener() {

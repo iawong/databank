@@ -1,5 +1,6 @@
 package com.example.databank;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,11 +24,11 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/5/25 notes
+ * 1/7/25 notes
+ * TODO: add categories to transactions
  * TODO: resolve other TODOs around and create new list of items/features
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
-    RecyclerView accountRecyclerView;
     AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
     DatabaseHelper db;
     ArrayList<Integer> accountIds;
@@ -110,9 +111,10 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         super.onCreate(savedInstanceState);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot()); //getRoot(), get the outer most view
+        View rootView = binding.getRoot();
+        setContentView(rootView); //getRoot(), get the outer most view
 
-        accountRecyclerView = binding.accountList;
+        RecyclerView accountRecyclerView = binding.accountList;
 
         FloatingActionButton addAccountButton = binding.addAccountButton;
         addAccountButton.setOnClickListener(new View.OnClickListener() {
@@ -155,12 +157,15 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                         .show();
 
                 positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
                     public void onClick(View v) {
                         db.deleteAll();
                         accountIds.clear();
                         accounts.clear();
                         accountBalances.clear();
+                        // using this instead of a more specific notify because we're
+                        // deleting all accounts
                         accountAdapter.notifyDataSetChanged();
 
                         dialog.dismiss();
@@ -175,7 +180,11 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 });
 
                 dialog.show();
-                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                if (dialog.getWindow() != null) {
+                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                }
             }
         });
     }
@@ -186,6 +195,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private void storeAccountData() {
         Cursor cursor = db.getAllAccounts();
 
+        // TODO: use background image for no accounts instead of toast
         if (cursor.getCount() == 0) {
             Toast.makeText(MainActivity.this, "No account data found", Toast.LENGTH_SHORT).show();
         } else {
@@ -248,8 +258,6 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                db = new DatabaseHelper(MainActivity.this);
-
                 db.deleteAccount(accountId);
 
                 accountIds.remove(position);
@@ -269,11 +277,13 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         });
 
         dialog.show();
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        }
     }
 
     @Override
-    public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {
-
-    }
+    public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {}
 }
