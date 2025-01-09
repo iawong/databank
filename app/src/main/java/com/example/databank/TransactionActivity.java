@@ -43,7 +43,10 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                     if (resultCode == RESULT_OK) {
                         Intent data = activityResult.getData();
 
-                        assert data != null;
+                        if (data == null) {
+                            Toast.makeText(TransactionActivity.this, "Transaction data not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         reloadTransactions();
                     }
@@ -61,7 +64,10 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                     if (resultCode == RESULT_OK) {
                         Intent data = activityResult.getData();
 
-                        assert data != null;
+                        if (data == null) {
+                            Toast.makeText(TransactionActivity.this, "Transaction data not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
                         reloadTransactions();
                     }
@@ -80,20 +86,23 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
 
         accountId = getIntent().getIntExtra("accountId", -1);
 
-        // TODO: wth is this?? double check if try / catch is appropriate
         if (accountId == -1) {
-            try {
-                throw new Exception("Account not found: returned -1");
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
+            Toast.makeText(TransactionActivity.this, "Account not found", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        int position = getIntent().getIntExtra("position", -1);
+
+        if (position == -1) {
+            Toast.makeText(TransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         FloatingActionButton addTransaction = binding.addTransactionButton;
         addTransaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(TransactionActivity.this, NewTransactionActivity.class);
-
+                intent.putExtra("position", position);
                 intent.putExtra("accountId", accountId);
                 addTransactionLauncher.launch(intent);
             }
@@ -105,6 +114,8 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent returnToAccounts = new Intent();
+                returnToAccounts.putExtra("position", position);
+                returnToAccounts.putExtra("accountId", accountId);
                 setResult(RESULT_OK, returnToAccounts);
                 finish();
             }
@@ -120,6 +131,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
 
         transactionAdapter = new TransactionAdapter(TransactionActivity.this,
                                                     accountId,
+                                                    position,
                                                     transactionIds,
                                                     transactionAmounts,
                                                     transactionDescriptions,
@@ -175,18 +187,16 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
      * @param accountId account id
      */
     @Override
-    public void onAccountDelete(int position, int accountId) {
-
-    }
+    public void onAccountDelete(int position, int accountId) {}
 
     /**
      * delete the transaction
      * @param position transaction position
-     * @param accountId account id
+     * @param accId account id
      * @param transactionId transaction id
      */
     @Override
-    public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {
+    public void onTransactionDelete(int position, int accId, int transactionId, double amount) {
         View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
 
         Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
@@ -202,7 +212,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
             public void onClick(View v) {
                 db = new DatabaseHelper(TransactionActivity.this);
 
-                db.deleteTransaction(accountId, transactionId, amount);
+                db.deleteTransaction(accId, transactionId, amount);
 
                 transactionIds.remove(position);
                 transactionAmounts.remove(position);
@@ -223,6 +233,10 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         });
 
         dialog.show();
-        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        }
     }
 }

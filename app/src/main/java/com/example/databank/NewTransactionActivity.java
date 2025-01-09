@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -95,8 +96,27 @@ public class NewTransactionActivity extends AppCompatActivity {
         saveNewTransaction.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (newTransAmt.getText() == null) {
+                    // kick out of saving since user needs to enter a transaction amount
+                    return;
+                }
+
                 String strAmount = newTransAmt.getText().toString().trim();
+
+                if (newTransDesc.getText() == null) {
+                    // kick out of saving because this should not be null even
+                    // if user has not entered a description
+                    return;
+                }
+
                 String strDescription = newTransDesc.getText().toString().trim();
+
+                if (newTransDate.getText() == null) {
+                    // kick out of saving because this should not be null even
+                    // if user has not entered a date
+                    return;
+                }
+
                 String strDate = newTransDate.getText().toString().trim();
 
                 if (strAmount.isEmpty()) {
@@ -106,7 +126,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                     textInputTransactionAmount.setError(null);
                 }
 
-                double amount = 0;
+                double amount;
 
                 try {
                     amount = Double.parseDouble(strAmount.replaceAll("[$,]", ""));
@@ -117,10 +137,28 @@ public class NewTransactionActivity extends AppCompatActivity {
 
                 int accountId = getIntent().getIntExtra("accountId", -1);
 
-                DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this);
-                db.addTransaction(accountId, amount, strDescription, strDate);
+                if (accountId == -1) {
+                    Toast.makeText(NewTransactionActivity.this, "Account not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                int position = getIntent().getIntExtra("position", -1);
+
+                if (position == -1) {
+                    Toast.makeText(NewTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
+                    db.addTransaction(accountId, amount, strDescription, strDate);
+                } catch (Exception e) {
+                    Log.e("NewTransactionActivity", "Error adding transaction", e);
+                    Toast.makeText(NewTransactionActivity.this, "Failed to add transaction. Please try again.", Toast.LENGTH_SHORT).show();
+                }
 
                 Intent returnIntent = new Intent();
+                returnIntent.putExtra("position", position);
+                returnIntent.putExtra("accountId", accountId);
                 setResult(RESULT_OK, returnIntent);
 
                 finish();
@@ -132,7 +170,7 @@ public class NewTransactionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnToTransactions = new Intent();
-                setResult(RESULT_OK, returnToTransactions);
+                setResult(RESULT_CANCELED, returnToTransactions);
                 finish();
             }
         });
@@ -154,7 +192,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                         NewTransactionActivity.this,
                         (view, selectedYear, selectedMonth, selectedDay) -> {
                             // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            String formattedDate = String.format(Locale.US, "%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
                             newTransDate.setText(formattedDate);
                         },
                         year, month, day

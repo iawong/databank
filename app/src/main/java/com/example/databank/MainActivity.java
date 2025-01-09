@@ -24,7 +24,9 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/7/25 notes
+ * 1/8/25 notes
+ * Cleaned up some code. Namely, getting rid of warnings.
+ * TODO: clean up reloadTransactions method
  * TODO: add categories to transactions
  * TODO: resolve other TODOs around and create new list of items/features
  */
@@ -115,9 +117,26 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                     if (resultCode == RESULT_OK) {
                         Intent data = activityResult.getData();
 
-                        assert data != null;
+                        if (data == null) {
+                            Toast.makeText(MainActivity.this, "Transaction not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
 
-                        reloadAccounts();
+                        int position = data.getIntExtra("position", -1);
+
+                        if (position == -1) {
+                            Toast.makeText(MainActivity.this, "Unable to add transaction", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        int accountId = data.getIntExtra("accountId", -1);
+
+                        if (accountId == -1) {
+                            Toast.makeText(MainActivity.this, "Unable to find account", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        reloadAccount(position, accountId);
                     }
                 }
             }
@@ -229,19 +248,21 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     }
 
     /**
-     * When we get results, reload the accounts to have the most up to date data
+     * reload the specific account to show the most up to date info
+     * @param position position of the account to reload
+     * @param accountId account id of the account to grab new balance for
      */
-    private void reloadAccounts() {
-        accountIds.clear();
-        accountNames.clear();
-        accountBalances.clear();
+    private void reloadAccount(int position, int accountId) {
+        Cursor cursor = db.getAccount(accountId);
 
-        // Reload data from the database
-        storeAccountData();
+        if (cursor.getCount() == 0) {
+            Toast.makeText(MainActivity.this, "No account data found", Toast.LENGTH_SHORT).show();
+        } else {
+            cursor.moveToFirst();
 
-        // Notify the adapter of the changes
-        // TODO: find better way to notify item change instead
-        accountAdapter.notifyDataSetChanged();
+            accountBalances.set(position, cursor.getDouble(2));
+            accountAdapter.notifyItemChanged(position);
+        }
     }
 
     /**

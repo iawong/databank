@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -74,7 +73,7 @@ public class EditTransactionActivity extends AppCompatActivity {
                         EditTransactionActivity.this,
                         (view, selectedYear, selectedMonth, selectedDay) -> {
                             // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format("%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            String formattedDate = String.format(Locale.US, "%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
                             newTransDate.setText(formattedDate);
                         },
                         year, month, day
@@ -95,6 +94,13 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         if (transactionId == -1) {
             Toast.makeText(this, "Error: Invalid transaction ID", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        int position = getIntent().getIntExtra("position", -1);
+
+        if (position == -1) {
+            Toast.makeText(EditTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -145,12 +151,28 @@ public class EditTransactionActivity extends AppCompatActivity {
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (newTransAmt.getText() == null) {
+                    // can't be null
+                    return;
+                }
+
                 String changedTransAmt = newTransAmt.getText().toString().trim();
-                System.out.println("changed trans amt: " + changedTransAmt);
+
+                if (newTransDesc.getText() == null) {
+                    // can't be null but can be empty
+                    return;
+                }
+
                 String changedTransDesc = newTransDesc.getText().toString().trim();
+
+                if (newTransDate.getText() == null) {
+                    // can't be null but can be empty
+                    return;
+                }
+
                 String changedTransDate = newTransDate.getText().toString().trim();
 
-                double parsedDouble = 0;
+                double parsedDouble;
 
                 try {
                     parsedDouble = Double.parseDouble(changedTransAmt.replaceAll("[$,]", ""));
@@ -159,13 +181,13 @@ public class EditTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
-                System.out.println("parsedDouble amount: " + parsedDouble);
-
                 // TODO: handle errors if double can't be parsed
                 db = new DatabaseHelper(EditTransactionActivity.this);
                 db.updateTransaction(accountId, transactionId, parsedDouble, changedTransDesc, changedTransDate);
 
                 Intent returnIntent = new Intent();
+                returnIntent.putExtra("position", position);
+                returnIntent.putExtra("accountId", accountId);
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }
@@ -176,7 +198,7 @@ public class EditTransactionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent returnToTransactions = new Intent();
-                setResult(RESULT_OK, returnToTransactions);
+                setResult(RESULT_CANCELED, returnToTransactions);
                 finish();
             }
         });

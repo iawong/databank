@@ -22,6 +22,7 @@ import java.util.Locale;
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
     private Context context;
     private int accountId;
+    private int accountPosition;
     private ArrayList<Integer> transactionIds;
     private ArrayList<Double> transactionAmounts;
     private ArrayList<String> transactionDescriptions;
@@ -31,6 +32,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     public TransactionAdapter (Context context,
                                int accountId,
+                               int accountPosition,
                                ArrayList<Integer> transactionIds,
                                ArrayList<Double> transactionAmounts,
                                ArrayList<String> transactionDescriptions,
@@ -39,6 +41,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                                OnDeleteListener deleteListener) {
         this.context = context;
         this.accountId = accountId;
+        this.accountPosition = accountPosition;
         this.transactionIds = transactionIds;
         this.transactionAmounts = transactionAmounts;
         this.transactionDescriptions = transactionDescriptions;
@@ -83,6 +86,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 changeTransactionDetails.putExtra("transactionAmount", transactionAmounts.get(holder.getAdapterPosition()));
                 changeTransactionDetails.putExtra("transactionDescription", transactionDescriptions.get(holder.getAdapterPosition()));
                 changeTransactionDetails.putExtra("transactionDate", transactionDates.get(holder.getAdapterPosition()));
+                changeTransactionDetails.putExtra("position", accountPosition);
                 transactionChangeResultLauncher.launch(changeTransactionDetails);
             }
         });
