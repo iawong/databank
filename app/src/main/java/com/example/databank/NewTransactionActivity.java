@@ -142,13 +142,6 @@ public class NewTransactionActivity extends AppCompatActivity {
                     finish();
                 }
 
-                int position = getIntent().getIntExtra("position", -1);
-
-                if (position == -1) {
-                    Toast.makeText(NewTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
                 long transactionId = -1;
 
                 try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
@@ -164,12 +157,11 @@ public class NewTransactionActivity extends AppCompatActivity {
                 }
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("position", position);
-                returnIntent.putExtra("accountId", accountId);
                 returnIntent.putExtra("transactionId", transactionId);
                 returnIntent.putExtra("transactionAmount", amount);
                 returnIntent.putExtra("transactionDescription", strDescription);
                 returnIntent.putExtra("transactionDate", strDate);
+
                 setResult(RESULT_OK, returnIntent);
 
                 finish();
@@ -187,6 +179,10 @@ public class NewTransactionActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Create formatted transaction date
+     * @return the TextInputEditText with the new transaction date
+     */
     private @NonNull TextInputEditText getTextInputEditText() {
         TextInputEditText newTransDate = binding.newTransactionDate;
 
@@ -222,6 +218,10 @@ public class NewTransactionActivity extends AppCompatActivity {
         return newTransDate;
     }
 
+    /**
+     * Hides the keyboard after tapping out of the edit text
+     * @param v view that the keyboard should be hidden from
+     */
     private void hideKeyboard(View v) {
         if (v != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(NewTransactionActivity.INPUT_METHOD_SERVICE);

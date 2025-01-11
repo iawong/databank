@@ -40,6 +40,7 @@ public class NewAccountActivity extends AppCompatActivity {
                     // kick out of saving since user needs to enter something
                     return;
                 }
+
                 String strAccountName = newAccountName.getText().toString().trim();
 
                 if (strAccountName.isEmpty()) {

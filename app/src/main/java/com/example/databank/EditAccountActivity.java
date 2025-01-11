@@ -79,7 +79,7 @@ public class EditAccountActivity extends AppCompatActivity {
 
                 Intent returnIntent = new Intent();
                 // position of the account we're editing from the account adapter
-                returnIntent.putExtra("position", getIntent().getIntExtra("position", -1));
+                returnIntent.putExtra("accountPosition", getIntent().getIntExtra("position", -1));
                 returnIntent.putExtra("accountName", changedAccName);
                 setResult(RESULT_OK, returnIntent);
                 finish();

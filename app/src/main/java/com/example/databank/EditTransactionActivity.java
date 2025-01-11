@@ -214,6 +214,10 @@ public class EditTransactionActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Hides the keyboard after tapping out of the edit text
+     * @param v view that the keyboard should be hidden from
+     */
     private void hideKeyboard(View v) {
         if (v != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);

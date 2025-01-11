@@ -103,13 +103,13 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         accountId = getIntent().getIntExtra("accountId", -1);
 
         if (accountId == -1) {
-            Toast.makeText(TransactionActivity.this, "Account not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(TransactionActivity.this, "Account id not found", Toast.LENGTH_SHORT).show();
             finish();
         }
 
-        int accPosition = getIntent().getIntExtra("position", -1);
+        int accountPosition = getIntent().getIntExtra("position", -1);
 
-        if (accPosition == -1) {
+        if (accountPosition == -1) {
             Toast.makeText(TransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -118,7 +118,6 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         addTransaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(TransactionActivity.this, NewTransactionActivity.class);
-                intent.putExtra("position", accPosition);
                 intent.putExtra("accountId", accountId);
                 addTransactionLauncher.launch(intent);
             }
@@ -130,7 +129,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent returnToAccounts = new Intent();
-                returnToAccounts.putExtra("position", accPosition);
+                returnToAccounts.putExtra("position", accountPosition);
                 returnToAccounts.putExtra("accountId", accountId);
                 setResult(RESULT_OK, returnToAccounts);
                 finish();
@@ -147,7 +146,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
 
         transactionAdapter = new TransactionAdapter(TransactionActivity.this,
                                                     accountId,
-                                                    accPosition,
+                                                    accountPosition,
                                                     transactionIds,
                                                     transactionAmounts,
                                                     transactionDescriptions,
@@ -209,6 +208,9 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         transactionAdapter.notifyItemChanged(transactionPosition);
     }
 
+    /**
+     * When the activity is destroyed, close the database
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -88,16 +88,16 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                             return;
                         }
 
-                        int position = data.getIntExtra("position", -1);
+                        int accountPosition = data.getIntExtra("accountPosition", -1);
 
-                        if (position == -1) {
+                        if (accountPosition == -1) {
                             Toast.makeText(MainActivity.this, "Account to change not found", Toast.LENGTH_SHORT).show();
                             return;
                         }
 
                         String changedAccountName = data.getStringExtra("accountName");
 
-                        updateAccount(position, changedAccountName);
+                        updateAccount(accountPosition, changedAccountName);
                     }
                 }
             }
@@ -122,9 +122,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                             return;
                         }
 
-                        int position = data.getIntExtra("position", -1);
+                        int accountPosition = data.getIntExtra("position", -1);
 
-                        if (position == -1) {
+                        if (accountPosition == -1) {
                             Toast.makeText(MainActivity.this, "Unable to add transaction", Toast.LENGTH_SHORT).show();
                             return;
                         }
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                             return;
                         }
 
-                        reloadAccount(position, accountId);
+                        reloadAccount(accountPosition, accountId);
                     }
                 }
             }
