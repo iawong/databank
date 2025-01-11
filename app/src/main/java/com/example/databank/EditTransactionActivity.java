@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -30,13 +32,9 @@ public class EditTransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityEditTransactionBinding.inflate(getLayoutInflater());
-        // Find the root view
         View rootView = binding.getRoot();
         setContentView(rootView);
 
-        TextInputLayout textInputChangeTransactionAmount = binding.textInputChangeTransactionAmount;
-        TextInputLayout textInputChangeTransactionDescription = binding.textInputChangeTransactionDescription;
-        TextInputLayout textInputChangeTransactionDate = binding.textInputChangeTransactionDate;
         TextInputEditText newTransAmt = binding.changeTransactionAmount;
 
         newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -46,75 +44,9 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         });
 
-        TextInputEditText newTransDesc = binding.changeTransactionDescription;
-
-        newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
-            }
-        });
-
-        TextInputEditText newTransDate = binding.changeTransactionDate;
-
-        newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
-            }
-        });
-
-        newTransDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                // Create and show the DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EditTransactionActivity.this,
-                        (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format(Locale.US, "%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
-                            newTransDate.setText(formattedDate);
-                        },
-                        year, month, day
-                );
-
-                datePickerDialog.show();
-            }
-        });
-
-        int accountId = getIntent().getIntExtra("accountId", -1);
-
-        if (accountId == -1) {
-            Toast.makeText(this, "Error: Invalid account ID", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        int transactionId = getIntent().getIntExtra("transactionId", -1);
-
-        if (transactionId == -1) {
-            Toast.makeText(this, "Error: Invalid transaction ID", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        int accountPosition = getIntent().getIntExtra("accountPosition", -1);
-
-        if (accountPosition == -1) {
-            Toast.makeText(EditTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
         double transAmt = getIntent().getDoubleExtra("transactionAmount", 0);
-        String transDesc = getIntent().getStringExtra("transactionDescription");
-        String transDate = getIntent().getStringExtra("transactionDate");
 
         newTransAmt.setText(NumberFormat.getCurrencyInstance(Locale.US).format(transAmt));
-        newTransDesc.setText(transDesc);
-        newTransDate.setText(transDate);
 
         newTransAmt.addTextChangedListener(new TextWatcher() {
             private String current = "";
@@ -148,8 +80,80 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         });
 
+        TextInputEditText newTransDesc = binding.changeTransactionDescription;
+
+        newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+
         // makes sure the transaction description doesn't exceed 255 characters
         newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
+        newTransDesc.setText(getIntent().getStringExtra("transactionDescription"));
+
+        TextInputEditText newTransDate = binding.changeTransactionDate;
+
+        newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+
+        newTransDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                // Create and show the DatePickerDialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        EditTransactionActivity.this,
+                        (view, selectedYear, selectedMonth, selectedDay) -> {
+                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
+                            String formattedDate = String.format(Locale.US, "%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            newTransDate.setText(formattedDate);
+                        },
+                        year, month, day
+                );
+
+                datePickerDialog.show();
+            }
+        });
+
+        newTransDate.setText(getIntent().getStringExtra("transactionDate"));
+
+        AutoCompleteTextView newTransCategory = binding.editTransactionCategory;
+        String[] transactionCategories = getResources().getStringArray(R.array.transaction_categories);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(EditTransactionActivity.this, R.layout.dropdown_item, transactionCategories);
+
+        newTransCategory.setText(getIntent().getStringExtra("transactionCategory"));
+        newTransCategory.setAdapter(adapter);
+
+        int accountId = getIntent().getIntExtra("accountId", -1);
+
+        if (accountId == -1) {
+            Toast.makeText(this, "Error: Invalid account ID", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        int transactionId = getIntent().getIntExtra("transactionId", -1);
+
+        if (transactionId == -1) {
+            Toast.makeText(this, "Error: Invalid transaction ID", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        int accountPosition = getIntent().getIntExtra("accountPosition", -1);
+
+        if (accountPosition == -1) {
+            Toast.makeText(EditTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
+            finish();
+        }
 
         Button saveChanges = binding.saveEditTransactionButton;
         saveChanges.setOnClickListener(new View.OnClickListener() {
@@ -185,8 +189,10 @@ public class EditTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
+                String changedTransCategory = newTransCategory.getText().toString().trim();
+
                 try (DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
-                    db.updateTransaction(accountId, transactionId, parsedDouble, changedTransDesc, changedTransDate);
+                    db.updateTransaction(accountId, transactionId, parsedDouble, changedTransDesc, changedTransDate, changedTransCategory);
                 } catch (Exception e) {
                     Log.e("EditTransactionActivity", "Error editing transaction", e);
                     Toast.makeText(EditTransactionActivity.this, "Failed to edit transaction. Please try again", Toast.LENGTH_SHORT).show();
@@ -197,6 +203,7 @@ public class EditTransactionActivity extends AppCompatActivity {
                 returnIntent.putExtra("transactionAmount", parsedDouble);
                 returnIntent.putExtra("transactionDescription", changedTransDesc);
                 returnIntent.putExtra("transactionDate", changedTransDate);
+                returnIntent.putExtra("transactionCategory", changedTransCategory);
 
                 setResult(RESULT_OK, returnIntent);
                 finish();

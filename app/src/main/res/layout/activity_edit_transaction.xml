@@ -97,6 +97,29 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputEditTransactionCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:textColorHint="@color/white"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        app:hintTextColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/textInputChangeTransactionDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <AutoCompleteTextView
+            android:id="@+id/editTransactionCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/rowItem"
+            android:hint="@string/select_category"
+            android:inputType="none"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
     <Button
         android:id="@+id/saveEditTransactionButton"
         android:layout_width="wrap_content"
@@ -107,7 +130,7 @@
         android:layout_marginEnd="50dp"
         android:textColor="@color/white"
         android:backgroundTint="@color/rowItem"
-        app:layout_constraintTop_toBottomOf="@id/textInputChangeTransactionDate"
+        app:layout_constraintTop_toBottomOf="@id/textInputEditTransactionCategory"
         app:layout_constraintStart_toEndOf="@+id/cancelEditTransactionButton"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -122,5 +145,5 @@
         android:layout_marginStart="50dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/saveEditTransactionButton"
-        app:layout_constraintTop_toBottomOf="@id/textInputChangeTransactionDate"/>
+        app:layout_constraintTop_toBottomOf="@id/textInputEditTransactionCategory"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -138,7 +138,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void updateTransaction(int accountId, int transactionId, double newAmount, String description, String date) {
+    void updateTransaction(int accountId, int transactionId, double newAmount, String description, String date, String category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor transaction = getTransactionAmount(accountId, transactionId);
@@ -149,7 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TRANSACTION_AMOUNT, newAmount);
         values.put(COLUMN_TRANSACTION_DESCRIPTION, description);
         values.put(COLUMN_TRANSACTION_DATE, date);
-        // values.put(COLUMN_TRANSACTION_CATEGORY, category);
+        values.put(COLUMN_TRANSACTION_CATEGORY, category);
 
         int resultCode = db.update(TABLE_NAME_TRANSACTION, values, COLUMN_TRANSACTION_ID + " = ?", new String[]{String.valueOf(transactionId)});
 

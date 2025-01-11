@@ -86,8 +86,9 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                         double changedTransAmt = data.getDoubleExtra("transactionAmount", -1);
                         String changedTransDesc = data.getStringExtra("transactionDescription");
                         String changedTransDate = data.getStringExtra("transactionDate");
+                        String changedTransCategory = data.getStringExtra("transactionCategory");
 
-                        updateTransaction(transactionPosition, changedTransAmt, changedTransDesc, changedTransDate);
+                        updateTransaction(transactionPosition, changedTransAmt, changedTransDesc, changedTransDate, changedTransCategory);
                     }
                 }
             }
@@ -209,10 +210,11 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
      * @param transactionDescription the changed transaction description
      * @param transactionDate the changed transaction date
      */
-    private void updateTransaction(int transactionPosition, double transactionAmount, String transactionDescription, String transactionDate) {
+    private void updateTransaction(int transactionPosition, double transactionAmount, String transactionDescription, String transactionDate, String transactionCategory) {
         transactionAmounts.set(transactionPosition, transactionAmount);
         transactionDescriptions.set(transactionPosition, transactionDescription);
         transactionDates.set(transactionPosition, transactionDate);
+        transactionCategories.set(transactionPosition, transactionCategory);
 
         transactionAdapter.notifyItemChanged(transactionPosition);
     }
