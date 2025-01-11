@@ -26,7 +26,6 @@ import java.util.ArrayList;
  * This is the account activity
  * 1/8/25 notes
  * Cleaned up some code. Namely, getting rid of warnings.
- * TODO: clean up reloadTransactions method
  * TODO: add categories to transactions
  * TODO: resolve other TODOs around and create new list of items/features
  */
@@ -42,9 +41,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // name is ActivityTransactionBinding
     ActivityMainBinding binding;
 
-    /**
-     * ActivityResultLauncher for adding accounts
-     */
+    // ActivityResultLauncher for adding accounts
     ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -69,10 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             }
     );
 
-    /**
-     * ActivityResultLauncher for changing account details
-     * Will come back and update the account name/balances if changes were made
-     */
+    // ActivityResultLauncher for changing account details
     ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -103,10 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             }
     );
 
-    /**
-     * ActivityResultLauncher for adding transactions
-     * Will come back and update the account balances if the transactions have changed
-     */
+    // ActivityResultLauncher for adding transactions
     ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -167,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
         storeAccountData();
 
+        // account adapter to handle account and transaction changes
         accountAdapter = new AccountAdapter(MainActivity.this,
                                             accountIds,
                                             accountNames,
@@ -350,6 +342,13 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         }
     }
 
+    /**
+     * not used
+     * @param position transaction position
+     * @param accountId account id
+     * @param transactionId transaction id
+     * @param amount transaction amount
+     */
     @Override
     public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {}
 }

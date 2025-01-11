@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -17,11 +19,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.databank.databinding.ActivityNewTransactionBinding;
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
@@ -38,19 +44,23 @@ public class NewTransactionActivity extends AppCompatActivity {
         TextInputLayout textInputTransactionDescription = binding.textInputTransactionDescription;
         TextInputLayout textInputTransactionDate = binding.textInputTransactionDate;
         TextInputEditText newTransAmt = binding.newTransactionAmount;
+
         newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 hideKeyboard(v);
             }
         });
+
         TextInputEditText newTransDesc = binding.newTransactionDescription;
+
         newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 hideKeyboard(v);
             }
         });
+
         newTransAmt.setText(getString(R.string.default_currency));
 
         newTransAmt.addTextChangedListener(new TextWatcher() {
@@ -91,6 +101,13 @@ public class NewTransactionActivity extends AppCompatActivity {
 
         // makes sure transaction description doesn't exceed 255 characters
         newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
+
+        // Transaction category drop down
+        AutoCompleteTextView newTransCategory = binding.newTransactionCategory;
+        String[] transactionCategories = getResources().getStringArray(R.array.transaction_categories);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(NewTransactionActivity.this, R.layout.dropdown_item, transactionCategories);
+
+        newTransCategory.setAdapter(adapter);
 
         Button saveNewTransaction = binding.saveNewTransactionButton;
         saveNewTransaction.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +152,8 @@ public class NewTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
+                String strCategory = newTransCategory.getText().toString().trim();
+
                 int accountId = getIntent().getIntExtra("accountId", -1);
 
                 if (accountId == -1) {
@@ -145,7 +164,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                 long transactionId = -1;
 
                 try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
-                    transactionId = db.addTransaction(accountId, amount, strDescription, strDate);
+                    transactionId = db.addTransaction(accountId, amount, strDescription, strDate, strCategory);
 
                     if (transactionId == -1) {
                         // failed to add transaction, try again
@@ -161,6 +180,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                 returnIntent.putExtra("transactionAmount", amount);
                 returnIntent.putExtra("transactionDescription", strDescription);
                 returnIntent.putExtra("transactionDate", strDate);
+                returnIntent.putExtra("transactionCategory", strCategory);
 
                 setResult(RESULT_OK, returnIntent);
 

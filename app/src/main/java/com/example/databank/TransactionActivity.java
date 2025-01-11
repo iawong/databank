@@ -30,6 +30,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
     ArrayList<Double> transactionAmounts;
     ArrayList<String> transactionDescriptions;
     ArrayList<String> transactionDates;
+    ArrayList<String> transactionCategories;
     int accountId;
 
     // get results from new transaction activity
@@ -52,8 +53,9 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                         double transactionAmount = data.getDoubleExtra("transactionAmount", -1);
                         String transactionDescription = data.getStringExtra("transactionDescription");
                         String transactionDate = data.getStringExtra("transactionDate");
+                        String transactionCategory = data.getStringExtra("transactionCategory");
 
-                        insertItemIntoTransactions((int) transactionId, transactionAmount, transactionDescription, transactionDate);
+                        insertItemIntoTransactions((int) transactionId, transactionAmount, transactionDescription, transactionDate, transactionCategory);
                     }
                 }
             }
@@ -107,7 +109,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
             finish();
         }
 
-        int accountPosition = getIntent().getIntExtra("position", -1);
+        int accountPosition = getIntent().getIntExtra("accountPosition", -1);
 
         if (accountPosition == -1) {
             Toast.makeText(TransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
@@ -131,6 +133,8 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                 Intent returnToAccounts = new Intent();
                 returnToAccounts.putExtra("position", accountPosition);
                 returnToAccounts.putExtra("accountId", accountId);
+                // TODO: add a boolean to track if transactions have changed
+                // this can help us avoid reloading the account in the main activity
                 setResult(RESULT_OK, returnToAccounts);
                 finish();
             }
@@ -141,6 +145,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         transactionAmounts = new ArrayList<>();
         transactionDescriptions = new ArrayList<>();
         transactionDates = new ArrayList<>();
+        transactionCategories = new ArrayList<>();
 
         storeTransactionData();
 
@@ -151,6 +156,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                                                     transactionAmounts,
                                                     transactionDescriptions,
                                                     transactionDates,
+                                                    transactionCategories,
                                                     transactionChangeResultLauncher,
                                                     TransactionActivity.this);
         transactionRecyclerView.setAdapter(transactionAdapter);
@@ -169,6 +175,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                 transactionAmounts.add(cursor.getDouble(2));
                 transactionDescriptions.add(cursor.getString(3));
                 transactionDates.add(cursor.getString(4));
+                transactionCategories.add(cursor.getString(5));
             }
         }
 
@@ -181,12 +188,14 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
      * @param transactionAmount amount of the transaction
      * @param transactionDescription description for the transaction
      * @param transactionDate date of the transaction
+     * @param transactionCategory category of the transaction
      */
-    private void insertItemIntoTransactions(int transactionId, double transactionAmount, String transactionDescription, String transactionDate) {
+    private void insertItemIntoTransactions(int transactionId, double transactionAmount, String transactionDescription, String transactionDate, String transactionCategory) {
         transactionIds.add(transactionId);
         transactionAmounts.add(transactionAmount);
         transactionDescriptions.add(transactionDescription);
         transactionDates.add(transactionDate);
+        transactionCategories.add(transactionCategory);
 
         // notify the adapter of the new transaction added
         // transactionIds.size() - 1 should be the position/index of the new transaction
@@ -258,6 +267,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                 transactionAmounts.remove(position);
                 transactionDescriptions.remove(position);
                 transactionDates.remove(position);
+                transactionCategories.remove(position);
 
                 transactionAdapter.notifyItemRemoved(position);
 

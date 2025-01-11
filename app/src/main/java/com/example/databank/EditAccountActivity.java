@@ -38,7 +38,8 @@ public class EditAccountActivity extends AppCompatActivity {
         int accountId = getIntent().getIntExtra("accountId", -1);
 
         if (accountId == -1) {
-            Toast.makeText(this, "Error: Invalid account ID", Toast.LENGTH_SHORT).show();
+            // kicking out of editing the account because we couldn't find the account id
+            Toast.makeText(EditAccountActivity.this, "Error: Invalid account ID", Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -78,6 +79,7 @@ public class EditAccountActivity extends AppCompatActivity {
                 }
 
                 Intent returnIntent = new Intent();
+
                 // position of the account we're editing from the account adapter
                 returnIntent.putExtra("accountPosition", getIntent().getIntExtra("position", -1));
                 returnIntent.putExtra("accountName", changedAccName);

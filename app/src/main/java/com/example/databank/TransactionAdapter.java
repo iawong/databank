@@ -27,6 +27,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private ArrayList<Double> transactionAmounts;
     private ArrayList<String> transactionDescriptions;
     private ArrayList<String> transactionDates;
+    private ArrayList<String> transactionCategories;
     private ActivityResultLauncher<Intent> transactionChangeResultLauncher;
     private OnDeleteListener deleteListener;
 
@@ -37,6 +38,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                                ArrayList<Double> transactionAmounts,
                                ArrayList<String> transactionDescriptions,
                                ArrayList<String> transactionDates,
+                               ArrayList<String> transactionCategories,
                                ActivityResultLauncher<Intent> transactionChangeResultLauncher,
                                OnDeleteListener deleteListener) {
         this.context = context;
@@ -46,6 +48,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.transactionAmounts = transactionAmounts;
         this.transactionDescriptions = transactionDescriptions;
         this.transactionDates = transactionDates;
+        this.transactionCategories = transactionCategories;
         this.transactionChangeResultLauncher = transactionChangeResultLauncher;
         this.deleteListener = deleteListener;
     }
@@ -76,6 +79,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
         holder.transactionDescription.setText(descriptionPreview);
         holder.transactionDate.setText(String.valueOf(transactionDates.get(position)));
+        holder.transactionCategory.setText(String.valueOf(transactionCategories.get(position)));
 
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +113,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView transactionAmount, transactionDescription, transactionDate;
+        TextView transactionAmount, transactionDescription, transactionDate, transactionCategory;
         ImageButton editButton, deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
@@ -118,6 +122,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             transactionAmount = itemView.findViewById(R.id.transactionAmount);
             transactionDescription = itemView.findViewById(R.id.transactionDescription);
             transactionDate = itemView.findViewById(R.id.transactionDate);
+            transactionCategory = itemView.findViewById(R.id.transactionCategory);
             editButton = itemView.findViewById(R.id.editTransaction);
             deleteButton = itemView.findViewById(R.id.removeTransaction);
         }

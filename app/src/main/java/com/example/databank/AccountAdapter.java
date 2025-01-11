@@ -83,7 +83,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Intent viewTransactions = new Intent(context, TransactionActivity.class);
-                viewTransactions.putExtra("position", holder.getAdapterPosition());
+                viewTransactions.putExtra("accountPosition", holder.getAdapterPosition());
                 viewTransactions.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
                 transactionResultLauncher.launch(viewTransactions);
             }

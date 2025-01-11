@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 /**
- * TODO: add transaction usage
  * TODO: close db connections when done
  * This class creates the account and transactions database and
  * holds all the functions for getting/inserting/updating/deleting
@@ -27,6 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_TRANSACTION_AMOUNT = "amount";
     private static final String COLUMN_TRANSACTION_DESCRIPTION = "description";
     private static final String COLUMN_TRANSACTION_DATE = "date";
+    private static final String COLUMN_TRANSACTION_CATEGORY = "category";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -49,6 +49,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_TRANSACTION_AMOUNT + " REAL NOT NULL, " +
             COLUMN_TRANSACTION_DESCRIPTION + " TEXT, " +
             COLUMN_TRANSACTION_DATE + " TEXT NOT NULL, " +
+            COLUMN_TRANSACTION_CATEGORY + " TEXT, " +
             "FOREIGN KEY (" + COLUMN_ACCOUNT_ID + ") REFERENCES " + TABLE_NAME_ACCOUNT + " (" + COLUMN_ACCOUNT_ID + "));";
 
         db.execSQL(CREATE_ACCOUNTS_TABLE);
@@ -80,7 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultCode;
     }
 
-    long addTransaction(int accountId, double amount, String description, String date) {
+    long addTransaction(int accountId, double amount, String description, String date, String category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -88,6 +89,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TRANSACTION_AMOUNT, amount);
         values.put(COLUMN_TRANSACTION_DESCRIPTION, description);
         values.put(COLUMN_TRANSACTION_DATE, date);
+        values.put(COLUMN_TRANSACTION_CATEGORY, category);
 
         long resultCode = db.insert(TABLE_NAME_TRANSACTION, null, values);
 
@@ -147,6 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_TRANSACTION_AMOUNT, newAmount);
         values.put(COLUMN_TRANSACTION_DESCRIPTION, description);
         values.put(COLUMN_TRANSACTION_DATE, date);
+        // values.put(COLUMN_TRANSACTION_CATEGORY, category);
 
         int resultCode = db.update(TABLE_NAME_TRANSACTION, values, COLUMN_TRANSACTION_ID + " = ?", new String[]{String.valueOf(transactionId)});
 
