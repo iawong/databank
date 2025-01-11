@@ -62,7 +62,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    protected long addAccount(String name) {
+    long addAccount(String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -80,7 +80,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultCode;
     }
 
-    void addTransaction(int accountId, double amount, String description, String date) {
+    long addTransaction(int accountId, double amount, String description, String date) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -102,6 +102,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         account.moveToFirst();
         double balance = account.getDouble(2) + amount;
         updateAccountBalance(accountId, balance);
+
+        return resultCode;
     }
 
     void updateAccount(int accountId, String name) {
@@ -270,6 +272,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT + " FROM " + TABLE_NAME_TRANSACTION +
                 " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId +
                 " AND " + COLUMN_ACCOUNT_ID + " = " + accountId;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    Cursor getTransaction(int accountId, int transactionId) {
+        String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION + " WHERE " +
+                COLUMN_ACCOUNT_ID + " = " + accountId + " AND " + COLUMN_TRANSACTION_ID +
+                " = " + transactionId;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;

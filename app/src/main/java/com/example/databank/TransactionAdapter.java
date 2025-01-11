@@ -86,7 +86,8 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 changeTransactionDetails.putExtra("transactionAmount", transactionAmounts.get(holder.getAdapterPosition()));
                 changeTransactionDetails.putExtra("transactionDescription", transactionDescriptions.get(holder.getAdapterPosition()));
                 changeTransactionDetails.putExtra("transactionDate", transactionDates.get(holder.getAdapterPosition()));
-                changeTransactionDetails.putExtra("position", accountPosition);
+                changeTransactionDetails.putExtra("accountPosition", accountPosition);
+                changeTransactionDetails.putExtra("transactionPosition", holder.getAdapterPosition());
                 transactionChangeResultLauncher.launch(changeTransactionDetails);
             }
         });

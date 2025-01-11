@@ -149,8 +149,15 @@ public class NewTransactionActivity extends AppCompatActivity {
                     finish();
                 }
 
+                long transactionId = -1;
+
                 try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
-                    db.addTransaction(accountId, amount, strDescription, strDate);
+                    transactionId = db.addTransaction(accountId, amount, strDescription, strDate);
+
+                    if (transactionId == -1) {
+                        // failed to add transaction, try again
+                        return;
+                    }
                 } catch (Exception e) {
                     Log.e("NewTransactionActivity", "Error adding transaction", e);
                     Toast.makeText(NewTransactionActivity.this, "Failed to add transaction. Please try again.", Toast.LENGTH_SHORT).show();
@@ -159,6 +166,10 @@ public class NewTransactionActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("position", position);
                 returnIntent.putExtra("accountId", accountId);
+                returnIntent.putExtra("transactionId", transactionId);
+                returnIntent.putExtra("transactionAmount", amount);
+                returnIntent.putExtra("transactionDescription", strDescription);
+                returnIntent.putExtra("transactionDate", strDate);
                 setResult(RESULT_OK, returnIntent);
 
                 finish();

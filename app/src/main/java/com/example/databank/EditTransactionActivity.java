@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -23,8 +24,6 @@ import java.util.Locale;
 
 public class EditTransactionActivity extends AppCompatActivity {
     ActivityEditTransactionBinding binding;
-    // TODO: maybe declare and initialize the database outside to avoid repetition
-    DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,20 +38,25 @@ public class EditTransactionActivity extends AppCompatActivity {
         TextInputLayout textInputChangeTransactionDescription = binding.textInputChangeTransactionDescription;
         TextInputLayout textInputChangeTransactionDate = binding.textInputChangeTransactionDate;
         TextInputEditText newTransAmt = binding.changeTransactionAmount;
+
         newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 hideKeyboard(v);
             }
         });
+
         TextInputEditText newTransDesc = binding.changeTransactionDescription;
+
         newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 hideKeyboard(v);
             }
         });
+
         TextInputEditText newTransDate = binding.changeTransactionDate;
+
         newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -97,9 +101,9 @@ public class EditTransactionActivity extends AppCompatActivity {
             finish();
         }
 
-        int position = getIntent().getIntExtra("position", -1);
+        int accountPosition = getIntent().getIntExtra("accountPosition", -1);
 
-        if (position == -1) {
+        if (accountPosition == -1) {
             Toast.makeText(EditTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -181,13 +185,19 @@ public class EditTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
-                // TODO: handle errors if double can't be parsed
-                db = new DatabaseHelper(EditTransactionActivity.this);
-                db.updateTransaction(accountId, transactionId, parsedDouble, changedTransDesc, changedTransDate);
+                try (DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
+                    db.updateTransaction(accountId, transactionId, parsedDouble, changedTransDesc, changedTransDate);
+                } catch (Exception e) {
+                    Log.e("EditTransactionActivity", "Error editing transaction", e);
+                    Toast.makeText(EditTransactionActivity.this, "Failed to edit transaction. Please try again", Toast.LENGTH_SHORT).show();
+                }
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("position", position);
-                returnIntent.putExtra("accountId", accountId);
+                returnIntent.putExtra("transactionPosition", getIntent().getIntExtra("transactionPosition", -1));
+                returnIntent.putExtra("transactionAmount", parsedDouble);
+                returnIntent.putExtra("transactionDescription", changedTransDesc);
+                returnIntent.putExtra("transactionDate", changedTransDate);
+
                 setResult(RESULT_OK, returnIntent);
                 finish();
             }

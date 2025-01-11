@@ -48,7 +48,12 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                             return;
                         }
 
-                        reloadTransactions();
+                        long transactionId = data.getLongExtra("transactionId", -1);
+                        double transactionAmount = data.getDoubleExtra("transactionAmount", -1);
+                        String transactionDescription = data.getStringExtra("transactionDescription");
+                        String transactionDate = data.getStringExtra("transactionDate");
+
+                        insertItemIntoTransactions((int) transactionId, transactionAmount, transactionDescription, transactionDate);
                     }
                 }
             }
@@ -69,7 +74,18 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                             return;
                         }
 
-                        reloadTransactions();
+                        int transactionPosition = data.getIntExtra("transactionPosition", -1);
+
+                        if (transactionPosition == -1)  {
+                            Toast.makeText(TransactionActivity.this, "Transaction to change not found", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        double changedTransAmt = data.getDoubleExtra("transactionAmount", -1);
+                        String changedTransDesc = data.getStringExtra("transactionDescription");
+                        String changedTransDate = data.getStringExtra("transactionDate");
+
+                        updateTransaction(transactionPosition, changedTransAmt, changedTransDesc, changedTransDate);
                     }
                 }
             }
@@ -91,9 +107,9 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
             finish();
         }
 
-        int position = getIntent().getIntExtra("position", -1);
+        int accPosition = getIntent().getIntExtra("position", -1);
 
-        if (position == -1) {
+        if (accPosition == -1) {
             Toast.makeText(TransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -102,7 +118,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         addTransaction.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent = new Intent(TransactionActivity.this, NewTransactionActivity.class);
-                intent.putExtra("position", position);
+                intent.putExtra("position", accPosition);
                 intent.putExtra("accountId", accountId);
                 addTransactionLauncher.launch(intent);
             }
@@ -114,7 +130,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent returnToAccounts = new Intent();
-                returnToAccounts.putExtra("position", position);
+                returnToAccounts.putExtra("position", accPosition);
                 returnToAccounts.putExtra("accountId", accountId);
                 setResult(RESULT_OK, returnToAccounts);
                 finish();
@@ -131,7 +147,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
 
         transactionAdapter = new TransactionAdapter(TransactionActivity.this,
                                                     accountId,
-                                                    position,
+                                                    accPosition,
                                                     transactionIds,
                                                     transactionAmounts,
                                                     transactionDescriptions,
@@ -160,15 +176,37 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         cursor.close();
     }
 
-    private void reloadTransactions() {
-        transactionIds.clear();
-        transactionAmounts.clear();
-        transactionDescriptions.clear();
-        transactionDates.clear();
+    /**
+     * Inserts the new transaction
+     * @param transactionId id of the transaction
+     * @param transactionAmount amount of the transaction
+     * @param transactionDescription description for the transaction
+     * @param transactionDate date of the transaction
+     */
+    private void insertItemIntoTransactions(int transactionId, double transactionAmount, String transactionDescription, String transactionDate) {
+        transactionIds.add(transactionId);
+        transactionAmounts.add(transactionAmount);
+        transactionDescriptions.add(transactionDescription);
+        transactionDates.add(transactionDate);
 
-        storeTransactionData();
+        // notify the adapter of the new transaction added
+        // transactionIds.size() - 1 should be the position/index of the new transaction
+        transactionAdapter.notifyItemInserted(transactionIds.size() - 1);
+    }
 
-        transactionAdapter.notifyDataSetChanged();
+    /**
+     * Update the transaction amount, description, and date
+     * @param transactionPosition position of the transaction to update
+     * @param transactionAmount the changed transaction amount
+     * @param transactionDescription the changed transaction description
+     * @param transactionDate the changed transaction date
+     */
+    private void updateTransaction(int transactionPosition, double transactionAmount, String transactionDescription, String transactionDate) {
+        transactionAmounts.set(transactionPosition, transactionAmount);
+        transactionDescriptions.set(transactionPosition, transactionDescription);
+        transactionDates.set(transactionPosition, transactionDate);
+
+        transactionAdapter.notifyItemChanged(transactionPosition);
     }
 
     @Override
