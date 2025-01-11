@@ -24,10 +24,11 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/8/25 notes
- * Cleaned up some code. Namely, getting rid of warnings.
- * TODO: add categories to transactions
- * TODO: resolve other TODOs around and create new list of items/features
+ * 1/11/25 notes
+ * More code clean up and added transaction categories.
+ * TODO: implement debt/credit for transactions
+ * TODO: color code debt/credit transactions
+ * TODO: rearrange transaction cardview
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
     AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
