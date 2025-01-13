@@ -140,6 +140,26 @@ public class NewTransactionActivity extends AppCompatActivity {
 
                 String strAmount = newTransAmt.getText().toString().trim();
 
+                double amount;
+
+                try {
+                    amount = Double.parseDouble(strAmount.replaceAll("[$,]", ""));
+
+                    if (amount == 0) {
+                        textInputTransactionAmount.setError("Please enter a transaction amount");
+                        return;
+                    } else {
+                        textInputTransactionAmount.setError(null);
+                    }
+
+                    if (isDebit) {
+                        amount *= -1;
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(NewTransactionActivity.this, "Invalid transaction amount", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (newTransDesc.getText() == null) {
                     // kick out of saving because this should not be null even
                     // if user has not entered a description
@@ -156,25 +176,7 @@ public class NewTransactionActivity extends AppCompatActivity {
 
                 String strDate = newTransDate.getText().toString().trim();
 
-                if (strAmount.isEmpty()) {
-                    textInputTransactionAmount.setError("Please enter a transaction amount");
-                    return;
-                } else {
-                    textInputTransactionAmount.setError(null);
-                }
 
-                double amount;
-
-                try {
-                    amount = Double.parseDouble(strAmount.replaceAll("[$,]", ""));
-
-                    if (isDebit) {
-                        amount *= -1;
-                    }
-                } catch (NumberFormatException e) {
-                    Toast.makeText(NewTransactionActivity.this, "Invalid transaction amount", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
                 String strCategory = newTransCategory.getText().toString().trim();
 
