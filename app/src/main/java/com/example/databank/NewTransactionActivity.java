@@ -29,6 +29,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -229,6 +230,14 @@ public class NewTransactionActivity extends AppCompatActivity {
     private @NonNull TextInputEditText getTextInputEditText() {
         TextInputEditText newTransDate = binding.newTransactionDate;
 
+        Calendar calendar = Calendar.getInstance();
+        String runDate = String.format(Locale.US, "%02d/%02d/%d",
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH),
+                calendar.get(Calendar.YEAR));
+
+        newTransDate.setText(runDate);
+
         newTransDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,6 +267,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                 hideKeyboard(v);
             }
         });
+
         return newTransDate;
     }
 
