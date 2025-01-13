@@ -2,6 +2,7 @@ package com.example.databank;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,16 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public void onBindViewHolder(@NonNull AccountAdapter.ViewHolder holder, int position) {
         holder.accountName.setText(String.valueOf(accountNames.get(position)));
 
-        String formattedBalance = NumberFormat.getCurrencyInstance(Locale.US).format(accountBalances.get(position));
+        double balance = accountBalances.get(position);
+        String formattedBalance = NumberFormat.getCurrencyInstance(Locale.US).format(balance);
+
+        // set balance colors
+        if (balance < 0) {
+            holder.accountBalance.setTextColor(Color.parseColor("#F44336"));
+        } else {
+            holder.accountBalance.setTextColor(Color.parseColor("#4CAF50"));
+        }
+
         holder.accountBalance.setText(formattedBalance);
 
         holder.editButton.setOnClickListener(new View.OnClickListener() {

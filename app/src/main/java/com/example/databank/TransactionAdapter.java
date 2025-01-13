@@ -2,6 +2,7 @@ package com.example.databank;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,12 +65,21 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TransactionAdapter.ViewHolder holder, int position) {
-        String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(transactionAmounts.get(position));
+        double amount = transactionAmounts.get(position);
+        String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(Math.abs(amount));
+
+        // Add a negative sign if the amount is negative and set colors
+        if (amount < 0) {
+            formattedAmount = "-" + formattedAmount;
+            holder.transactionAmount.setTextColor(Color.parseColor("#F44336"));
+        } else {
+            holder.transactionAmount.setTextColor(Color.parseColor("#4CAF50"));
+        }
 
         holder.transactionAmount.setText(formattedAmount);
 
         String description = String.valueOf(transactionDescriptions.get(position));
-        String descriptionPreview = "";
+        String descriptionPreview;
 
         if (description.length() >= 20) {
             descriptionPreview = description.substring(0, 20) + "...";

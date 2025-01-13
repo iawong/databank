@@ -12,6 +12,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -32,6 +34,7 @@ import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
     ActivityNewTransactionBinding binding;
+    boolean isDebit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,8 +44,6 @@ public class NewTransactionActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         TextInputLayout textInputTransactionAmount = binding.textInputTransactionAmount;
-        TextInputLayout textInputTransactionDescription = binding.textInputTransactionDescription;
-        TextInputLayout textInputTransactionDate = binding.textInputTransactionDate;
         TextInputEditText newTransAmt = binding.newTransactionAmount;
 
         newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -97,10 +98,28 @@ public class NewTransactionActivity extends AppCompatActivity {
             }
         });
 
-        TextInputEditText newTransDate = getTextInputEditText();
+        // radio group to save if the transaction is a credit or debit
+        RadioGroup transactionTypeGroup = findViewById(R.id.radioGroupTransactionType);
+
+        int selectedId = transactionTypeGroup.getCheckedRadioButtonId();
+        if (selectedId == R.id.radioDebitButton) {
+            isDebit = true;
+        } else if (selectedId == R.id.radioCreditButton) {
+            isDebit = false;
+        }
+
+        transactionTypeGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.radioDebitButton) {
+                isDebit = true;
+            } else if (checkedId == R.id.radioCreditButton) {
+                isDebit = false;
+            }
+        });
 
         // makes sure transaction description doesn't exceed 255 characters
         newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
+
+        TextInputEditText newTransDate = getTextInputEditText();
 
         // Transaction category drop down
         AutoCompleteTextView newTransCategory = binding.newTransactionCategory;
@@ -147,8 +166,12 @@ public class NewTransactionActivity extends AppCompatActivity {
 
                 try {
                     amount = Double.parseDouble(strAmount.replaceAll("[$,]", ""));
+
+                    if (isDebit) {
+                        amount *= -1;
+                    }
                 } catch (NumberFormatException e) {
-                    Toast.makeText(NewTransactionActivity.this, "Exception: " + e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewTransactionActivity.this, "Invalid transaction amount", Toast.LENGTH_SHORT).show();
                     return;
                 }
 

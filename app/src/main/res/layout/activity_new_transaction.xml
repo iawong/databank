@@ -52,14 +52,13 @@
         android:id="@+id/textInputTransactionDescription"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         app:counterEnabled="true"
         app:counterMaxLength="255"
-        app:layout_constraintTop_toBottomOf="@id/textInputTransactionAmount"
+        app:layout_constraintTop_toBottomOf="@id/radioGroupTransactionType"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -146,4 +145,30 @@
         app:layout_constraintEnd_toStartOf="@+id/saveNewTransactionButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textInputTransactionCategory"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroupTransactionType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textInputTransactionAmount">
+
+        <RadioButton
+            android:id="@+id/radioDebitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/debit"
+            android:textColor="@color/white"
+            android:buttonTint="@color/rowItem"
+            android:checked="true"/>
+        <RadioButton
+            android:id="@+id/radioCreditButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/credit"
+            android:textColor="@color/white"
+            android:buttonTint="@color/rowItem"/>
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

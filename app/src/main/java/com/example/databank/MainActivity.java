@@ -24,10 +24,8 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/11/25 notes
- * More code clean up and added transaction categories.
- * TODO: implement debt/credit for transactions
- * TODO: color code debt/credit transactions
+ * 1/12/25 notes
+ * updated transactions to show negative and added colors for positive/negative amounts
  * TODO: rearrange transaction cardview
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {

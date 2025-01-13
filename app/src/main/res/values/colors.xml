@@ -11,4 +11,6 @@
     <color name="red">#C30000</color>
     <color name="discordBlue">#7289da</color>
     <color name="lightGrey">#99aab5</color>
+    <color name="credit_color">#4CAF50</color> <!-- Green -->
+    <color name="debit_color">#F44336</color> <!-- Red -->
 </resources>
