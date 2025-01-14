@@ -175,20 +175,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
-                // this is converting the readable date format to the sortable date format
-                SimpleDateFormat readFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-                SimpleDateFormat sortFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 String strDate = newTransDate.getText().toString().trim();
-
-                String strFormattedDate = "";
-
-                try {
-                    strFormattedDate = sortFormat.format(readFormat.parse(strDate));
-
-                } catch (Exception e) {
-                    Log.e("NewTransactionActivity", "Failed to parse the readable date into sortable date");
-                }
-
 
                 String strCategory = newTransCategory.getText().toString().trim();
 
@@ -217,7 +204,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                 returnIntent.putExtra("transactionId", transactionId);
                 returnIntent.putExtra("transactionAmount", amount);
                 returnIntent.putExtra("transactionDescription", strDescription);
-                returnIntent.putExtra("transactionDate", strFormattedDate);
+                returnIntent.putExtra("transactionDate", strDate);
                 returnIntent.putExtra("transactionCategory", strCategory);
 
                 setResult(RESULT_OK, returnIntent);
@@ -245,10 +232,10 @@ public class NewTransactionActivity extends AppCompatActivity {
         TextInputEditText newTransDate = binding.newTransactionDate;
 
         Calendar calendar = Calendar.getInstance();
-        String runDate = String.format(Locale.US, "%02d/%02d/%d",
+        String runDate = String.format(Locale.US, "%d-%02d-%02d",
+                calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.DAY_OF_MONTH),
-                calendar.get(Calendar.YEAR));
+                calendar.get(Calendar.DAY_OF_MONTH));
 
         newTransDate.setText(runDate);
 
@@ -265,7 +252,10 @@ public class NewTransactionActivity extends AppCompatActivity {
                         NewTransactionActivity.this,
                         (view, selectedYear, selectedMonth, selectedDay) -> {
                             // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format(Locale.US, "%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
+                                    selectedYear,
+                                    selectedMonth + 1,
+                                    selectedDay);
                             newTransDate.setText(formattedDate);
                         },
                         year, month, day

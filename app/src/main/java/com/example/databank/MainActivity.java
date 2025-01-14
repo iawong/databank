@@ -26,11 +26,11 @@ import java.util.ArrayList;
  * This is the account activity
  * 1/13/25 notes
  * updated transactions sql table to have indexes and sort
- * transactions by the newest transactions first
- * implemented paging
- * issue with sorting dates. Last left off converting from MM/dd/yyyy to
- * yyyy-MM-dd, but this doesn't look like it's working.
- * TODO: fix transaction date sorting
+ * transactions by the newest transactions first, implemented paging
+ * issue with sorting dates. after adding new transaction, dates don't
+ * get sorted because I'm not updating the entire list, I'm only updating the
+ * one transaction that gets added to the arraylist.
+ * TODO: fix transaction date sorting by updating all array lists.
  * TODO: add toolbar side menu for settings and delete all
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts

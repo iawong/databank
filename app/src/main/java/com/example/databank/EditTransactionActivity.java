@@ -152,8 +152,11 @@ public class EditTransactionActivity extends AppCompatActivity {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(
                         EditTransactionActivity.this,
                         (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format(Locale.US, "%02d/%02d/%d", selectedMonth + 1, selectedDay, selectedYear);
+                            // Update the TextInputEditText with the selected date in yyyy-MM-dd format
+                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
+                                    selectedYear,
+                                    selectedMonth + 1,
+                                    selectedDay);
                             newTransDate.setText(formattedDate);
                         },
                         year, month, day
