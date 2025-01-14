@@ -52,8 +52,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_TRANSACTION_CATEGORY + " TEXT, " +
             "FOREIGN KEY (" + COLUMN_ACCOUNT_ID + ") REFERENCES " + TABLE_NAME_ACCOUNT + " (" + COLUMN_ACCOUNT_ID + "));";
 
+        String CREATE_INDEX_ON_DATE =
+                "CREATE INDEX idx_transaction_date ON " + TABLE_NAME_TRANSACTION + " (" + COLUMN_ACCOUNT_ID +
+                ", " + COLUMN_TRANSACTION_DATE + ");";
+
         db.execSQL(CREATE_ACCOUNTS_TABLE);
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
+        db.execSQL(CREATE_INDEX_ON_DATE);
     }
 
     @Override
@@ -228,6 +233,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Deleted all transactions", Toast.LENGTH_SHORT).show();
         }
+
+        onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION + 1);
     }
 
     Cursor getAllAccounts() {
@@ -274,7 +281,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     Cursor getTransactionAmount(int accountId, int transactionId) {
         String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT + " FROM " + TABLE_NAME_TRANSACTION +
                 " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId +
-                " AND " + COLUMN_ACCOUNT_ID + " = " + accountId;
+                " AND " + COLUMN_ACCOUNT_ID + " = " + accountId + " ORDER BY " +
+                COLUMN_TRANSACTION_DATE + " DESC ";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
