@@ -27,7 +27,10 @@ import java.util.ArrayList;
  * 1/13/25 notes
  * updated transactions sql table to have indexes and sort
  * transactions by the newest transactions first
- * TODO: implement paging for transactions
+ * implemented paging
+ * issue with sorting dates. Last left off converting from MM/dd/yyyy to
+ * yyyy-MM-dd, but this doesn't look like it's working.
+ * TODO: fix transaction date sorting
  * TODO: add toolbar side menu for settings and delete all
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
