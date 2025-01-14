@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,16 +23,19 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class TransactionActivity extends AppCompatActivity implements OnDeleteListener{
-    TransactionAdapter transactionAdapter;
+    private TransactionAdapter transactionAdapter;
     ActivityTransactionBinding binding;
-    RecyclerView transactionRecyclerView;
-    DatabaseHelper db;
-    ArrayList<Integer> transactionIds;
-    ArrayList<Double> transactionAmounts;
-    ArrayList<String> transactionDescriptions;
-    ArrayList<String> transactionDates;
-    ArrayList<String> transactionCategories;
+    private RecyclerView transactionRecyclerView;
+    private DatabaseHelper db;
+    private ArrayList<Integer> transactionIds;
+    private ArrayList<Double> transactionAmounts;
+    private ArrayList<String> transactionDescriptions;
+    private ArrayList<String> transactionDates;
+    private ArrayList<String> transactionCategories;
     int accountId;
+    private static final int PAGE_SIZE = 10;
+    private boolean isLoading = false;
+    private int currentOffset = 0;
 
     // get results from new transaction activity
     ActivityResultLauncher<Intent> addTransactionLauncher = registerForActivityResult(
@@ -148,7 +152,8 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         transactionDates = new ArrayList<>();
         transactionCategories = new ArrayList<>();
 
-        storeTransactionData();
+        // load the first 10 transactions
+        loadTransactions();
 
         transactionAdapter = new TransactionAdapter(TransactionActivity.this,
                                                     accountId,
@@ -162,26 +167,86 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                                                     TransactionActivity.this);
         transactionRecyclerView.setAdapter(transactionAdapter);
         transactionRecyclerView.setLayoutManager(new LinearLayoutManager(TransactionActivity.this));
-    }
+        transactionRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
 
-
-    private void storeTransactionData() {
-        Cursor cursor = db.getAccountTransactions(accountId);
-
-        if (cursor.getCount() == 0) {
-            Toast.makeText(TransactionActivity.this, "No transaction data found", Toast.LENGTH_SHORT).show();
-        } else {
-            while (cursor.moveToNext()) {
-                transactionIds.add(cursor.getInt(0));
-                transactionAmounts.add(cursor.getDouble(2));
-                transactionDescriptions.add(cursor.getString(3));
-                transactionDates.add(cursor.getString(4));
-                transactionCategories.add(cursor.getString(5));
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (!isLoading && layoutManager != null && layoutManager.findLastCompletelyVisibleItemPosition() == transactionIds.size() - 1) {
+                    // Load the next page of transactions when reaching the bottom
+                    loadTransactions();
+                }
             }
-        }
-
-        cursor.close();
+        });
     }
+
+    /**
+     * this will handle pagination for transactions
+     * we show the first 10 transactions and then when we scroll
+     * to the bottom, we show the next 10 and so on
+     */
+    private void loadTransactions() {
+        isLoading = true;
+
+        new Thread(() -> {
+            Cursor cursor = db.getAccountTransactions(accountId, PAGE_SIZE, currentOffset);
+
+            ArrayList<Integer> newTransactionIds = new ArrayList<>();
+            ArrayList<Double> newTransactionAmounts = new ArrayList<>();
+            ArrayList<String> newTransactionDescriptions = new ArrayList<>();
+            ArrayList<String> newTransactionDates = new ArrayList<>();
+            ArrayList<String> newTransactionCategories = new ArrayList<>();
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    newTransactionIds.add(cursor.getInt(0));
+                    newTransactionAmounts.add(cursor.getDouble(2));
+                    newTransactionDescriptions.add(cursor.getString(3));
+                    newTransactionDates.add(cursor.getString(4));
+                    newTransactionCategories.add(cursor.getString(5));
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+
+            runOnUiThread(() -> {
+                transactionIds.addAll(newTransactionIds);
+                transactionAmounts.addAll(newTransactionAmounts);
+                transactionDescriptions.addAll(newTransactionDescriptions);
+                transactionDates.addAll(newTransactionDates);
+                transactionCategories.addAll(newTransactionCategories);
+
+                transactionAdapter.notifyItemRangeInserted(transactionIds.size() - newTransactionIds.size(), newTransactionIds.size());
+                currentOffset += newTransactionIds.size();
+
+                isLoading = false;
+
+                // If no more data, stop further loading
+                if (newTransactionIds.isEmpty()) {
+                    transactionRecyclerView.clearOnScrollListeners();
+                }
+            });
+        }).start();
+    }
+
+
+//    private void storeTransactionData() {
+//        Cursor cursor = db.getAccountTransactions(accountId);
+//
+//        if (cursor.getCount() == 0) {
+//            Toast.makeText(TransactionActivity.this, "No transaction data found", Toast.LENGTH_SHORT).show();
+//        } else {
+//            while (cursor.moveToNext()) {
+//                transactionIds.add(cursor.getInt(0));
+//                transactionAmounts.add(cursor.getDouble(2));
+//                transactionDescriptions.add(cursor.getString(3));
+//                transactionDates.add(cursor.getString(4));
+//                transactionCategories.add(cursor.getString(5));
+//            }
+//        }
+//
+//        cursor.close();
+//    }
 
     /**
      * Inserts the new transaction

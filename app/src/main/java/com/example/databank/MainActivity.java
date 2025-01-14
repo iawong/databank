@@ -27,9 +27,7 @@ import java.util.ArrayList;
  * 1/13/25 notes
  * updated transactions sql table to have indexes and sort
  * transactions by the newest transactions first
- * TODO: make sure the transactions are always sorted with most recent ones at the top
  * TODO: implement paging for transactions
- * TODO: implement paging for accounts
  * TODO: add toolbar side menu for settings and delete all
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts

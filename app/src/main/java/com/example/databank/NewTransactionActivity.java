@@ -26,6 +26,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -174,8 +175,19 @@ public class NewTransactionActivity extends AppCompatActivity {
                     return;
                 }
 
+                // this is converting the readable date format to the sortable date format
+                SimpleDateFormat readFormat = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+                SimpleDateFormat sortFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
                 String strDate = newTransDate.getText().toString().trim();
 
+                String strFormattedDate = "";
+
+                try {
+                    strFormattedDate = sortFormat.format(readFormat.parse(strDate));
+
+                } catch (Exception e) {
+                    Log.e("NewTransactionActivity", "Failed to parse the readable date into sortable date");
+                }
 
 
                 String strCategory = newTransCategory.getText().toString().trim();
@@ -205,7 +217,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                 returnIntent.putExtra("transactionId", transactionId);
                 returnIntent.putExtra("transactionAmount", amount);
                 returnIntent.putExtra("transactionDescription", strDescription);
-                returnIntent.putExtra("transactionDate", strDate);
+                returnIntent.putExtra("transactionDate", strFormattedDate);
                 returnIntent.putExtra("transactionCategory", strCategory);
 
                 setResult(RESULT_OK, returnIntent);

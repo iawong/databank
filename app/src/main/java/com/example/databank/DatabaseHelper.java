@@ -264,25 +264,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    Cursor getAccountTransactions(int accountId) {
+    Cursor getAccountTransactions(int accountId, int limit, int offset) {
         String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION +
-                " WHERE " + COLUMN_ACCOUNT_ID + " = " + accountId;
+                " WHERE " + COLUMN_ACCOUNT_ID + " = ? " +
+                " ORDER BY " + COLUMN_TRANSACTION_DATE + " DESC " +
+                " LIMIT ? OFFSET ?";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
 
         if (db != null) {
-            cursor = db.rawQuery(query, null);
+            cursor = db.rawQuery(query, new String[] {
+                    String.valueOf(accountId),
+                    String.valueOf(limit),
+                    String.valueOf(offset)
+            });
         }
 
         return cursor;
     }
 
     Cursor getTransactionAmount(int accountId, int transactionId) {
-        String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT + " FROM " + TABLE_NAME_TRANSACTION +
+        String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT +
+                " FROM " + TABLE_NAME_TRANSACTION +
                 " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId +
-                " AND " + COLUMN_ACCOUNT_ID + " = " + accountId + " ORDER BY " +
-                COLUMN_TRANSACTION_DATE + " DESC ";
+                " AND " + COLUMN_ACCOUNT_ID + " = " + accountId;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
