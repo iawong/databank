@@ -19,7 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.databank.databinding.ActivityEditTransactionBinding;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -244,11 +243,6 @@ public class EditTransactionActivity extends AppCompatActivity {
                 }
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("transactionPosition", getIntent().getIntExtra("transactionPosition", -1));
-                returnIntent.putExtra("transactionAmount", changedAmount);
-                returnIntent.putExtra("transactionDescription", changedTransDesc);
-                returnIntent.putExtra("transactionDate", changedTransDate);
-                returnIntent.putExtra("transactionCategory", changedTransCategory);
 
                 setResult(RESULT_OK, returnIntent);
                 finish();

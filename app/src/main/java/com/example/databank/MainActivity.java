@@ -24,12 +24,10 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/13/25 notes
- * updated transactions sql table to have indexes and sort
- * transactions by the newest transactions first, implemented paging
- * issue with sorting dates. after adding new transaction, dates don't
- * get sorted because I'm not updating the entire list, I'm only updating the
- * one transaction that gets added to the arraylist
+ * 1/19/25 notes
+ * Transaction sorting is good now. Updated scrolling so that
+ * new transactions added or updated will refresh the entire list
+ * and the adapter. Continuous scrolling should be possible now.
  * TODO: add toolbar side menu for settings and delete all
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts

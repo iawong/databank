@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -21,17 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.databank.databinding.ActivityNewTransactionBinding;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
@@ -186,7 +179,7 @@ public class NewTransactionActivity extends AppCompatActivity {
                     finish();
                 }
 
-                long transactionId = -1;
+                long transactionId;
 
                 try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
                     transactionId = db.addTransaction(accountId, amount, strDescription, strDate, strCategory);
@@ -201,11 +194,6 @@ public class NewTransactionActivity extends AppCompatActivity {
                 }
 
                 Intent returnIntent = new Intent();
-                returnIntent.putExtra("transactionId", transactionId);
-                returnIntent.putExtra("transactionAmount", amount);
-                returnIntent.putExtra("transactionDescription", strDescription);
-                returnIntent.putExtra("transactionDate", strDate);
-                returnIntent.putExtra("transactionCategory", strCategory);
 
                 setResult(RESULT_OK, returnIntent);
 
