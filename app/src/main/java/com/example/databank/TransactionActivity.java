@@ -1,5 +1,6 @@
 package com.example.databank;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -53,13 +54,14 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                             return;
                         }
 
-                        long transactionId = data.getLongExtra("transactionId", -1);
-                        double transactionAmount = data.getDoubleExtra("transactionAmount", -1);
-                        String transactionDescription = data.getStringExtra("transactionDescription");
-                        String transactionDate = data.getStringExtra("transactionDate");
-                        String transactionCategory = data.getStringExtra("transactionCategory");
+//                        long transactionId = data.getLongExtra("transactionId", -1);
+//                        double transactionAmount = data.getDoubleExtra("transactionAmount", -1);
+//                        String transactionDescription = data.getStringExtra("transactionDescription");
+//                        String transactionDate = data.getStringExtra("transactionDate");
+//                        String transactionCategory = data.getStringExtra("transactionCategory");
 
-                        insertItemIntoTransactions((int) transactionId, transactionAmount, transactionDescription, transactionDate, transactionCategory);
+//                        insertItemIntoTransactions((int) transactionId, transactionAmount, transactionDescription, transactionDate, transactionCategory);
+                        reloadTransactionData();
                     }
                 }
             }
@@ -92,7 +94,8 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                         String changedTransDate = data.getStringExtra("transactionDate");
                         String changedTransCategory = data.getStringExtra("transactionCategory");
 
-                        updateTransaction(transactionPosition, changedTransAmt, changedTransDesc, changedTransDate, changedTransCategory);
+//                        updateTransaction(transactionPosition, changedTransAmt, changedTransDesc, changedTransDate, changedTransCategory);
+                        reloadTransactionData();
                     }
                 }
             }
@@ -230,23 +233,31 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
     }
 
 
-//    private void storeTransactionData() {
-//        Cursor cursor = db.getAccountTransactions(accountId);
-//
-//        if (cursor.getCount() == 0) {
-//            Toast.makeText(TransactionActivity.this, "No transaction data found", Toast.LENGTH_SHORT).show();
-//        } else {
-//            while (cursor.moveToNext()) {
-//                transactionIds.add(cursor.getInt(0));
-//                transactionAmounts.add(cursor.getDouble(2));
-//                transactionDescriptions.add(cursor.getString(3));
-//                transactionDates.add(cursor.getString(4));
-//                transactionCategories.add(cursor.getString(5));
-//            }
-//        }
-//
-//        cursor.close();
-//    }
+    /**
+     * This will reload the transactions that have already been loaded
+     * after adding a new transaction or updating a transaction
+     * Updating a transaction may not necessarily change the date,
+     * but nevertheless, it's easier to just reload all the transactions
+     * just in case a date change was made.
+     * I am suppressing the NotifyDataSetChanged because a transaction can be pushed
+     * outside the 10 most recent transactions to anywhere else.
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    private void reloadTransactionData() {
+        // Reset offset and clear existing data
+        currentOffset = 0;
+        transactionIds.clear();
+        transactionAmounts.clear();
+        transactionDescriptions.clear();
+        transactionDates.clear();
+        transactionCategories.clear();
+
+        // Notify the adapter that the dataset has been cleared
+        transactionAdapter.notifyDataSetChanged();
+
+        // Load the first batch of transactions
+        loadTransactions();
+    }
 
     /**
      * Inserts the new transaction
