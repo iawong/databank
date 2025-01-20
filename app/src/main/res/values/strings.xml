@@ -8,7 +8,7 @@
     <string name="transaction_amount">Enter transaction amount</string>
     <string name="back">Back</string>
     <string name="transaction_description">Enter transaction description</string>
-    <string name="transaction_date">MM/DD/YYYY</string>
+    <string name="transaction_date">YYYY-MM-DD</string>
     <string name="save_changes">Save changes</string>
     <string name="new_account_name">New account name</string>
     <string name="new_account_balance">New account balance</string>
