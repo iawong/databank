@@ -5,20 +5,27 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.databank.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
@@ -29,6 +36,7 @@ import java.util.ArrayList;
  * new transactions added or updated will refresh the entire list
  * and the adapter. Continuous scrolling should be possible now.
  * TODO: add toolbar side menu for settings and delete all
+ * TODO: export and import data as json to excel
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: rearrange transaction cardview
@@ -39,7 +47,8 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     ArrayList<Integer> accountIds;
     ArrayList<String> accountNames;
     ArrayList<Double> accountBalances;
-
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
     // the name of this class "ActivityMainBinding" literally comes from the fact that
     // the class' name is MainActivity. So, in my TransactionActivity class, the binding class
     // name is ActivityTransactionBinding
@@ -144,6 +153,51 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         View rootView = binding.getRoot();
         setContentView(rootView); //getRoot(), get the outer most view
+
+        // Set up Toolbar
+        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.accountAppbar);
+        setSupportActionBar(toolbar);
+
+        // Set up DrawerLayout and NavigationView
+        drawerLayout = binding.drawerLayout;
+        navigationView = binding.navigationView;
+
+        // Set up the hamburger button for the toolbar
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                super.onDrawerOpened(drawerView);
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        };
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_settings) {
+                    System.out.println("settings");
+                } else if (id == R.id.nav_help) {
+                    System.out.println("help");
+                } else if (id == R.id.nav_logout) {
+                    System.out.println("logout");
+                }
+
+                drawerLayout.closeDrawer(GravityCompat.END);
+                return true;
+            }
+        });
 
         RecyclerView accountRecyclerView = binding.accountList;
 
