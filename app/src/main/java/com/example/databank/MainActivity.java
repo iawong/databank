@@ -31,10 +31,12 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/19/25 notes
- * Transaction sorting is good now. Updated scrolling so that
- * new transactions added or updated will refresh the entire list
- * and the adapter. Continuous scrolling should be possible now.
+ * 1/21/25 notes
+ * Started adding a nav bar, but there are some issues. I need to
+ * update the toolbar to use androidx version of the the toolbar
+ * to show texts. And I also need to double check if this is the
+ * best way to implement the toolbar.
+ * Also need to fix the hamburger to the right side.
  * TODO: add toolbar side menu for settings and delete all
  * TODO: export and import data as json to excel
  * TODO: add search functionality for transactions
