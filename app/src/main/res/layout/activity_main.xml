@@ -16,14 +16,13 @@
         android:background="@color/background"
         tools:context=".MainActivity">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/accountAppbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/appbar"
             android:elevation="4dp"
-            android:title="@string/account_appbar"
-            android:titleTextAppearance="@style/AppbarTitle"
+            app:titleTextAppearance="@style/AppbarTitle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>

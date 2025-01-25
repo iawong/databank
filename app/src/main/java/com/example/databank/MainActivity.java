@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.databank.databinding.ActivityMainBinding;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -157,8 +158,14 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         setContentView(rootView); //getRoot(), get the outer most view
 
         // Set up Toolbar
-        androidx.appcompat.widget.Toolbar toolbar = findViewById(R.id.accountAppbar);
+        MaterialToolbar toolbar = findViewById(R.id.accountAppbar);
         setSupportActionBar(toolbar);
+
+        // Override actionbar title because it defaults to the app title
+        // despite setting the title in the activity_main.xml
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.account_appbar));
+        }
 
         // Set up DrawerLayout and NavigationView
         drawerLayout = binding.drawerLayout;

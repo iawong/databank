@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppbarTitle" parent="TextAppearance.Material3.ActionBar.Title">
+    <style name="Theme.Databank" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="actionBarStyle">@style/CustomToolBar</item>
+    </style>
+
+    <style name="CustomToolBar" parent="Widget.Material3.Toolbar">
+        <item name="titleTextAppearance">@style/AppbarTitle</item>
+    </style>
+
+    <style name="AppbarTitle" parent="TextAppearance.Material3.TitleLarge">
         <item name="android:textSize">30sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/white</item>
