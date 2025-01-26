@@ -32,17 +32,17 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/21/25 notes
- * Started adding a nav bar, but there are some issues. I need to
- * update the toolbar to use androidx version of the the toolbar
- * to show texts. And I also need to double check if this is the
- * best way to implement the toolbar.
- * Also need to fix the hamburger to the right side.
- * TODO: add toolbar side menu for settings and delete all
+ * 1/25/25 notes
+ * Fixed tool bar. Kept on left side because it sounds like
+ * forcing it to be on the right is too much work and will
+ * need another button added onto the toolbar.
+ * Using material 3 design for toolbar now as well
+ * TODO: configure toolbar side menu for settings and delete all
  * TODO: export and import data as json to excel
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: rearrange transaction cardview
+ * TODO: update settings to open up like SAO settings on bottom right
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
     AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
@@ -172,41 +172,27 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         navigationView = binding.navigationView;
 
         // Set up the hamburger button for the toolbar
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-                super.onDrawerOpened(drawerView);
-                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                }
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                super.onDrawerClosed(drawerView);
-            }
-        };
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_settings) {
-                    System.out.println("settings");
-                } else if (id == R.id.nav_help) {
-                    System.out.println("help");
-                } else if (id == R.id.nav_logout) {
-                    System.out.println("logout");
-                }
-
-                drawerLayout.closeDrawer(GravityCompat.END);
-                return true;
-            }
-        });
+//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+//            @Override
+//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+//                int id = item.getItemId();
+//
+//                if (id == R.id.nav_settings) {
+//                    System.out.println("settings");
+//                } else if (id == R.id.nav_help) {
+//                    System.out.println("help");
+//                } else if (id == R.id.nav_logout) {
+//                    System.out.println("logout");
+//                }
+//
+//                drawerLayout.closeDrawer(GravityCompat.END);
+//                return true;
+//            }
+//        });
 
         RecyclerView accountRecyclerView = binding.accountList;
 
