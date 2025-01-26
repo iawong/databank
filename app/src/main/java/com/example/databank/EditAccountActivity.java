@@ -16,7 +16,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class EditAccountActivity extends AppCompatActivity {
-    ActivityEditAccountBinding binding;
+    private ActivityEditAccountBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -21,7 +21,7 @@ import com.google.android.material.textfield.TextInputLayout;
  * Activity for creating a new account
  */
 public class NewAccountActivity extends AppCompatActivity {
-    ActivityNewAccountBinding binding;
+    private ActivityNewAccountBinding binding;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

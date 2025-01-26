@@ -26,7 +26,7 @@ import java.util.Locale;
 
 public class EditTransactionActivity extends AppCompatActivity {
     ActivityEditTransactionBinding binding;
-    boolean isDebit;
+    private boolean isDebit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

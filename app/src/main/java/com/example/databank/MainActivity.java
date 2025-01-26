@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -45,17 +44,16 @@ import java.util.ArrayList;
  * TODO: update settings to open up like SAO settings on bottom right
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
-    AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
-    DatabaseHelper db;
-    ArrayList<Integer> accountIds;
-    ArrayList<String> accountNames;
-    ArrayList<Double> accountBalances;
+    private AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
+    private DatabaseHelper db;
+    private ArrayList<Integer> accountIds;
+    private ArrayList<String> accountNames;
+    private ArrayList<Double> accountBalances;
     private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
     // the name of this class "ActivityMainBinding" literally comes from the fact that
     // the class' name is MainActivity. So, in my TransactionActivity class, the binding class
     // name is ActivityTransactionBinding
-    ActivityMainBinding binding;
+    private ActivityMainBinding binding;
 
     // ActivityResultLauncher for adding accounts
     ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
@@ -169,30 +167,29 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
         // Set up DrawerLayout and NavigationView
         drawerLayout = binding.drawerLayout;
-        navigationView = binding.navigationView;
+        NavigationView navigationView = binding.navigationView;
 
         // Set up the hamburger button for the toolbar
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-//        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                int id = item.getItemId();
-//
-//                if (id == R.id.nav_settings) {
-//                    System.out.println("settings");
-//                } else if (id == R.id.nav_help) {
-//                    System.out.println("help");
-//                } else if (id == R.id.nav_logout) {
-//                    System.out.println("logout");
-//                }
-//
-//                drawerLayout.closeDrawer(GravityCompat.END);
-//                return true;
-//            }
-//        });
+        // Set up navigation item actions
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if (id == R.id.nav_export) {
+                } else if (id == R.id.nav_import) {
+                } else if (id == R.id.nav_delete_all) {
+                    deleteAllAlertView();
+                }
+
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         RecyclerView accountRecyclerView = binding.accountList;
 
@@ -221,53 +218,6 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                                             MainActivity.this);
         accountRecyclerView.setAdapter(accountAdapter);
         accountRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
-        FloatingActionButton deleteAllButton = binding.deleteAllButton;
-        deleteAllButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
-
-                Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
-                Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
-
-                // alert dialog to confirm if the user wants to delete all
-                AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
-                        .setView(alertView)
-                        .setCancelable(false)
-                        .show();
-
-                positiveButton.setOnClickListener(new View.OnClickListener() {
-                    @SuppressLint("NotifyDataSetChanged")
-                    @Override
-                    public void onClick(View v) {
-                        db.deleteAll();
-                        accountIds.clear();
-                        accountNames.clear();
-                        accountBalances.clear();
-                        // using this instead of a more specific notify because we're
-                        // deleting all accounts
-                        accountAdapter.notifyDataSetChanged();
-
-                        dialog.dismiss();
-                    }
-                });
-
-                negativeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show();
-
-                if (dialog.getWindow() != null) {
-                    dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-                }
-            }
-        });
     }
 
     /**
@@ -404,4 +354,50 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      */
     @Override
     public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {}
+
+    /**
+     * Creates the delete all alert view
+     */
+    private void deleteAllAlertView() {
+        View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
+
+        Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
+        Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
+
+        // alert dialog to confirm if the user wants to delete all
+        AlertDialog dialog = new AlertDialog.Builder(MainActivity.this)
+                .setView(alertView)
+                .setCancelable(false)
+                .show();
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View v) {
+                db.deleteAll();
+                accountIds.clear();
+                accountNames.clear();
+                accountBalances.clear();
+                // using this instead of a more specific notify because we're
+                // deleting all accounts
+                accountAdapter.notifyDataSetChanged();
+
+                dialog.dismiss();
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        }
+    }
 }

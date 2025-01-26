@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_settings"
-        android:title="Settings" />
+        android:id="@+id/nav_export"
+        android:title="@string/export_data"/>
     <item
-        android:id="@+id/nav_help"
-        android:title="Help" />
+        android:id="@+id/nav_import"
+        android:title="@string/import_data"/>
     <item
-        android:id="@+id/nav_logout"
-        android:title="Logout" />
+        android:id="@+id/nav_delete_all"
+        android:title="@string/delete_all"/>
 </menu>

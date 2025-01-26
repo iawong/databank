@@ -28,8 +28,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
-    ActivityNewTransactionBinding binding;
-    boolean isDebit;
+    private ActivityNewTransactionBinding binding;
+    private boolean isDebit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

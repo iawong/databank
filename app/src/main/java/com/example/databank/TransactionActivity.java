@@ -25,14 +25,14 @@ import java.util.ArrayList;
 
 public class TransactionActivity extends AppCompatActivity implements OnDeleteListener{
     private TransactionAdapter transactionAdapter;
-    ActivityTransactionBinding binding;
+    private ActivityTransactionBinding binding;
     private DatabaseHelper db;
     private ArrayList<Integer> transactionIds;
     private ArrayList<Double> transactionAmounts;
     private ArrayList<String> transactionDescriptions;
     private ArrayList<String> transactionDates;
     private ArrayList<String> transactionCategories;
-    int accountId;
+    private int accountId;
     private static final int PAGE_SIZE = 10;
     private boolean isLoading = false;
     private int currentOffset = 0;
