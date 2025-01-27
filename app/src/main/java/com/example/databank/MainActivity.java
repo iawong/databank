@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -27,17 +28,19 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/25/25 notes
- * Fixed tool bar. Kept on left side because it sounds like
- * forcing it to be on the right is too much work and will
- * need another button added onto the toolbar.
- * Using material 3 design for toolbar now as well
- * TODO: configure toolbar side menu for settings and delete all
- * TODO: export and import data as json to excel
+ * 1/26/25 notes
+ * Added the export functionality
+ * TODO: import json file and read to database
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: rearrange transaction cardview
@@ -56,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private ActivityMainBinding binding;
 
     // ActivityResultLauncher for adding accounts
-    ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
+    private ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     );
 
     // ActivityResultLauncher for changing account details
-    ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
+    private ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -112,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     );
 
     // ActivityResultLauncher for adding transactions
-    ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
+    private ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -181,6 +184,11 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 int id = item.getItemId();
 
                 if (id == R.id.nav_export) {
+                    try {
+                        exportDatabaseToJson();
+                    } catch (Exception e) {
+                        Log.e("MainActivity", "Error exporting to JSON", e);
+                    }
                 } else if (id == R.id.nav_import) {
                 } else if (id == R.id.nav_delete_all) {
                     deleteAllAlertView();
@@ -398,6 +406,90 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
+        }
+    }
+
+    /**
+     * Exports the database as a JSON file
+     * @throws JSONException json exception if it fails to create a json file
+     */
+    private void exportDatabaseToJson() throws JSONException {
+        // get all the account data and write to the JSON array
+        Cursor accountsCursor = db.getAllAccounts();
+        JSONArray accountsJsonArray = new JSONArray();
+
+        if (accountsCursor.moveToFirst()) {
+            do {
+                JSONObject accountObject = new JSONObject();
+                accountObject.put("account_id", accountsCursor.getInt(0));
+                accountObject.put("account_name", accountsCursor.getString(1));
+                accountObject.put("balance", accountsCursor.getDouble(2));
+                accountsJsonArray.put(accountObject);
+            } while (accountsCursor.moveToNext());
+        }
+        accountsCursor.close();
+
+        // get all the transaction data and write to the JSON array
+        Cursor transactionsCursor = db.getAllTransactions();
+        JSONArray transactionsJsonArray = new JSONArray();
+
+        if (transactionsCursor.moveToFirst()) {
+            do {
+                JSONObject transactionObject = new JSONObject();
+                transactionObject.put("transaction_id", transactionsCursor.getInt(0));
+                transactionObject.put("account_id", transactionsCursor.getInt(1));
+                transactionObject.put("amount", transactionsCursor.getDouble(2));
+                transactionObject.put("description", transactionsCursor.getString(3));
+                transactionObject.put("date", transactionsCursor.getString(4));
+                transactionObject.put("category", transactionsCursor.getString(5));
+                transactionsJsonArray.put(transactionObject);
+            } while (transactionsCursor.moveToNext());
+        }
+        transactionsCursor.close();
+
+        // Create a JSONObject to hold both tables
+        JSONObject exportJson = new JSONObject();
+        exportJson.put("accounts", accountsJsonArray);
+        exportJson.put("transactions", transactionsJsonArray);
+
+        // Write the JSON to a file
+        writeJsonToFile(exportJson.toString());
+
+        Toast.makeText(this, "Data exported successfully!", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Writes the json string into a file and saves it to the app folders
+     * @param jsonString json string to write into a file
+     */
+    private void writeJsonToFile(String jsonString) {
+        try {
+            // Define the file path and name
+            File exportDir = new File(getExternalFilesDir(null), "exports");
+
+            // Create directory if it doesn't exist
+            if (!exportDir.exists()) {
+                boolean directoryMade = exportDir.mkdirs();
+
+                if (!directoryMade) {
+                    Toast.makeText(MainActivity.this, "Directory not made", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            File jsonFile = new File(exportDir, "accounts_and_transactions.json");
+
+            // Write the JSON string to the file
+            FileWriter writer = new FileWriter(jsonFile);
+            writer.write(jsonString);
+            writer.flush();
+            writer.close();
+
+            Toast.makeText(this, "Exported to: " + jsonFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+
+            // the absolute path: /storage/emulated/0/Android/data/com.example.databank/files/exports
+        } catch (Exception e) {
+            Log.e("MainActivity", "Error writing JSON to file", e);
+            Toast.makeText(this, "Failed to write file!", Toast.LENGTH_SHORT).show();
         }
     }
 }

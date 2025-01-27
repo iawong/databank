@@ -284,6 +284,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    Cursor getAllTransactions() {
+        String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
     Cursor getTransactionAmount(int accountId, int transactionId) {
         String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT +
                 " FROM " + TABLE_NAME_TRANSACTION +
