@@ -44,6 +44,7 @@ import java.util.ArrayList;
  * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
  * TODO: import json file and read to database
+ * TODO: sqlite migration features for database structure changes
  * TODO: rearrange transaction cardview
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
