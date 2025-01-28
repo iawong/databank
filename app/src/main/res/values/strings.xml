@@ -37,10 +37,14 @@
     <string name="debit">Debit</string>
     <string name="export_data">Export data</string>
     <string name="import_data">Import data</string>
+    <string name="hidden">Hidden</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>
         <item>Bills &amp; Utilities</item>
+        <item>Cash Deposit</item>
+        <item>Cash Withdraw</item>
+        <item>Credit Card Payment</item>
         <item>Education</item>
         <item>Entertainment</item>
         <item>Food &amp; Drinks</item>

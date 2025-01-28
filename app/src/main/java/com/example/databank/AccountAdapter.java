@@ -69,7 +69,22 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             holder.accountBalance.setTextColor(Color.parseColor("#4CAF50"));
         }
 
-        holder.accountBalance.setText(formattedBalance);
+        holder.accountBalance.setText(R.string.hidden);
+
+        holder.accountBalance.setOnClickListener(new View.OnClickListener() {
+            Boolean hidden = true;
+
+            @Override
+            public void onClick(View v) {
+                if (hidden) {
+                    holder.accountBalance.setText(formattedBalance);
+                    hidden = false;
+                } else {
+                    holder.accountBalance.setText(R.string.hidden);
+                    hidden = true;
+                }
+            }
+        });
 
         holder.editButton.setOnClickListener(new View.OnClickListener() {
             @Override
