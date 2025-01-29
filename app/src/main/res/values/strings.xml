@@ -41,6 +41,7 @@
 
     <string-array name="transaction_categories">
         <item>Automotive</item>
+        <item>Account Transfer</item>
         <item>Bills &amp; Utilities</item>
         <item>Cash Deposit</item>
         <item>Cash Withdraw</item>
