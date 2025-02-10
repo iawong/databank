@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -28,18 +29,24 @@ import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 1/26/25 notes
- * Added app icon
+ * 2/9/25 notes
+ * Changed database export to be the database file instead of converting
+ * to JSON. This is easier to reimport back into the app.
+ * TODO: fix database import and allow user to select where to import
+ * research different options for exporting the database file to the documents folder
+ * so that importing will work using ACTION_OPEN_DOCUMENT_TREE, or default to documents
+ * folder. 
+ * TODO: move transaction buttons into itself
+ * TODO: add transaction transfer
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
@@ -60,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // the class' name is MainActivity. So, in my TransactionActivity class, the binding class
     // name is ActivityTransactionBinding
     private ActivityMainBinding binding;
+    private Uri baseFolderUri;
 
     // ActivityResultLauncher for adding accounts
     private ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
@@ -153,6 +161,57 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             }
     );
 
+    // ActivityResultLauncher for getting the file path to save exported json files
+    private ActivityResultLauncher<Intent> exportDatabaseResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult activityResult) {
+                    int resultCode = activityResult.getResultCode();
+
+                    if (resultCode == RESULT_OK) {
+                        Intent data = activityResult.getData();
+
+                        if (data == null) {
+                            Toast.makeText(MainActivity.this, "Unable to export file", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        Uri fileUri = data.getData();
+
+                        if (fileUri != null) {
+                            saveDatabaseToUri(fileUri);
+                        }
+                    }
+                }
+            }
+    );
+
+    private ActivityResultLauncher<Intent> importDatabaseResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult activityResult) {
+                    int resultCode = activityResult.getResultCode();
+
+                    if (resultCode == RESULT_OK) {
+                        Intent data = activityResult.getData();
+
+                        if (data == null) {
+                            Toast.makeText(MainActivity.this, "Unable to export file", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        Uri fileUri = data.getData();
+
+                        if (fileUri != null) {
+                            replaceDatabase(fileUri);
+                        }
+                    }
+                }
+            }
+    );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -187,12 +246,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 int id = item.getItemId();
 
                 if (id == R.id.nav_export) {
-                    try {
-                        exportDatabaseToJson();
-                    } catch (Exception e) {
-                        Log.e("MainActivity", "Error exporting to JSON", e);
-                    }
+                    exportDatabase();
                 } else if (id == R.id.nav_import) {
+                    importDatabase();
                 } else if (id == R.id.nav_delete_all) {
                     deleteAllAlertView();
                 }
@@ -408,91 +464,95 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
         }
     }
 
     /**
-     * Exports the database as a JSON file
-     * @throws JSONException json exception if it fails to create a json file
+     * Exports the database as a file and asks user to name the file and save into a directory
      */
-    private void exportDatabaseToJson() throws JSONException {
-        // get all the account data and write to the JSON array
-        Cursor accountsCursor = db.getAllAccounts();
-        JSONArray accountsJsonArray = new JSONArray();
-
-        if (accountsCursor.moveToFirst()) {
-            do {
-                JSONObject accountObject = new JSONObject();
-                accountObject.put("account_id", accountsCursor.getInt(0));
-                accountObject.put("account_name", accountsCursor.getString(1));
-                accountObject.put("balance", accountsCursor.getDouble(2));
-                accountsJsonArray.put(accountObject);
-            } while (accountsCursor.moveToNext());
-        }
-        accountsCursor.close();
-
-        // get all the transaction data and write to the JSON array
-        Cursor transactionsCursor = db.getAllTransactions();
-        JSONArray transactionsJsonArray = new JSONArray();
-
-        if (transactionsCursor.moveToFirst()) {
-            do {
-                JSONObject transactionObject = new JSONObject();
-                transactionObject.put("transaction_id", transactionsCursor.getInt(0));
-                transactionObject.put("account_id", transactionsCursor.getInt(1));
-                transactionObject.put("amount", transactionsCursor.getDouble(2));
-                transactionObject.put("description", transactionsCursor.getString(3));
-                transactionObject.put("date", transactionsCursor.getString(4));
-                transactionObject.put("category", transactionsCursor.getString(5));
-                transactionsJsonArray.put(transactionObject);
-            } while (transactionsCursor.moveToNext());
-        }
-        transactionsCursor.close();
-
-        // Create a JSONObject to hold both tables
-        JSONObject exportJson = new JSONObject();
-        exportJson.put("accounts", accountsJsonArray);
-        exportJson.put("transactions", transactionsJsonArray);
-
-        // Write the JSON to a file
-        writeJsonToFile(exportJson.toString());
-
-        Toast.makeText(this, "Data exported successfully!", Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * Writes the json string into a file and saves it to the app folders
-     * @param jsonString json string to write into a file
-     */
-    private void writeJsonToFile(String jsonString) {
+    private void exportDatabase() {
         try {
-            // Define the file path and name
-            File exportDir = new File(getExternalFilesDir(null), "exports");
+            File dbFile = getDatabasePath(db.getDatabaseName());
 
-            // Create directory if it doesn't exist
-            if (!exportDir.exists()) {
-                boolean directoryMade = exportDir.mkdirs();
-
-                if (!directoryMade) {
-                    Toast.makeText(MainActivity.this, "Directory not made", Toast.LENGTH_SHORT).show();
-                }
+            if (!dbFile.exists()) {
+                Toast.makeText(MainActivity.this, "Database file not found!", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            File jsonFile = new File(exportDir, "accounts_and_transactions.json");
+            Intent saveDatabaseFile = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            saveDatabaseFile.addCategory(Intent.CATEGORY_OPENABLE);
+            saveDatabaseFile.setType("application/vnd.sqlite3");
+            saveDatabaseFile.putExtra(Intent.EXTRA_TITLE, db.getDatabaseName());
 
-            // Write the JSON string to the file
-            FileWriter writer = new FileWriter(jsonFile);
-            writer.write(jsonString);
-            writer.flush();
-            writer.close();
-
-            Toast.makeText(this, "Exported to: " + jsonFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
-
-            // the absolute path: /storage/emulated/0/Android/data/com.example.databank/files/exports
+            exportDatabaseResultLauncher.launch(saveDatabaseFile);
         } catch (Exception e) {
-            Log.e("MainActivity", "Error writing JSON to file", e);
-            Toast.makeText(this, "Failed to write file!", Toast.LENGTH_SHORT).show();
+            Log.e("MainActivity.exportDatabase", "Error exporting database file", null);
+            Toast.makeText(MainActivity.this, "Export failed!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Writes the file out into the directory
+     * @param uri file path to save the file
+     */
+    private void saveDatabaseToUri(Uri uri) {
+        try {
+            File dbFile = getDatabasePath(db.getDatabaseName());
+            InputStream inputStream = new FileInputStream(dbFile);
+            OutputStream outputStream = getContentResolver().openOutputStream(uri);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            Toast.makeText(this, "Database exported successfully!", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e("MainActivity.saveDatabaseToUri", "Error exporting database file", null);
+            Toast.makeText(MainActivity.this, "Failed to export database!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    /**
+     * Import a database file to populate data
+     */
+    private void importDatabase() {
+        Intent importDatabaseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        //importDatabaseFile.addCategory(Intent.CATEGORY_OPENABLE);
+        //importDatabaseFile.setType("*/*");
+
+        importDatabaseResultLauncher.launch(importDatabaseFile);
+    }
+
+    /**
+     * Replace current database file with the selected file
+     */
+    private void replaceDatabase(Uri fileUri) {
+        try {
+            File dbFile = getDatabasePath(db.getDatabaseName());
+            InputStream inputStream = getContentResolver().openInputStream(fileUri);
+            OutputStream outputStream = new FileOutputStream(dbFile);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+
+            inputStream.close();
+            outputStream.close();
+
+            Toast.makeText(this, "Database imported successfully!", Toast.LENGTH_SHORT).show();
+            db.close();
+            recreate(); // Restart the activity to reload data
+            db = new DatabaseHelper(MainActivity.this);
+        } catch (Exception e) {
+            Log.e("MainActivity.replaceDatabase", "Error replacing database file", null);
+            Toast.makeText(this, "Failed to import database!", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -15,7 +15,7 @@ import android.widget.Toast;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     private Context context;
-    private static final String DATABASE_NAME = "spending_tracker.db";
+    private static final String DATABASE_NAME = "databank.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME_ACCOUNT = "accounts";
     private static final String COLUMN_ACCOUNT_ID = "account_id";
