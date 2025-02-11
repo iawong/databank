@@ -30,21 +30,17 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 2/9/25 notes
- * Changed database export to be the database file instead of converting
- * to JSON. This is easier to reimport back into the app.
- * TODO: fix database import and allow user to select where to import
- * research different options for exporting the database file to the documents folder
- * so that importing will work using ACTION_OPEN_DOCUMENT_TREE, or default to documents
- * folder. 
+ * 2/10/25 notes
+ * fixed database import and export. didn't realize that when exporting, I can manually select
+ * the documents folder, and for some reason, exporting to the downloads and documents folder that
+ * has a shortcut goes somewhere else
  * TODO: move transaction buttons into itself
  * TODO: add transaction transfer
  * TODO: add search functionality for transactions
@@ -67,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // the class' name is MainActivity. So, in my TransactionActivity class, the binding class
     // name is ActivityTransactionBinding
     private ActivityMainBinding binding;
-    private Uri baseFolderUri;
 
     // ActivityResultLauncher for adding accounts
     private ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
@@ -498,8 +493,13 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private void saveDatabaseToUri(Uri uri) {
         try {
             File dbFile = getDatabasePath(db.getDatabaseName());
-            InputStream inputStream = new FileInputStream(dbFile);
+            InputStream inputStream = Files.newInputStream(dbFile.toPath());
             OutputStream outputStream = getContentResolver().openOutputStream(uri);
+
+            if (outputStream == null) {
+                Toast.makeText(MainActivity.this, "Could not export database, URI not found", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             byte[] buffer = new byte[1024];
             int length;
@@ -521,9 +521,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      * Import a database file to populate data
      */
     private void importDatabase() {
-        Intent importDatabaseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        //importDatabaseFile.addCategory(Intent.CATEGORY_OPENABLE);
-        //importDatabaseFile.setType("*/*");
+        Intent importDatabaseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        importDatabaseFile.addCategory(Intent.CATEGORY_OPENABLE);
+        importDatabaseFile.setType("*/*");
 
         importDatabaseResultLauncher.launch(importDatabaseFile);
     }
@@ -535,7 +535,15 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         try {
             File dbFile = getDatabasePath(db.getDatabaseName());
             InputStream inputStream = getContentResolver().openInputStream(fileUri);
-            OutputStream outputStream = new FileOutputStream(dbFile);
+            OutputStream outputStream = Files.newOutputStream(dbFile.toPath());
+
+            if (inputStream == null) {
+                Toast.makeText(MainActivity.this, "Database file not found, bad URI", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // close current db connection, will reopen after new db file is written in
+            db.close();
 
             byte[] buffer = new byte[1024];
             int length;
@@ -547,7 +555,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             outputStream.close();
 
             Toast.makeText(this, "Database imported successfully!", Toast.LENGTH_SHORT).show();
-            db.close();
+
             recreate(); // Restart the activity to reload data
             db = new DatabaseHelper(MainActivity.this);
         } catch (Exception e) {
