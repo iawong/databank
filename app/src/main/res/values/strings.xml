@@ -39,6 +39,8 @@
     <string name="export_data">Export data</string>
     <string name="import_data">Import data</string>
     <string name="hidden">Hidden</string>
+    <string name="transfer">Transfer</string>
+    <string name="edit">Edit</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>

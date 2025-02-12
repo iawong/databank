@@ -196,6 +196,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         }
 
         Button saveChanges = binding.saveEditTransactionButton;
+        saveChanges.setText(R.string.edit);
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

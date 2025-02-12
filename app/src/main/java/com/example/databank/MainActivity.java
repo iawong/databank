@@ -37,10 +37,13 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 2/10/25 notes
- * fixed database import and export. didn't realize that when exporting, I can manually select
- * the documents folder, and for some reason, exporting to the downloads and documents folder that
- * has a shortcut goes somewhere else
+ * 2/11/25 notes
+ * added transfer button (not functioning yet) and the plan is to make the save button
+ * on the edit transactions activity switch dynamically. When the transaction details are
+ * first viewed, none of the fields should be editable. The save button should say edit,
+ * and by clicking it, all the fields will be enabled for editing. The save button will then
+ * change from edit to save. And then pressing save will actually save the changes. This
+ * should be determined by having a boolean toggle edit mode on and off.
  * TODO: move transaction buttons into itself
  * TODO: add transaction transfer
  * TODO: add search functionality for transactions
