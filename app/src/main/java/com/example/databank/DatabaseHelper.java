@@ -8,13 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 /**
- * TODO: close db connections when done
  * This class creates the account and transactions database and
  * holds all the functions for getting/inserting/updating/deleting
  * account and transaction information
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private Context context;
+    private final Context context;
     private static final String DATABASE_NAME = "databank.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_NAME_ACCOUNT = "accounts";

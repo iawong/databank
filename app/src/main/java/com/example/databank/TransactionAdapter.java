@@ -21,16 +21,16 @@ import java.util.Locale;
  * custom adapter for a transaction object
  */
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.ViewHolder> {
-    private Context context;
-    private int accountId;
-    private int accountPosition;
-    private ArrayList<Integer> transactionIds;
-    private ArrayList<Double> transactionAmounts;
-    private ArrayList<String> transactionDescriptions;
-    private ArrayList<String> transactionDates;
-    private ArrayList<String> transactionCategories;
-    private ActivityResultLauncher<Intent> transactionChangeResultLauncher;
-    private OnDeleteListener deleteListener;
+    private final Context context;
+    private final int accountId;
+    private final int accountPosition;
+    private final ArrayList<Integer> transactionIds;
+    private final ArrayList<Double> transactionAmounts;
+    private final ArrayList<String> transactionDescriptions;
+    private final ArrayList<String> transactionDates;
+    private final ArrayList<String> transactionCategories;
+    private final ActivityResultLauncher<Intent> transactionChangeResultLauncher;
+    private final OnDeleteListener deleteListener;
 
     public TransactionAdapter (Context context,
                                int accountId,
@@ -123,7 +123,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         return transactionAmounts.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView transactionAmount, transactionDescription, transactionDate, transactionCategory;
         ImageButton editButton, deleteButton;
 

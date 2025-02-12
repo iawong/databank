@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 public class TransactionActivity extends AppCompatActivity implements OnDeleteListener{
     private TransactionAdapter transactionAdapter;
-    private ActivityTransactionBinding binding;
     private DatabaseHelper db;
     private ArrayList<Integer> transactionIds;
     private ArrayList<Double> transactionAmounts;
@@ -38,7 +37,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
     private int currentOffset = 0;
 
     // get results from new transaction activity
-    ActivityResultLauncher<Intent> addTransactionLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> addTransactionLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -59,7 +58,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
             }
     );
 
-    ActivityResultLauncher<Intent> transactionChangeResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> transactionChangeResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -84,7 +83,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityTransactionBinding.inflate(getLayoutInflater());
+        ActivityTransactionBinding binding = ActivityTransactionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         accountId = getIntent().getIntExtra("accountId", -1);

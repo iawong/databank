@@ -16,13 +16,11 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
 public class EditAccountActivity extends AppCompatActivity {
-    private ActivityEditAccountBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityEditAccountBinding.inflate(getLayoutInflater());
+        ActivityEditAccountBinding binding = ActivityEditAccountBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         TextInputLayout textInputChangeAccountName = binding.textInputChangeAccountName;

@@ -22,13 +22,13 @@ import java.util.Locale;
  * custom adapter for an account object
  */
 public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHolder> {
-    private Context context;
-    private ArrayList<Integer> accountIds;
-    private ArrayList<String> accountNames;
-    private ArrayList<Double> accountBalances;
-    private ActivityResultLauncher<Intent> transactionResultLauncher;
-    private ActivityResultLauncher<Intent> accountChangeResultLauncher;
-    private OnDeleteListener deleteListener;
+    private final Context context;
+    private final ArrayList<Integer> accountIds;
+    private final ArrayList<String> accountNames;
+    private final ArrayList<Double> accountBalances;
+    private final ActivityResultLauncher<Intent> transactionResultLauncher;
+    private final ActivityResultLauncher<Intent> accountChangeResultLauncher;
+    private final OnDeleteListener deleteListener;
 
     public AccountAdapter (Context context,
                            ArrayList<Integer> accountIds,
@@ -120,7 +120,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         return accountNames.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView accountName, accountBalance;
         ImageButton editButton, deleteButton;

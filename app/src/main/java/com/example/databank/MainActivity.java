@@ -46,7 +46,6 @@ import java.util.ArrayList;
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
- * TODO: import json file and read to database
  * TODO: sqlite migration features for database structure changes
  * TODO: rearrange transaction cardview
  * TODO: update account balance "hidden" string to be grey
@@ -59,13 +58,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private ArrayList<String> accountNames;
     private ArrayList<Double> accountBalances;
     private DrawerLayout drawerLayout;
-    // the name of this class "ActivityMainBinding" literally comes from the fact that
-    // the class' name is MainActivity. So, in my TransactionActivity class, the binding class
-    // name is ActivityTransactionBinding
-    private ActivityMainBinding binding;
 
     // ActivityResultLauncher for adding accounts
-    private ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -90,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     );
 
     // ActivityResultLauncher for changing account details
-    private ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -121,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     );
 
     // ActivityResultLauncher for adding transactions
-    private ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -157,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     );
 
     // ActivityResultLauncher for getting the file path to save exported json files
-    private ActivityResultLauncher<Intent> exportDatabaseResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> exportDatabaseResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -182,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             }
     );
 
-    private ActivityResultLauncher<Intent> importDatabaseResultLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> importDatabaseResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -211,7 +206,10 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        // the name of this class "ActivityMainBinding" literally comes from the fact that
+        // the class' name is MainActivity. So, in my TransactionActivity class, the binding class
+        // name is ActivityTransactionBinding
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         View rootView = binding.getRoot();
         setContentView(rootView); //getRoot(), get the outer most view
 
