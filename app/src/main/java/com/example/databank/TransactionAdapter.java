@@ -6,11 +6,11 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
@@ -30,7 +30,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private final ArrayList<String> transactionDates;
     private final ArrayList<String> transactionCategories;
     private final ActivityResultLauncher<Intent> transactionChangeResultLauncher;
-    private final OnDeleteListener deleteListener;
 
     public TransactionAdapter (Context context,
                                int accountId,
@@ -40,8 +39,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                                ArrayList<String> transactionDescriptions,
                                ArrayList<String> transactionDates,
                                ArrayList<String> transactionCategories,
-                               ActivityResultLauncher<Intent> transactionChangeResultLauncher,
-                               OnDeleteListener deleteListener) {
+                               ActivityResultLauncher<Intent> transactionChangeResultLauncher) {
         this.context = context;
         this.accountId = accountId;
         this.accountPosition = accountPosition;
@@ -51,7 +49,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.transactionDates = transactionDates;
         this.transactionCategories = transactionCategories;
         this.transactionChangeResultLauncher = transactionChangeResultLauncher;
-        this.deleteListener = deleteListener;
     }
 
     @NonNull
@@ -91,7 +88,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.transactionDate.setText(String.valueOf(transactionDates.get(position)));
         holder.transactionCategory.setText(String.valueOf(transactionCategories.get(position)));
 
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent changeTransactionDetails = new Intent(context, EditTransactionActivity.class);
@@ -106,16 +103,6 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 transactionChangeResultLauncher.launch(changeTransactionDetails);
             }
         });
-
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteListener.onTransactionDelete(holder.getAdapterPosition(),
-                                                   accountId,
-                                                   transactionIds.get(holder.getAdapterPosition()),
-                                                   transactionAmounts.get(holder.getAdapterPosition()));
-            }
-        });
     }
 
     @Override
@@ -124,18 +111,17 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
+        CardView cardView;
         TextView transactionAmount, transactionDescription, transactionDate, transactionCategory;
-        ImageButton editButton, deleteButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
+            cardView = itemView.findViewById(R.id.transactionCardView);
             transactionAmount = itemView.findViewById(R.id.transactionAmount);
             transactionDescription = itemView.findViewById(R.id.transactionDescription);
             transactionDate = itemView.findViewById(R.id.transactionDate);
             transactionCategory = itemView.findViewById(R.id.transactionCategory);
-            editButton = itemView.findViewById(R.id.editTransaction);
-            deleteButton = itemView.findViewById(R.id.removeTransaction);
         }
     }
 }

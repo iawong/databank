@@ -1,10 +1,8 @@
 package com.example.databank;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.MediaRouter2;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -24,7 +22,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class TransactionActivity extends AppCompatActivity implements OnDeleteListener{
+public class TransactionActivity extends AppCompatActivity{
     private TransactionAdapter transactionAdapter;
     private DatabaseHelper db;
     private ArrayList<Integer> transactionIds;
@@ -157,8 +155,7 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                                                     transactionDescriptions,
                                                     transactionDates,
                                                     transactionCategories,
-                                                    transactionChangeResultLauncher,
-                                                    TransactionActivity.this);
+                                                    transactionChangeResultLauncher);
 
         // load the first 10 transactions
         loadTransactions();
@@ -271,66 +268,6 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
         // close the database connection when the app is closed
         if (db != null) {
             db.close();
-        }
-    }
-
-    /**
-     * Not using this
-     * @param position position of account
-     * @param accountId account id
-     */
-    @Override
-    public void onAccountDelete(int position, int accountId) {}
-
-    /**
-     * delete the transaction
-     * @param position transaction position
-     * @param accId account id
-     * @param transactionId transaction id
-     */
-    @Override
-    public void onTransactionDelete(int position, int accId, int transactionId, double amount) {
-        View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
-
-        Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
-        Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
-
-        AlertDialog dialog = new AlertDialog.Builder(TransactionActivity.this)
-                .setView(alertView)
-                .setCancelable(false)
-                .create();
-
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db = new DatabaseHelper(TransactionActivity.this);
-
-                db.deleteTransaction(accId, transactionId, amount);
-
-                transactionIds.remove(position);
-                transactionAmounts.remove(position);
-                transactionDescriptions.remove(position);
-                transactionDates.remove(position);
-                transactionCategories.remove(position);
-
-                transactionAdapter.notifyItemRemoved(position);
-
-                dialog.dismiss();
-            }
-        });
-
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
         }
     }
 }

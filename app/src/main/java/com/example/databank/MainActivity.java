@@ -37,20 +37,17 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 2/11/25 notes
- * added transfer button (not functioning yet) and the plan is to make the save button
- * on the edit transactions activity switch dynamically. When the transaction details are
- * first viewed, none of the fields should be editable. The save button should say edit,
- * and by clicking it, all the fields will be enabled for editing. The save button will then
- * change from edit to save. And then pressing save will actually save the changes. This
- * should be determined by having a boolean toggle edit mode on and off.
- * TODO: move transaction buttons into itself
+ * 2/23/25 notes
+ * updated transactions. edit button removed, you can just click on the transaction cardview
+ * to view the transaction details. the save button now starts as an edit button then switches to
+ * a save button when clicked. delete button on cardview now exists in the transaction details.
+ * rearranged the transaction cardview as well.
+ * transfer button not yet functioning.
  * TODO: add transaction transfer
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
  * TODO: sqlite migration features for database structure changes
- * TODO: rearrange transaction cardview
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
  */
