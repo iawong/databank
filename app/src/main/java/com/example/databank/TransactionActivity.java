@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaRouter2;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +72,25 @@ public class TransactionActivity extends AppCompatActivity implements OnDeleteLi
                         if (data == null) {
                             Toast.makeText(TransactionActivity.this, "Transaction data not found", Toast.LENGTH_SHORT).show();
                             return;
+                        }
+
+                        boolean deleteTrans = data.getBooleanExtra("deleteTransaction", false);
+
+                        if (deleteTrans) {
+                            int position = data.getIntExtra("transactionPosition", -1);
+
+                            if (position == -1) {
+                                Toast.makeText(TransactionActivity.this, "Transaction position not found", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            transactionIds.remove(position);
+                            transactionAmounts.remove(position);
+                            transactionDescriptions.remove(position);
+                            transactionDates.remove(position);
+                            transactionCategories.remove(position);
+
+                            transactionAdapter.notifyItemRemoved(position);
                         }
 
                         reloadTransactionData();

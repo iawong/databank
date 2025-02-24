@@ -1,5 +1,6 @@
 package com.example.databank;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.widget.Toolbar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.databank.databinding.ActivityEditTransactionBinding;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -39,7 +41,6 @@ public class EditTransactionActivity extends AppCompatActivity {
         binding = ActivityEditTransactionBinding.inflate(getLayoutInflater());
         View rootView = binding.getRoot();
         setContentView(rootView);
-
 
         TextInputEditText newTransAmt = binding.editTransactionAmount;
 
@@ -202,6 +203,13 @@ public class EditTransactionActivity extends AppCompatActivity {
             finish();
         }
 
+        int transactionPosition = getIntent().getIntExtra("transactionPosition", -1);
+
+        if (transactionPosition == -1) {
+            Toast.makeText(EditTransactionActivity.this, "Transaction position not found", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
         Toolbar toolbar = binding.editTransactionAppbar;
         TextInputLayout newTransCategoryLayout = binding.textInputEditTransactionCategory;
 
@@ -276,6 +284,14 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         });
 
+        FloatingActionButton deleteTrans = binding.deleteTransactionButton;
+        deleteTrans.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteTransaction(transactionPosition, accountId, transactionId, transAmt);
+            }
+        });
+
         Button back = binding.cancelEditTransactionButton;
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -285,6 +301,57 @@ public class EditTransactionActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    /**
+     * delete the transaction
+     * @param transPos transaction position
+     * @param accId account id
+     * @param transactionId transaction id
+     */
+    public void deleteTransaction(int transPos, int accId, int transactionId, double amount) {
+        View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
+
+        Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);
+        Button negativeButton = alertView.findViewById(R.id.alertNegativeButton);
+
+        AlertDialog dialog = new AlertDialog.Builder(EditTransactionActivity.this)
+                .setView(alertView)
+                .setCancelable(false)
+                .create();
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try(DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
+                    db.deleteTransaction(accId, transactionId, amount);
+                    dialog.dismiss();
+
+                    Intent returnIntent = new Intent();
+
+                    returnIntent.putExtra("deleteTransaction", true);
+                    returnIntent.putExtra("transactionPosition", transPos);
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
+                } catch (Exception e) {
+                    Log.e("EditTransactionActivity", "Error deleting transaction", e);
+                    Toast.makeText(EditTransactionActivity.this, "Failed to delete transaction. Please try again", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
     }
 
     /**
