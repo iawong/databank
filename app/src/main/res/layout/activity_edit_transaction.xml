@@ -18,7 +18,7 @@
         android:layout_height="?attr/actionBarSize"
         android:background="@color/appbar"
         android:elevation="4dp"
-        android:title="@string/edit_transaction_appbar"
+        android:title="@string/edit_transaction_appbar_1"
         android:titleTextAppearance="@style/AppbarTitle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +42,7 @@
             android:id="@+id/editTransactionAmount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:inputType="number"
             android:maxLength="15"
             android:background="@color/rowItem"
@@ -61,6 +62,7 @@
             android:id="@+id/editRadioDebitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/debit"
             android:textColor="@color/white"
             android:buttonTint="@color/rowItem"/>
@@ -68,6 +70,7 @@
             android:id="@+id/editRadioCreditButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/credit"
             android:textColor="@color/white"
             android:buttonTint="@color/rowItem"/>
@@ -91,6 +94,7 @@
             android:id="@+id/editTransactionDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:background="@color/rowItem"
             android:hint="@string/new_transaction_description"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -112,6 +116,7 @@
             android:id="@+id/editTransactionDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:background="@color/rowItem"
             android:inputType="none"
             android:focusable="false"
@@ -127,6 +132,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
+        android:enabled="false"
         android:textColorHint="@color/white"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         app:hintTextColor="@color/white"
@@ -138,6 +144,7 @@
             android:id="@+id/editTransactionCategory"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:background="@color/rowItem"
             android:hint="@string/select_category"
             android:inputType="none"/>

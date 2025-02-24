@@ -28,7 +28,8 @@
     <string name="cancel">Cancel</string>
     <string name="new_account_appbar">New Account</string>
     <string name="new_transaction_appbar">New Transaction</string>
-    <string name="edit_transaction_appbar">Edit Transaction</string>
+    <string name="edit_transaction_appbar_1">Transaction Details</string>
+    <string name="edit_transaction_appbar_2">Edit Transaction</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="alert_confirm_delete">Confirm Delete</string>

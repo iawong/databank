@@ -12,13 +12,16 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.databank.databinding.ActivityEditTransactionBinding;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -27,6 +30,7 @@ import java.util.Locale;
 public class EditTransactionActivity extends AppCompatActivity {
     ActivityEditTransactionBinding binding;
     private boolean isDebit;
+    private boolean edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +39,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         binding = ActivityEditTransactionBinding.inflate(getLayoutInflater());
         View rootView = binding.getRoot();
         setContentView(rootView);
+
 
         TextInputEditText newTransAmt = binding.editTransactionAmount;
 
@@ -88,13 +93,15 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         });
 
-        // radio group to save if the transaction is a credit or debit
-        RadioGroup transactionTypeGroup = findViewById(R.id.editRadioGroupTransactionType);
-
         if (newTransAmt.getText() == null) {
             Log.e("EditTransactionActivity", "newTransAmt.getText() is null");
             return;
         }
+
+        // radio group to save if the transaction is a credit or debit
+        RadioGroup transactionTypeGroup = binding.editRadioGroupTransactionType;
+        RadioButton debitRadioBtn = binding.editRadioDebitButton;
+        RadioButton creditRadioBtn = binding.editRadioCreditButton;
 
         if (transAmt < 0) {
             transactionTypeGroup.check(R.id.editRadioDebitButton);
@@ -195,58 +202,77 @@ public class EditTransactionActivity extends AppCompatActivity {
             finish();
         }
 
+        Toolbar toolbar = binding.editTransactionAppbar;
+        TextInputLayout newTransCategoryLayout = binding.textInputEditTransactionCategory;
+
+        edit = false;
+
         Button saveChanges = binding.saveEditTransactionButton;
         saveChanges.setText(R.string.edit);
         saveChanges.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (newTransAmt.getText() == null) {
-                    // can't be null
-                    return;
-                }
+                edit = !edit;
 
-                String changedTransAmt = newTransAmt.getText().toString().trim();
-
-                if (newTransDesc.getText() == null) {
-                    // can't be null but can be empty
-                    return;
-                }
-
-                String changedTransDesc = newTransDesc.getText().toString().trim();
-
-                if (newTransDate.getText() == null) {
-                    // can't be null but can be empty
-                    return;
-                }
-
-                String changedTransDate = newTransDate.getText().toString().trim();
-
-                double changedAmount;
-
-                try {
-                    changedAmount = Double.parseDouble(changedTransAmt.replaceAll("[$,]", ""));
-
-                    if (isDebit) {
-                        changedAmount *= -1;
+                if (edit) {
+                    toolbar.setTitle(R.string.edit_transaction_appbar_2);
+                    saveChanges.setText(R.string.save);
+                    newTransAmt.setEnabled(true);
+                    debitRadioBtn.setEnabled(true);
+                    creditRadioBtn.setEnabled(true);
+                    newTransDesc.setEnabled(true);
+                    newTransDate.setEnabled(true);
+                    newTransCategoryLayout.setEnabled(true);
+                    newTransCategory.setEnabled(true);
+                } else {
+                    if (newTransAmt.getText() == null) {
+                        // can't be null
+                        return;
                     }
-                } catch (Exception e) {
-                    Toast.makeText(EditTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
-                    return;
+
+                    String changedTransAmt = newTransAmt.getText().toString().trim();
+
+                    if (newTransDesc.getText() == null) {
+                        // can't be null but can be empty
+                        return;
+                    }
+
+                    String changedTransDesc = newTransDesc.getText().toString().trim();
+
+                    if (newTransDate.getText() == null) {
+                        // can't be null but can be empty
+                        return;
+                    }
+
+                    String changedTransDate = newTransDate.getText().toString().trim();
+
+                    double changedAmount;
+
+                    try {
+                        changedAmount = Double.parseDouble(changedTransAmt.replaceAll("[$,]", ""));
+
+                        if (isDebit) {
+                            changedAmount *= -1;
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(EditTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String changedTransCategory = newTransCategory.getText().toString().trim();
+
+                    try (DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
+                        db.updateTransaction(accountId, transactionId, changedAmount, changedTransDesc, changedTransDate, changedTransCategory);
+                    } catch (Exception e) {
+                        Log.e("EditTransactionActivity", "Error editing transaction", e);
+                        Toast.makeText(EditTransactionActivity.this, "Failed to edit transaction. Please try again", Toast.LENGTH_SHORT).show();
+                    }
+
+                    Intent returnIntent = new Intent();
+
+                    setResult(RESULT_OK, returnIntent);
+                    finish();
                 }
-
-                String changedTransCategory = newTransCategory.getText().toString().trim();
-
-                try (DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
-                    db.updateTransaction(accountId, transactionId, changedAmount, changedTransDesc, changedTransDate, changedTransCategory);
-                } catch (Exception e) {
-                    Log.e("EditTransactionActivity", "Error editing transaction", e);
-                    Toast.makeText(EditTransactionActivity.this, "Failed to edit transaction. Please try again", Toast.LENGTH_SHORT).show();
-                }
-
-                Intent returnIntent = new Intent();
-
-                setResult(RESULT_OK, returnIntent);
-                finish();
             }
         });
 
