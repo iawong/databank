@@ -1,0 +1,3 @@
+Reminder notes:
+ - When updating the version number of your app, go to the build.gradle.kts under the app folder directory
+ - When creating a key for generating signed apk files, never forget that password :c

@@ -43,7 +43,9 @@ import java.util.ArrayList;
  * a save button when clicked. delete button on cardview now exists in the transaction details.
  * rearranged the transaction cardview as well.
  * transfer button not yet functioning.
- * TODO: add transaction transfer
+ * TODO: add transaction transfer/transfer should not be available when editing
+ * TODO: back button should finish activity
+ * TODO: fix numbers being saved as decimals
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
