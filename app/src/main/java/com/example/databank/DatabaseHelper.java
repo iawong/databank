@@ -36,13 +36,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // Table creation SQL
         String CREATE_ACCOUNTS_TABLE =
-            "CREATE TABLE " + TABLE_NAME_ACCOUNT + " (" +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_ACCOUNT + " (" +
             COLUMN_ACCOUNT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_ACCOUNT_NAME + " TEXT NOT NULL, " +
             COLUMN_ACCOUNT_BALANCE + " REAL NOT NULL);";
 
         String CREATE_TRANSACTIONS_TABLE =
-            "CREATE TABLE " + TABLE_NAME_TRANSACTION + " (" +
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_TRANSACTION + " (" +
             COLUMN_TRANSACTION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_ACCOUNT_ID + " INTEGER NOT NULL, " +
             COLUMN_TRANSACTION_AMOUNT + " REAL NOT NULL, " +
@@ -52,7 +52,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "FOREIGN KEY (" + COLUMN_ACCOUNT_ID + ") REFERENCES " + TABLE_NAME_ACCOUNT + " (" + COLUMN_ACCOUNT_ID + "));";
 
         String CREATE_INDEX_ON_DATE =
-                "CREATE INDEX idx_transaction_date ON " + TABLE_NAME_TRANSACTION + " (" + COLUMN_ACCOUNT_ID +
+                "CREATE INDEX IF NOT EXISTS idx_transaction_date ON " + TABLE_NAME_TRANSACTION + " (" + COLUMN_ACCOUNT_ID +
                 ", " + COLUMN_TRANSACTION_DATE + ");";
 
         db.execSQL(CREATE_ACCOUNTS_TABLE);
