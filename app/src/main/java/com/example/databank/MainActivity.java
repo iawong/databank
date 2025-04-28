@@ -37,14 +37,9 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 2/23/25 notes
- * updated transactions. edit button removed, you can just click on the transaction cardview
- * to view the transaction details. the save button now starts as an edit button then switches to
- * a save button when clicked. delete button on cardview now exists in the transaction details.
- * rearranged the transaction cardview as well.
- * transfer button not yet functioning.
+ * 4/27/25 notes
+ * back button on transactions will now finish the activity and update the accounts page
  * TODO: add transaction transfer/transfer should not be available when editing
- * TODO: back button should finish activity
  * TODO: fix numbers being saved as decimals
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts

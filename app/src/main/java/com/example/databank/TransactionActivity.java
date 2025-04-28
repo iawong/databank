@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -132,13 +133,18 @@ public class TransactionActivity extends AppCompatActivity{
         Button back = binding.backToAccountsButton;
         back.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent returnToAccounts = new Intent();
-                returnToAccounts.putExtra("position", accountPosition);
-                returnToAccounts.putExtra("accountId", accountId);
-                setResult(RESULT_OK, returnToAccounts);
-                finish();
+                goBackToAccounts(accountPosition);
             }
         });
+
+        OnBackPressedCallback callback = new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                goBackToAccounts(accountPosition);
+            }
+        };
+
+        this.getOnBackPressedDispatcher().addCallback(this, callback);
 
         db = new DatabaseHelper(TransactionActivity.this);
         transactionIds = new ArrayList<>();
@@ -269,5 +275,13 @@ public class TransactionActivity extends AppCompatActivity{
         if (db != null) {
             db.close();
         }
+    }
+
+    private void goBackToAccounts(int accountPosition) {
+        Intent returnToAccounts = new Intent();
+        returnToAccounts.putExtra("position", accountPosition);
+        returnToAccounts.putExtra("accountId", accountId);
+        setResult(RESULT_OK, returnToAccounts);
+        finish();
     }
 }
