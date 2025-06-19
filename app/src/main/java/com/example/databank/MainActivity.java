@@ -37,10 +37,10 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 4/27/25 notes
- * back button on transactions will now finish the activity and update the accounts page
- * TODO: add transaction transfer/transfer should not be available when editing
- * TODO: fix numbers being saved as decimals
+ * 6/19/25
+ * started working on a show all values button in the navigation drawer
+ * TODO: add transaction transfer/transfer (should not be available when editing)
+ * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
  * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
@@ -235,7 +235,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
-                if (id == R.id.nav_export) {
+                if(id == R.id.nav_show_values) {
+                    showValues();
+                } else if (id == R.id.nav_export) {
                     exportDatabase();
                 } else if (id == R.id.nav_import) {
                     importDatabase();
@@ -557,5 +559,9 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             Log.e("MainActivity.replaceDatabase", "Error replacing database file", null);
             Toast.makeText(this, "Failed to import database!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void showValues() {
+
     }
 }

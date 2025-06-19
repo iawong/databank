@@ -42,6 +42,7 @@
     <string name="hidden">Hidden</string>
     <string name="transfer">Transfer</string>
     <string name="edit">Edit</string>
+    <string name="show_values">Show account amounts</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>
