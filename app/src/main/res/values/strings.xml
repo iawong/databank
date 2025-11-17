@@ -43,6 +43,10 @@
     <string name="transfer">Transfer</string>
     <string name="edit">Edit</string>
     <string name="show_values">Show account amounts</string>
+    <string name="transaction_summary">Transaction Summary</string>
+    <string name="transaction_from_date">From: YYYY-MM-DD</string>
+    <string name="transaction_to_date">To: YYYY-MM-DD</string>
+    <string name="search">Search</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>

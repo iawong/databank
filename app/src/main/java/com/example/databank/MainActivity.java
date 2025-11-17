@@ -37,12 +37,13 @@ import java.util.ArrayList;
 
 /**
  * This is the account activity
- * 6/19/25
- * started working on a show all values button in the navigation drawer
+ * 11/16/25
+ * tabled the show all values functionality, it's more important for me to
+ * start on the pie chart since that's the whole point of this app.
+ * TODO: add activity for data summary like pie charts
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
- * TODO: add activity for data summary like pie charts
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
  * TODO: sqlite migration features for database structure changes
  * TODO: update account balance "hidden" string to be grey
@@ -237,6 +238,8 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
                 if(id == R.id.nav_show_values) {
                     showValues();
+                } else if (id == R.id.nav_summary) {
+                    showSummary();
                 } else if (id == R.id.nav_export) {
                     exportDatabase();
                 } else if (id == R.id.nav_import) {
@@ -561,7 +564,18 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         }
     }
 
+    /**
+     * Shows all account values. This button shows up on the drawer on the top left.
+     */
     private void showValues() {
+        // TODO: implement
+    }
 
+    /**
+     * Shows a summary of all my transactions.
+     */
+    private void showSummary() {
+        Intent intent = new Intent(this, TransactionSummary.class);
+        this.startActivity(intent);
     }
 }

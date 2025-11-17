@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,13 +13,16 @@
         android:theme="@style/Theme.Databank"
         tools:targetApi="31">
         <activity
+            android:name=".TransactionSummary"
+            android:exported="false" />
+        <activity
             android:name=".EditTransactionActivity"
             android:exported="false"
-            android:parentActivityName=".TransactionActivity"/>
+            android:parentActivityName=".TransactionActivity" />
         <activity
             android:name=".EditAccountActivity"
             android:exported="false"
-            android:parentActivityName=".MainActivity"/>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".NewTransactionActivity"
             android:exported="false"
@@ -40,4 +44,5 @@
             android:name=".NewAccountActivity"
             android:parentActivityName=".MainActivity" />
     </application>
+
 </manifest>

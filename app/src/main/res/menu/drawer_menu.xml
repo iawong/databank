@@ -4,6 +4,9 @@
         android:id="@+id/nav_show_values"
         android:title="@string/show_values"/>
     <item
+        android:id="@+id/nav_summary"
+        android:title="@string/transaction_summary"/>
+    <item
         android:id="@+id/nav_export"
         android:title="@string/export_data"/>
     <item
