@@ -48,6 +48,8 @@ import java.util.ArrayList;
  * TODO: sqlite migration features for database structure changes
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
+ * TODO: re-eval how I'm creating the date picker fields
+ * TODO: override back button to finish activities. This should replace the back buttons I've added.
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
     private AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity

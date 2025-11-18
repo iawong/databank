@@ -1,22 +1,24 @@
 package com.example.databank;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
 import com.example.databank.databinding.ActivityTransactionSummaryBinding;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class TransactionSummary extends AppCompatActivity {
     private ActivityTransactionSummaryBinding binding;
@@ -30,7 +32,12 @@ public class TransactionSummary extends AppCompatActivity {
         View rootView = binding.getRoot();
         setContentView(rootView);
 
-        pieChart = findViewById(R.id.pieChart);
+        TextInputEditText fromDate = getTextInputEditTextDate(binding.transFromDate);
+        TextInputEditText toDate = getTextInputEditTextDate(binding.transToDate);
+
+        Button search = createSearchButton(fromDate, toDate);
+        
+        pieChart = binding.pieChart;
         setUpPieChart();
     }
 
@@ -56,8 +63,95 @@ public class TransactionSummary extends AppCompatActivity {
         pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
         pieChart.setCenterText("Spendings");
-        pieChart.animate();
+        pieChart.animateY(1000);
 
-//        pieChart.invalidate();
+        pieChart.invalidate();
+    }
+
+    private Button createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
+        Button search = binding.saveDateRange;
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String fromDate = "";
+                String toDate = "";
+
+                if (textInputFromDate.getText() != null) {
+                    fromDate = textInputFromDate.getText().toString().trim();
+                }
+
+                if (textInputToDate.getText() != null) {
+                    toDate = textInputToDate.getText().toString().trim();
+                }
+
+                getTransactions(fromDate, toDate);
+            }
+        });
+
+        return search;
+    }
+
+    private void getTransactions(String from, String to) {
+
+    }
+
+    /**
+     * Create formatted date
+     * @return the TextInputEditText with the new date
+     */
+    private @NonNull TextInputEditText getTextInputEditTextDate(TextInputEditText text) {
+        Calendar calendar = Calendar.getInstance();
+        String runDate = String.format(Locale.US, "%d-%02d-%02d",
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH));
+
+        text.setText(runDate);
+
+        text.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                // Create and show the DatePickerDialog
+                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                        TransactionSummary.this,
+                        (view, selectedYear, selectedMonth, selectedDay) -> {
+                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
+                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
+                                    selectedYear,
+                                    selectedMonth + 1,
+                                    selectedDay);
+                            text.setText(formattedDate);
+                        },
+                        year, month, day
+                );
+
+                datePickerDialog.show();
+            }
+        });
+
+        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                hideKeyboard(v);
+            }
+        });
+
+        return text;
+    }
+
+    /**
+     * Hides the keyboard after tapping out of the edit text
+     * @param v view that the keyboard should be hidden from
+     */
+    private void hideKeyboard(View v) {
+        if (v != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(NewTransactionActivity.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }
