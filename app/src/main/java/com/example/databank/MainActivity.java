@@ -40,6 +40,7 @@ import java.util.ArrayList;
  * 11/16/25
  * tabled the show all values functionality, it's more important for me to
  * start on the pie chart since that's the whole point of this app.
+ * test text for commit
  * TODO: add activity for data summary like pie charts
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
