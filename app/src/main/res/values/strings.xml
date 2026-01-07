@@ -47,6 +47,8 @@
     <string name="transaction_from_date">From: YYYY-MM-DD</string>
     <string name="transaction_to_date">To: YYYY-MM-DD</string>
     <string name="search">Search</string>
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>
@@ -62,6 +64,7 @@
         <item>Groceries</item>
         <item>Health &amp; wellness</item>
         <item>Home</item>
+        <item>Investment</item>
         <item>Other</item>
         <item>Paycheck</item>
         <item>Personal</item>
@@ -69,7 +72,4 @@
         <item>Shopping</item>
         <item>Travel</item>
     </string-array>
-
-    <string name="drawer_open">Open Drawer</string>
-    <string name="drawer_close">Close Drawer</string>
 </resources>

@@ -6,10 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,26 +41,15 @@ public class TransactionSummary extends AppCompatActivity {
         TextInputEditText fromDate = getTextInputEditTextDate(binding.transFromDate);
         TextInputEditText toDate = getTextInputEditTextDate(binding.transToDate);
 
-        Button search = createSearchButton(fromDate, toDate);
         db = new DatabaseHelper(TransactionSummary.this);
+        createSearchButton(fromDate, toDate);
         pieChart = binding.pieChart;
-        setUpPieChart();
-
-        String[] summaryList = buildSummaryList();
-
-        if (summaryList != null) {
-            TextView textView = binding.summaryListTextView;
-            StringBuilder text = new StringBuilder();
-
-            for (String s : summaryList) {
-                text.append(s).append("\r\n");
-            }
-
-            textView.setText(text);
-        }
+        setUpInitialPieChart();
+        printSummaryList();
     }
 
-    private Button createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
+    private void createSearchButton(TextInputEditText textInputFromDate,
+                                      TextInputEditText textInputToDate) {
         Button search = binding.saveDateRange;
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,13 +66,13 @@ public class TransactionSummary extends AppCompatActivity {
                 }
 
                 getTransactions(fromDate, toDate);
+                updatePieChart();
+                printSummaryList();
             }
         });
-
-        return search;
     }
 
-    private void setUpPieChart() {
+    private void setUpInitialPieChart() {
         ArrayList<PieEntry> entries = buildPieEntriesAll();
 
         PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
@@ -106,7 +92,6 @@ public class TransactionSummary extends AppCompatActivity {
         pieChart.getDescription().setEnabled(false);
         pieChart.setCenterText("Spendings");
         pieChart.animateY(1000);
-
         pieChart.invalidate();
     }
 
@@ -116,7 +101,7 @@ public class TransactionSummary extends AppCompatActivity {
      * @return ArrayList of pie entries with all transactions
      */
     private ArrayList<PieEntry> buildPieEntriesAll() {
-        Cursor cursor = db.summarizeALlTransactionsByCategory();
+        Cursor cursor = db.summarizeAllTransactionsByCategory();
         int queryRowCount = cursor.getCount();
 
         categories = new ArrayList<>();
@@ -157,6 +142,20 @@ public class TransactionSummary extends AppCompatActivity {
         return summaryList;
     }
 
+    private void printSummaryList() {
+        String[] summaryList = buildSummaryList();
+
+        if (summaryList != null) {
+            StringBuilder text = new StringBuilder();
+
+            for (String s : summaryList) {
+                text.append(s).append("\r\n");
+            }
+
+            binding.summaryListTextView.setText(text);
+        }
+    }
+
     private String FormatDoubleAsCurrency(double amount) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
 
@@ -164,7 +163,47 @@ public class TransactionSummary extends AppCompatActivity {
     }
 
     private void getTransactions(String fromDate, String toDate) {
+        Cursor cursor = db.summarizeTransactionsByCategoryAndDate(fromDate, toDate);
+        int queryRowCount = cursor.getCount();
 
+        if (queryRowCount == 0) {
+            Toast.makeText(TransactionSummary.this, "No transactions found", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            return;
+        }
+
+        categories = new ArrayList<>();
+        amounts = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            categories.add(cursor.getString(0));
+            amounts.add(cursor.getDouble(1));
+        }
+
+        cursor.close();
+    }
+
+    private void updatePieChart() {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        int rows = categories.size();
+
+        for (int i = 0; i < rows; i++) {
+            entries.add(new PieEntry(amounts.get(i).floatValue(), categories.get(i)));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.BLUE);
+        colors.add(Color.RED);
+        dataSet.setColors(colors);
+
+        PieData pieData = new PieData(dataSet);
+
+        pieChart.setData(pieData);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setCenterText("Spendings");
+        pieChart.animateY(1000);
+        pieChart.invalidate();
     }
 
     /**

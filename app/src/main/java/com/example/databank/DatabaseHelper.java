@@ -296,10 +296,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    Cursor summarizeALlTransactionsByCategory() {
+    Cursor summarizeAllTransactionsByCategory() {
         String query = "SELECT " + COLUMN_TRANSACTION_CATEGORY + ", SUM(" + COLUMN_TRANSACTION_AMOUNT + ") " +
                 " FROM " + TABLE_NAME_TRANSACTION +
                 " GROUP BY " + COLUMN_TRANSACTION_CATEGORY;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
+    Cursor summarizeTransactionsByCategoryAndDate(String from, String to) {
+        String query = "SELECT " + COLUMN_TRANSACTION_CATEGORY + ", SUM(" + COLUMN_TRANSACTION_AMOUNT + ") " +
+                " FROM " + TABLE_NAME_TRANSACTION +
+                " WHERE " + COLUMN_TRANSACTION_DATE + " >= '" + from + "'" +
+                " AND " + COLUMN_TRANSACTION_DATE + " <= '" + to + "'" +
+                " GROUP BY " + COLUMN_TRANSACTION_CATEGORY;
+
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
