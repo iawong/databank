@@ -72,11 +72,13 @@ public class TransactionSummary extends AppCompatActivity {
 
         PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#FF6384"));
-        colors.add(Color.parseColor("#36A2EB"));
-        colors.add(Color.parseColor("#FFCE56"));
-        colors.add(Color.parseColor("#4BC0C0"));
-        colors.add(Color.parseColor("#9966FF"));
+        colors.add(Color.BLUE);
+        colors.add(Color.RED);
+//        colors.add(Color.parseColor("#FF6384"));
+//        colors.add(Color.parseColor("#36A2EB"));
+//        colors.add(Color.parseColor("#FFCE56"));
+//        colors.add(Color.parseColor("#4BC0C0"));
+//        colors.add(Color.parseColor("#9966FF"));
         dataSet.setColors(colors);
 
         PieData pieData = new PieData(dataSet);
