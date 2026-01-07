@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:id="@+id/main"
     tools:context=".TransactionSummary">
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,9 +80,14 @@
             android:layout_width="match_parent"
             android:layout_height="600dp"
             android:layout_marginTop="10dp"
-
             app:layout_constraintTop_toBottomOf="@id/saveDateRange"/>
 
+        <TextView
+            android:id="@+id/summaryListTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="50dp"
+            app:layout_constraintTop_toBottomOf="@id/pieChart"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 

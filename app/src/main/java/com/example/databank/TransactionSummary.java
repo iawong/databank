@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,6 +21,7 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -26,6 +30,8 @@ public class TransactionSummary extends AppCompatActivity {
     private ActivityTransactionSummaryBinding binding;
     private PieChart pieChart;
     private DatabaseHelper db;
+    private ArrayList<String> categories;
+    private ArrayList<Double> amounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +48,19 @@ public class TransactionSummary extends AppCompatActivity {
         db = new DatabaseHelper(TransactionSummary.this);
         pieChart = binding.pieChart;
         setUpPieChart();
+
+        String[] summaryList = buildSummaryList();
+
+        if (summaryList != null) {
+            TextView textView = binding.summaryListTextView;
+            StringBuilder text = new StringBuilder();
+
+            for (String s : summaryList) {
+                text.append(s).append("\r\n");
+            }
+
+            textView.setText(text);
+        }
     }
 
     private Button createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
@@ -68,7 +87,7 @@ public class TransactionSummary extends AppCompatActivity {
     }
 
     private void setUpPieChart() {
-        ArrayList<PieEntry> entries = BuildPieEntriesAll();
+        ArrayList<PieEntry> entries = buildPieEntriesAll();
 
         PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
         ArrayList<Integer> colors = new ArrayList<>();
@@ -96,11 +115,12 @@ public class TransactionSummary extends AppCompatActivity {
      * an ArrayList of pie entries to be used for display purposes.
      * @return ArrayList of pie entries with all transactions
      */
-    private ArrayList<PieEntry> BuildPieEntriesAll() {
+    private ArrayList<PieEntry> buildPieEntriesAll() {
         Cursor cursor = db.summarizeALlTransactionsByCategory();
         int queryRowCount = cursor.getCount();
-        ArrayList<String> categories = new ArrayList<>();
-        ArrayList<Double> amount = new ArrayList<>();
+
+        categories = new ArrayList<>();
+        amounts = new ArrayList<>();
 
         if (queryRowCount == 0) {
             Toast.makeText(TransactionSummary.this, "No transactions found", Toast.LENGTH_SHORT).show();
@@ -109,7 +129,7 @@ public class TransactionSummary extends AppCompatActivity {
         } else {
             while (cursor.moveToNext()) {
                 categories.add(cursor.getString(0));
-                amount.add(cursor.getDouble(1));
+                amounts.add(cursor.getDouble(1));
             }
         }
 
@@ -117,10 +137,30 @@ public class TransactionSummary extends AppCompatActivity {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
         for(int i = 0; i < queryRowCount; i++) {
-            entries.add(new PieEntry(amount.get(i).floatValue(), categories.get(i)));
+            entries.add(new PieEntry(amounts.get(i).floatValue(), categories.get(i)));
         }
 
         return entries;
+    }
+
+    private String[] buildSummaryList() {
+        if (categories.isEmpty()) {
+            return null;
+        }
+
+        String[] summaryList = new String[categories.size()];
+
+        for (int i = 0; i < categories.size(); i++) {
+            summaryList[i] = categories.get(i) + ": " + FormatDoubleAsCurrency(Math.abs(amounts.get(i)));
+        }
+
+        return summaryList;
+    }
+
+    private String FormatDoubleAsCurrency(double amount) {
+        NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
+
+        return numberFormat.format(amount);
     }
 
     private void getTransactions(String fromDate, String toDate) {
