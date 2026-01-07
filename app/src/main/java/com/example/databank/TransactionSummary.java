@@ -1,11 +1,13 @@
 package com.example.databank;
 
 import android.app.DatePickerDialog;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +25,7 @@ import java.util.Locale;
 public class TransactionSummary extends AppCompatActivity {
     private ActivityTransactionSummaryBinding binding;
     private PieChart pieChart;
+    private DatabaseHelper db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,36 +39,9 @@ public class TransactionSummary extends AppCompatActivity {
         TextInputEditText toDate = getTextInputEditTextDate(binding.transToDate);
 
         Button search = createSearchButton(fromDate, toDate);
-        
+        db = new DatabaseHelper(TransactionSummary.this);
         pieChart = binding.pieChart;
         setUpPieChart();
-    }
-
-    private void setUpPieChart() {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(30f, "Food"));
-        entries.add(new PieEntry(25f, "Transport"));
-        entries.add(new PieEntry(20f, "Entertainment"));
-        entries.add(new PieEntry(15f, "Shopping"));
-        entries.add(new PieEntry(10f, "Bills"));
-
-        PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#FF6384"));
-        colors.add(Color.parseColor("#36A2EB"));
-        colors.add(Color.parseColor("#FFCE56"));
-        colors.add(Color.parseColor("#4BC0C0"));
-        colors.add(Color.parseColor("#9966FF"));
-        dataSet.setColors(colors);
-
-        PieData pieData = new PieData(dataSet);
-
-        pieChart.setData(pieData);
-        pieChart.getDescription().setEnabled(false);
-        pieChart.setCenterText("Spendings");
-        pieChart.animateY(1000);
-
-        pieChart.invalidate();
     }
 
     private Button createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
@@ -91,7 +67,61 @@ public class TransactionSummary extends AppCompatActivity {
         return search;
     }
 
-    private void getTransactions(String from, String to) {
+    private void setUpPieChart() {
+        ArrayList<PieEntry> entries = BuildPieEntriesAll();
+
+        PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#FF6384"));
+        colors.add(Color.parseColor("#36A2EB"));
+        colors.add(Color.parseColor("#FFCE56"));
+        colors.add(Color.parseColor("#4BC0C0"));
+        colors.add(Color.parseColor("#9966FF"));
+        dataSet.setColors(colors);
+
+        PieData pieData = new PieData(dataSet);
+
+        pieChart.setData(pieData);
+        pieChart.getDescription().setEnabled(false);
+        pieChart.setCenterText("Spendings");
+        pieChart.animateY(1000);
+
+        pieChart.invalidate();
+    }
+
+    /**
+     * Queries the transactions database for all transactions and builds
+     * an ArrayList of pie entries to be used for display purposes.
+     * @return ArrayList of pie entries with all transactions
+     */
+    private ArrayList<PieEntry> BuildPieEntriesAll() {
+        Cursor cursor = db.summarizeALlTransactionsByCategory();
+        int queryRowCount = cursor.getCount();
+        ArrayList<String> categories = new ArrayList<>();
+        ArrayList<Double> amount = new ArrayList<>();
+
+        if (queryRowCount == 0) {
+            Toast.makeText(TransactionSummary.this, "No transactions found", Toast.LENGTH_SHORT).show();
+            cursor.close();
+            return null;
+        } else {
+            while (cursor.moveToNext()) {
+                categories.add(cursor.getString(0));
+                amount.add(cursor.getDouble(1));
+            }
+        }
+
+        cursor.close();
+
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        for(int i = 0; i < queryRowCount; i++) {
+            entries.add(new PieEntry(amount.get(i).floatValue(), categories.get(i)));
+        }
+
+        return entries;
+    }
+
+    private void getTransactions(String fromDate, String toDate) {
 
     }
 

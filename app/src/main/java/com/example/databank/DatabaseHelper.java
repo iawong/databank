@@ -296,6 +296,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    Cursor summarizeALlTransactionsByCategory() {
+        String query = "SELECT " + COLUMN_TRANSACTION_CATEGORY + ", SUM(" + COLUMN_TRANSACTION_AMOUNT + ") " +
+                " FROM " + TABLE_NAME_TRANSACTION +
+                " GROUP BY " + COLUMN_TRANSACTION_CATEGORY;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = null;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, null);
+        }
+
+        return cursor;
+    }
+
     Cursor getTransactionAmount(int accountId, int transactionId) {
         String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT +
                 " FROM " + TABLE_NAME_TRANSACTION +

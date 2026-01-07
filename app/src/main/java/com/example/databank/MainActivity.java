@@ -36,12 +36,12 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 
 /**
- * This is the account activity
- * 11/16/25
+ * This is the main activity for the app and shows accounts.
+ * 1/7/26
  * tabled the show all values functionality, it's more important for me to
  * start on the pie chart since that's the whole point of this app.
- * test text for commit
- * TODO: add activity for data summary like pie charts
+ * TODO: figure out why pie chart isn't showing colors
+ * TODO: add transaction summary list below pie chart
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
