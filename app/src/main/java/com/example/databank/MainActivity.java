@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 /**
  * This is the main activity for the app and shows accounts.
- * 1/7/26
+ * 1/8/26
  * tabled the show all values functionality, it's more important for me to
  * start on the pie chart since that's the whole point of this app.
  * TODO: figure out why pie chart isn't showing colors
@@ -45,7 +45,7 @@ import java.util.ArrayList;
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
- * TODO: sqlite migration features for database structure changes
+ * TODO: need to test the sql structure changes
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
  * TODO: re-eval how I'm creating the date picker fields

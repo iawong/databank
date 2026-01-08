@@ -62,9 +62,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TRANSACTION);
+        db.execSQL("ALTER TABLE " + TABLE_NAME_ACCOUNT + " RENAME TO " + TABLE_NAME_ACCOUNT + "_old");
+        db.execSQL("ALTER TABLE " + TABLE_NAME_TRANSACTION + " RENAME TO " + TABLE_NAME_TRANSACTION + "_old");
+
         onCreate(db);
+
+        db.execSQL("INSERT INTO " + TABLE_NAME_ACCOUNT + " (" + COLUMN_ACCOUNT_ID + ", " + COLUMN_ACCOUNT_NAME + ", " + COLUMN_ACCOUNT_BALANCE + ") " +
+                "SELECT " + COLUMN_ACCOUNT_ID + ", " + COLUMN_ACCOUNT_NAME + ", " + COLUMN_ACCOUNT_BALANCE + " FROM " + TABLE_NAME_ACCOUNT + "_old");
+
+        db.execSQL("INSERT INTO " + TABLE_NAME_TRANSACTION + " (" + COLUMN_TRANSACTION_ID + ", " + COLUMN_ACCOUNT_ID + ", " + COLUMN_TRANSACTION_AMOUNT +
+                ", " + COLUMN_TRANSACTION_DESCRIPTION + ", " + COLUMN_TRANSACTION_DATE + ", " + COLUMN_TRANSACTION_CATEGORY + ") " +
+                "SELECT " + COLUMN_TRANSACTION_ID + ", " + COLUMN_ACCOUNT_ID + ", " + COLUMN_TRANSACTION_AMOUNT + ", " + COLUMN_TRANSACTION_DESCRIPTION +
+                ", " + COLUMN_TRANSACTION_DATE + ", " + COLUMN_TRANSACTION_CATEGORY + " FROM " + TABLE_NAME_TRANSACTION + "_old");
+
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNT + "_old");
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TRANSACTION + "_old");
     }
 
     long addAccount(String name) {
