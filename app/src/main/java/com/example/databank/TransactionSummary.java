@@ -23,6 +23,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * This activity is for showing transaction summaries. The first visual is a pie chart
+ * and the second is a plain text list of totals across different categories.
+ */
 public class TransactionSummary extends AppCompatActivity {
     private ActivityTransactionSummaryBinding binding;
     private PieChart pieChart;
@@ -120,12 +124,26 @@ public class TransactionSummary extends AppCompatActivity {
 
         cursor.close();
 
+        removeExcludedCategories();
+
         ArrayList<PieEntry> entries = new ArrayList<>();
-        for(int i = 0; i < queryRowCount; i++) {
+        for(int i = 0; i < categories.size(); i++) {
             entries.add(new PieEntry(amounts.get(i).floatValue(), categories.get(i)));
         }
 
         return entries;
+    }
+
+    private boolean isExcludedCategory(String category) {
+        String[] excludedCategories = new String[]{"Account Transfer", "Cash Deposit", "Cash Withdrawal", "Credit Card Payment", "Paycheck"};
+
+        for (String s : excludedCategories) {
+            if (category.equals(s)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private String[] buildSummaryList() {
@@ -181,11 +199,38 @@ public class TransactionSummary extends AppCompatActivity {
         }
 
         cursor.close();
+
+        removeExcludedCategories();
     }
+
+    /**
+     * Remove any categories and the corresponding amount that should be excluded.
+     */
+    private void removeExcludedCategories() {
+        ArrayList<Integer> indexes = new ArrayList<>();
+
+        for (int i = 0; i < categories.size(); i++) {
+            if (!isExcludedCategory(categories.get(i))) {
+                continue;
+            }
+
+            indexes.add(i);
+        }
+
+        for (int i : indexes) {
+            categories.remove(i);
+            amounts.remove(i);
+        }
+    }
+
 
     private void updatePieChart() {
         ArrayList<PieEntry> entries = new ArrayList<>();
         int rows = categories.size();
+
+        if (rows == 0) {
+            return;
+        }
 
         for (int i = 0; i < rows; i++) {
             entries.add(new PieEntry(amounts.get(i).floatValue(), categories.get(i)));
