@@ -78,16 +78,10 @@
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
             android:layout_width="match_parent"
-            android:layout_height="600dp"
+            android:layout_height="900dp"
             android:layout_marginTop="10dp"
             app:layout_constraintTop_toBottomOf="@id/saveDateRange"/>
 
-        <TextView
-            android:id="@+id/summaryListTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="50dp"
-            app:layout_constraintTop_toBottomOf="@id/pieChart"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
 
