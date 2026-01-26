@@ -1,3 +1,3 @@
 # databank
 
-This app is starting as a spendings tracker for myself to learn more about android development. 
+This app is an expenses tracker for myself to learn more about android development. 
