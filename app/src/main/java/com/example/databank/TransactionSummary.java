@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.databank.databinding.ActivityTransactionSummaryBinding;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -20,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -49,11 +51,9 @@ public class TransactionSummary extends AppCompatActivity {
         createSearchButton(fromDate, toDate);
         pieChart = binding.pieChart;
         setUpInitialPieChart();
-        printSummaryList();
     }
 
-    private void createSearchButton(TextInputEditText textInputFromDate,
-                                      TextInputEditText textInputToDate) {
+    private void createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
         Button search = binding.saveDateRange;
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,32 +71,101 @@ public class TransactionSummary extends AppCompatActivity {
 
                 getTransactions(fromDate, toDate);
                 updatePieChart();
-                printSummaryList();
             }
         });
     }
 
     private void setUpInitialPieChart() {
         ArrayList<PieEntry> entries = buildPieEntriesAll();
+        if (entries == null) entries = new ArrayList<>();
 
-        PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.BLUE);
-        colors.add(Color.RED);
-//        colors.add(Color.parseColor("#FF6384"));
-//        colors.add(Color.parseColor("#36A2EB"));
-//        colors.add(Color.parseColor("#FFCE56"));
-//        colors.add(Color.parseColor("#4BC0C0"));
-//        colors.add(Color.parseColor("#9966FF"));
-        dataSet.setColors(colors);
+        setPieLegend();
 
-        PieData pieData = new PieData(dataSet);
+        PieData pieData = getPieData(entries);
 
-        pieChart.setData(pieData);
+        pieChart.setDrawEntryLabels(false);
         pieChart.getDescription().setEnabled(false);
-        pieChart.setCenterText("Spendings");
+        pieChart.setCenterText("Expenses");
         pieChart.animateY(1000);
+        pieChart.setData(pieData);
         pieChart.invalidate();
+
+        pieChart.setOnChartValueSelectedListener(new com.github.mikephil.charting.listener.OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(com.github.mikephil.charting.data.Entry e, com.github.mikephil.charting.highlight.Highlight h) {
+                if (e == null) return;
+
+                PieEntry pe = (PieEntry) e;
+                pieChart.setCenterText(pe.getLabel());
+            }
+
+            @Override
+            public void onNothingSelected() {
+                // Reset the center text when clicking away
+                pieChart.setCenterText("Expenses");
+            }
+        });
+    }
+
+    private void setPieLegend() {
+        Legend l = pieChart.getLegend();
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setDrawInside(false);
+        l.setWordWrapEnabled(true);
+        l.setYEntrySpace(5f);
+        l.setTextColor(Color.WHITE);
+        l.setTextSize(20);
+    }
+
+    @NonNull
+    private static PieData getPieData(ArrayList<PieEntry> entries) {
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        ArrayList<Integer> colors = new ArrayList<>();
+        colors.add(Color.parseColor("#2ECC71"));
+        colors.add(Color.parseColor("#3498DB"));
+        colors.add(Color.parseColor("#9B59B6"));
+        colors.add(Color.parseColor("#E74C3C"));
+        colors.add(Color.parseColor("#F1C40F"));
+        colors.add(Color.parseColor("#1ABC9C"));
+        colors.add(Color.parseColor("#FA8072"));
+        colors.add(Color.parseColor("#5D6D7E"));
+        colors.add(Color.parseColor("#E67E22"));
+        colors.add(Color.parseColor("#E91E63"));
+        colors.add(Color.parseColor("#A6E22E"));
+        colors.add(Color.parseColor("#00BCD4"));
+        colors.add(Color.parseColor("#FFC107"));
+        colors.add(Color.parseColor("#6610F2"));
+        colors.add(Color.parseColor("#BDC3C7"));
+        dataSet.setColors(colors);
+        // hide the slice values
+        dataSet.setDrawValues(false);
+        return new PieData(dataSet);
+    }
+
+    // Helper method to build entries with custom labels
+    private ArrayList<PieEntry> getFormattedEntries() {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+
+        double total = 0;
+        for (Double amount : amounts) {
+            total += Math.abs(amount);
+        }
+
+        for (int i = 0; i < categories.size(); i++) {
+            double val = Math.abs(amounts.get(i));
+            float percentage = (total == 0) ? 0f : (float) (val / total * 100f);
+
+            // Create the string: Automotive: $1,000.00 - 56.0%
+            String customLabel = String.format(Locale.US, "%s: %s - %.1f%%",
+                    categories.get(i),
+                    formatDoubleAsCurrency(val),
+                    percentage);
+
+            entries.add(new PieEntry((float) val, customLabel));
+        }
+        return entries;
     }
 
     /**
@@ -126,57 +195,16 @@ public class TransactionSummary extends AppCompatActivity {
 
         removeExcludedCategories();
 
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        for(int i = 0; i < categories.size(); i++) {
-            entries.add(new PieEntry(amounts.get(i).floatValue(), categories.get(i)));
-        }
-
-        return entries;
+        return getFormattedEntries();
     }
 
     private boolean isExcludedCategory(String category) {
-        String[] excludedCategories = new String[]{"Account Transfer", "Cash Deposit", "Cash Withdrawal", "Credit Card Payment", "Paycheck"};
-
-        for (String s : excludedCategories) {
-            if (category.equals(s)) {
-                return true;
-            }
-        }
-
-        return false;
+        String[] excludedCategories = {"Account Transfer", "Cash Deposit", "Cash Withdraw", "Credit Card Payment", "Paycheck", ""};
+        return Arrays.asList(excludedCategories).contains(category);
     }
 
-    private String[] buildSummaryList() {
-        if (categories.isEmpty()) {
-            return null;
-        }
-
-        String[] summaryList = new String[categories.size()];
-
-        for (int i = 0; i < categories.size(); i++) {
-            summaryList[i] = categories.get(i) + ": " + FormatDoubleAsCurrency(Math.abs(amounts.get(i)));
-        }
-
-        return summaryList;
-    }
-
-    private void printSummaryList() {
-        String[] summaryList = buildSummaryList();
-
-        if (summaryList != null) {
-            StringBuilder text = new StringBuilder();
-
-            for (String s : summaryList) {
-                text.append(s).append("\r\n");
-            }
-
-            binding.summaryListTextView.setText(text);
-        }
-    }
-
-    private String FormatDoubleAsCurrency(double amount) {
+    private String formatDoubleAsCurrency(double amount) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
-
         return numberFormat.format(amount);
     }
 
@@ -187,6 +215,8 @@ public class TransactionSummary extends AppCompatActivity {
         if (queryRowCount == 0) {
             Toast.makeText(TransactionSummary.this, "No transactions found", Toast.LENGTH_SHORT).show();
             cursor.close();
+            categories = new ArrayList<>();
+            amounts = new ArrayList<>();
             return;
         }
 
@@ -199,7 +229,6 @@ public class TransactionSummary extends AppCompatActivity {
         }
 
         cursor.close();
-
         removeExcludedCategories();
     }
 
@@ -207,47 +236,29 @@ public class TransactionSummary extends AppCompatActivity {
      * Remove any categories and the corresponding amount that should be excluded.
      */
     private void removeExcludedCategories() {
-        ArrayList<Integer> indexes = new ArrayList<>();
-
-        for (int i = 0; i < categories.size(); i++) {
-            if (!isExcludedCategory(categories.get(i))) {
-                continue;
+        for (int i = categories.size() - 1; i >= 0; i--) {
+            if (isExcludedCategory(categories.get(i))) {
+                categories.remove(i);
+                amounts.remove(i);
             }
-
-            indexes.add(i);
-        }
-
-        for (int i : indexes) {
-            categories.remove(i);
-            amounts.remove(i);
         }
     }
 
-
     private void updatePieChart() {
-        ArrayList<PieEntry> entries = new ArrayList<>();
-        int rows = categories.size();
-
-        if (rows == 0) {
+        if (categories.isEmpty()) {
+            pieChart.clear();
             return;
         }
 
-        for (int i = 0; i < rows; i++) {
-            entries.add(new PieEntry(amounts.get(i).floatValue(), categories.get(i)));
-        }
+        ArrayList<PieEntry> entries = getFormattedEntries();
 
-        PieDataSet dataSet = new PieDataSet(entries, "Expense Categories");
-        ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.BLUE);
-        colors.add(Color.RED);
-        dataSet.setColors(colors);
+        PieData pieData = getPieData(entries);
 
-        PieData pieData = new PieData(dataSet);
-
-        pieChart.setData(pieData);
         pieChart.getDescription().setEnabled(false);
-        pieChart.setCenterText("Spendings");
+        pieChart.setDrawEntryLabels(false);
+        pieChart.setCenterText("Expenses");
         pieChart.animateY(1000);
+        pieChart.setData(pieData);
         pieChart.invalidate();
     }
 
