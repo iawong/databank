@@ -27,7 +27,7 @@ public class TransactionActivity extends AppCompatActivity{
     private TransactionAdapter transactionAdapter;
     private DatabaseHelper db;
     private ArrayList<Integer> transactionIds;
-    private ArrayList<Double> transactionAmounts;
+    private ArrayList<Integer> transactionAmounts;
     private ArrayList<String> transactionDescriptions;
     private ArrayList<String> transactionDates;
     private ArrayList<String> transactionCategories;
@@ -198,7 +198,7 @@ public class TransactionActivity extends AppCompatActivity{
 
         // temp arraylists to store the next page of transactions
         ArrayList<Integer> newTransactionIds = new ArrayList<>();
-        ArrayList<Double> newTransactionAmounts = new ArrayList<>();
+        ArrayList<Integer> newTransactionAmounts = new ArrayList<>();
         ArrayList<String> newTransactionDescriptions = new ArrayList<>();
         ArrayList<String> newTransactionDates = new ArrayList<>();
         ArrayList<String> newTransactionCategories = new ArrayList<>();
@@ -206,7 +206,7 @@ public class TransactionActivity extends AppCompatActivity{
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 newTransactionIds.add(cursor.getInt(0));
-                newTransactionAmounts.add(cursor.getDouble(2));
+                newTransactionAmounts.add(cursor.getInt(2));
                 newTransactionDescriptions.add(cursor.getString(3));
                 newTransactionDates.add(cursor.getString(4));
                 newTransactionCategories.add(cursor.getString(5));

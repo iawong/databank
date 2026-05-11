@@ -93,7 +93,7 @@ public class NewAccountActivity extends AppCompatActivity {
 
         // makes sure account name does not exceed 20 characters otherwise it overflows
         newAccountName.setFilters(new InputFilter[]{new InputFilter.LengthFilter(20)});
-        // hides the keyboard if clicking outside of the edit text
+        // hides the keyboard if clicking outside the edit text
         newAccountName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {

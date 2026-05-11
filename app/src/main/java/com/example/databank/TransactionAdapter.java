@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -25,7 +26,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private final int accountId;
     private final int accountPosition;
     private final ArrayList<Integer> transactionIds;
-    private final ArrayList<Double> transactionAmounts;
+    private final ArrayList<Integer> transactionAmounts;
     private final ArrayList<String> transactionDescriptions;
     private final ArrayList<String> transactionDates;
     private final ArrayList<String> transactionCategories;
@@ -35,7 +36,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                                int accountId,
                                int accountPosition,
                                ArrayList<Integer> transactionIds,
-                               ArrayList<Double> transactionAmounts,
+                               ArrayList<Integer> transactionAmounts,
                                ArrayList<String> transactionDescriptions,
                                ArrayList<String> transactionDates,
                                ArrayList<String> transactionCategories,
@@ -62,11 +63,12 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull TransactionAdapter.ViewHolder holder, int position) {
-        double amount = transactionAmounts.get(position);
-        String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(Math.abs(amount));
+        int amountInCents = transactionAmounts.get(position);
+        BigDecimal amount = BigDecimal.valueOf(Math.abs(amountInCents)).movePointLeft(2);
+        String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(amount);
 
         // Add a negative sign if the amount is negative and set colors
-        if (amount < 0) {
+        if (amountInCents < 0) {
             formattedAmount = "-" + formattedAmount;
             holder.transactionAmount.setTextColor(Color.parseColor("#F44336"));
         } else {

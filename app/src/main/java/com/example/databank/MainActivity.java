@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private DatabaseHelper db;
     private ArrayList<Integer> accountIds;
     private ArrayList<String> accountNames;
-    private ArrayList<Double> accountBalances;
+    private ArrayList<Integer> accountBalances;
     private DrawerLayout drawerLayout;
 
     // ActivityResultLauncher for adding accounts
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             }
     );
 
-    // ActivityResultLauncher for getting the file path to save exported json files
+    // ActivityResultLauncher for getting the file path to save exported JSON files
     private final ActivityResultLauncher<Intent> exportDatabaseResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -285,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     /**
      * this queries the account table and fills up the account
      * arraylists with the account data so that it can be viewed as
-     * the most up to date information
+     * the most up-to-date information
      */
     private void storeAccountData() {
         Cursor cursor = db.getAllAccounts();
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
             while (cursor.moveToNext()) {
                 accountIds.add(cursor.getInt(0));
                 accountNames.add(cursor.getString(1));
-                accountBalances.add(cursor.getDouble(2));
+                accountBalances.add(cursor.getInt(2));
             }
         }
 
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     }
 
     /**
-     * reload the specific account to show the most up to date info
+     * reload the specific account to show the most up-to-date info
      * @param position position of the account to reload
      * @param accountId account id of the account to grab new balance for
      */
@@ -317,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         } else {
             cursor.moveToFirst();
 
-            accountBalances.set(position, cursor.getDouble(2));
+            accountBalances.set(position, cursor.getInt(2));
             accountAdapter.notifyItemChanged(position);
         }
     }
@@ -330,7 +330,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private void insertItemIntoAccounts(int accountId, String accountName) {
         accountIds.add(accountId);
         accountNames.add(accountName);
-        accountBalances.add(0.0);
+        accountBalances.add(0);
 
         // Notify the adapter of the changes
         // accountIds size - 1 should be the position/index of the new account
@@ -415,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      * @param amount transaction amount
      */
     @Override
-    public void onTransactionDelete(int position, int accountId, int transactionId, double amount) {}
+    public void onTransactionDelete(int position, int accountId, int transactionId, int amount) {}
 
     /**
      * Creates the delete all alert view

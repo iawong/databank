@@ -25,6 +25,8 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -51,8 +53,8 @@ public class EditTransactionActivity extends AppCompatActivity {
             }
         });
 
-        double transAmt = getIntent().getDoubleExtra("transactionAmount", 0);
-
+        int transAmtInCents = getIntent().getIntExtra("transactionAmount", 0);
+        BigDecimal transAmt = BigDecimal.valueOf(transAmtInCents).movePointLeft(2);
         String formattedTransAmt = NumberFormat.getCurrencyInstance(Locale.US).format(transAmt);
 
         // remove the negative when viewing the amount to edit
@@ -79,8 +81,21 @@ public class EditTransactionActivity extends AppCompatActivity {
                     String cleanString = s.toString().replaceAll("[$,.]", "");
 
                     if (!cleanString.isEmpty()) {
-                        double parsed = Double.parseDouble(cleanString) / 100;
-                        String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(parsed);
+                        int amountInCents;
+
+                        try {
+                            amountInCents = Integer.parseInt(cleanString);
+                        } catch(NumberFormatException e) {
+                            // user tried to enter a value greater than an int so
+                            // we keep the text as is and return
+                            newTransAmt.setText(current);
+                            newTransAmt.setSelection(current.length());
+                            newTransAmt.addTextChangedListener(this);
+                            return;
+                        }
+
+                        BigDecimal amount = new BigDecimal(BigInteger.valueOf(amountInCents)).movePointLeft(2);
+                        String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(amount);
                         newTransAmt.setText(formatted);
                         newTransAmt.setSelection(formatted.length()); // Move cursor to the end
                     } else {
@@ -104,7 +119,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         RadioButton debitRadioBtn = binding.editRadioDebitButton;
         RadioButton creditRadioBtn = binding.editRadioCreditButton;
 
-        if (transAmt < 0) {
+        if (transAmtInCents < 0) {
             transactionTypeGroup.check(R.id.editRadioDebitButton);
         } else {
             transactionTypeGroup.check(R.id.editRadioCreditButton);
@@ -254,10 +269,10 @@ public class EditTransactionActivity extends AppCompatActivity {
 
                     String changedTransDate = newTransDate.getText().toString().trim();
 
-                    double changedAmount;
+                    int changedAmount;
 
                     try {
-                        changedAmount = Double.parseDouble(changedTransAmt.replaceAll("[$,]", ""));
+                        changedAmount = Integer.parseInt(changedTransAmt.replaceAll("[$,.]", ""));
 
                         if (isDebit) {
                             changedAmount *= -1;
@@ -288,7 +303,7 @@ public class EditTransactionActivity extends AppCompatActivity {
         deleteTrans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteTransaction(transactionPosition, accountId, transactionId, transAmt);
+                deleteTransaction(transactionPosition, accountId, transactionId, transAmtInCents);
             }
         });
 
@@ -309,7 +324,7 @@ public class EditTransactionActivity extends AppCompatActivity {
      * @param accId account id
      * @param transactionId transaction id
      */
-    public void deleteTransaction(int transPos, int accId, int transactionId, double amount) {
+    public void deleteTransaction(int transPos, int accId, int transactionId, int amount) {
         View alertView = getLayoutInflater().inflate(R.layout.alert_dialog, null);
 
         Button positiveButton = alertView.findViewById(R.id.alertPositiveButton);

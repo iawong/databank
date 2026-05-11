@@ -23,6 +23,8 @@ import com.example.databank.databinding.ActivityNewTransactionBinding;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -75,10 +77,22 @@ public class NewTransactionActivity extends AppCompatActivity {
 
                     String cleanString = s.toString().replaceAll("[$,.]", "");
 
-                    // Parse as cents (integer)
                     if (!cleanString.isEmpty()) {
-                        double parsed = Double.parseDouble(cleanString) / 100;
-                        String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(parsed);
+                        int amountInCents;
+
+                        try {
+                            amountInCents = Integer.parseInt(cleanString);
+                        } catch (NumberFormatException e) {
+                            // user tried to enter a value greater than an int so
+                            // we keep the text as is and return
+                            newTransAmt.setText(current);
+                            newTransAmt.setSelection(current.length());
+                            newTransAmt.addTextChangedListener(this);
+                            return;
+                        }
+
+                        BigDecimal amount = new BigDecimal(BigInteger.valueOf(amountInCents)).movePointLeft(2);
+                        String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(amount);
                         current = formatted;
                         newTransAmt.setText(formatted);
                         newTransAmt.setSelection(formatted.length()); // Move cursor to end
@@ -134,10 +148,10 @@ public class NewTransactionActivity extends AppCompatActivity {
 
                 String strAmount = newTransAmt.getText().toString().trim();
 
-                double amount;
+                int amount;
 
                 try {
-                    amount = Double.parseDouble(strAmount.replaceAll("[$,]", ""));
+                    amount = Integer.parseInt(strAmount.replaceAll("[$,.]", ""));
 
                     if (amount == 0) {
                         textInputTransactionAmount.setError("Please enter a transaction amount");

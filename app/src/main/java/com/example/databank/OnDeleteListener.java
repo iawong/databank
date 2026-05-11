@@ -10,5 +10,5 @@ package com.example.databank;
  */
 public interface OnDeleteListener {
     void onAccountDelete(int position, int accountId);
-    void onTransactionDelete(int position, int accountId, int transactionId, double amount);
+    void onTransactionDelete(int position, int accountId, int transactionId, int amount);
 }

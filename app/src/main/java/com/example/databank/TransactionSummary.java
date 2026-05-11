@@ -34,7 +34,7 @@ public class TransactionSummary extends AppCompatActivity {
     private PieChart pieChart;
     private DatabaseHelper db;
     private ArrayList<String> categories;
-    private ArrayList<Double> amounts;
+    private ArrayList<Integer> amounts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,19 +148,19 @@ public class TransactionSummary extends AppCompatActivity {
     private ArrayList<PieEntry> getFormattedEntries() {
         ArrayList<PieEntry> entries = new ArrayList<>();
 
-        double total = 0;
-        for (Double amount : amounts) {
+        int total = 0;
+        for (int amount : amounts) {
             total += Math.abs(amount);
         }
 
         for (int i = 0; i < categories.size(); i++) {
-            double val = Math.abs(amounts.get(i));
-            float percentage = (total == 0) ? 0f : (float) (val / total * 100f);
+            int val = Math.abs(amounts.get(i));
+            float percentage = (total == 0) ? 0f : ((float) val / total * 100f);
 
             // Create the string: Automotive: $1,000.00 - 56.0%
             String customLabel = String.format(Locale.US, "%s: %s - %.1f%%",
                     categories.get(i),
-                    formatDoubleAsCurrency(val),
+                    formatIntAsCurrency(val),
                     percentage);
 
             entries.add(new PieEntry((float) val, customLabel));
@@ -187,7 +187,7 @@ public class TransactionSummary extends AppCompatActivity {
         } else {
             while (cursor.moveToNext()) {
                 categories.add(cursor.getString(0));
-                amounts.add(cursor.getDouble(1));
+                amounts.add(cursor.getInt(1));
             }
         }
 
@@ -203,7 +203,7 @@ public class TransactionSummary extends AppCompatActivity {
         return Arrays.asList(excludedCategories).contains(category);
     }
 
-    private String formatDoubleAsCurrency(double amount) {
+    private String formatIntAsCurrency(int amount) {
         NumberFormat numberFormat = NumberFormat.getCurrencyInstance(Locale.US);
         return numberFormat.format(amount);
     }
@@ -225,7 +225,7 @@ public class TransactionSummary extends AppCompatActivity {
 
         while (cursor.moveToNext()) {
             categories.add(cursor.getString(0));
-            amounts.add(cursor.getDouble(1));
+            amounts.add(cursor.getInt(1));
         }
 
         cursor.close();

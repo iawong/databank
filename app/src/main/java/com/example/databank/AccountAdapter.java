@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -25,7 +26,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     private final Context context;
     private final ArrayList<Integer> accountIds;
     private final ArrayList<String> accountNames;
-    private final ArrayList<Double> accountBalances;
+    private final ArrayList<Integer> accountBalances;
     private final ActivityResultLauncher<Intent> transactionResultLauncher;
     private final ActivityResultLauncher<Intent> accountChangeResultLauncher;
     private final OnDeleteListener deleteListener;
@@ -33,7 +34,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public AccountAdapter (Context context,
                            ArrayList<Integer> accountIds,
                            ArrayList<String> accountNames,
-                           ArrayList<Double> accountBalances,
+                           ArrayList<Integer> accountBalances,
                            ActivityResultLauncher<Intent> transactionResultLauncher,
                            ActivityResultLauncher<Intent> accountChangeResultLauncher,
                            OnDeleteListener deleteListener) {
@@ -59,11 +60,12 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
     public void onBindViewHolder(@NonNull AccountAdapter.ViewHolder holder, int position) {
         holder.accountName.setText(String.valueOf(accountNames.get(position)));
 
-        double balance = accountBalances.get(position);
-        String formattedBalance = NumberFormat.getCurrencyInstance(Locale.US).format(balance);
+        int balanceInCents = accountBalances.get(position);
+        BigDecimal balanceDisplay = BigDecimal.valueOf(balanceInCents).movePointLeft(2);
+        String formattedBalance = NumberFormat.getCurrencyInstance(Locale.US).format(balanceDisplay);
 
         // set balance colors
-        if (balance < 0) {
+        if (balanceInCents < 0) {
             holder.accountBalance.setTextColor(Color.parseColor("#F44336"));
         } else {
             holder.accountBalance.setTextColor(Color.parseColor("#4CAF50"));
@@ -100,6 +102,7 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
         holder.deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: I think this can be removed and a private method in the account adapter can be used.
                 deleteListener.onAccountDelete(holder.getAdapterPosition(), accountIds.get(holder.getAdapterPosition()));
             }
         });

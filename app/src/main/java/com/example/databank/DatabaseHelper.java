@@ -97,7 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return resultCode;
     }
 
-    long addTransaction(int accountId, double amount, String description, String date, String category) {
+    long addTransaction(int accountId, int amount, String description, String date, String category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -118,7 +118,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // grab the account row by accountId and add transaction amount to the account balance
         Cursor account = getAccount(accountId);
         account.moveToFirst();
-        double balance = account.getDouble(2) + amount;
+        int balance = account.getInt(2) + amount;
         updateAccountBalance(accountId, balance);
 
         return resultCode;
@@ -139,7 +139,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void updateAccountBalance(int accountId, double balance) {
+    void updateAccountBalance(int accountId, int balance) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
@@ -154,13 +154,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void updateTransaction(int accountId, int transactionId, double newAmount, String description, String date, String category) {
+    void updateTransaction(int accountId, int transactionId, int newAmount, String description, String date, String category) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         Cursor transaction = getTransactionAmount(accountId, transactionId);
 
         transaction.moveToFirst();
-        double curAmount = transaction.getDouble(0);
+        int curAmount = transaction.getInt(0);
 
         values.put(COLUMN_TRANSACTION_AMOUNT, newAmount);
         values.put(COLUMN_TRANSACTION_DESCRIPTION, description);
@@ -178,7 +178,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // grab the account row by accountId and add transaction newAmount to the account balance
         Cursor account = getAccount(accountId);
         account.moveToFirst();
-        double balance = account.getDouble(2) + newAmount - curAmount;
+        int balance = account.getInt(2) + newAmount - curAmount;
         updateAccountBalance(accountId, balance);
     }
 
@@ -208,7 +208,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    void deleteTransaction(int accountId, int transactionId, double amount) {
+    void deleteTransaction(int accountId, int transactionId, int amount) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         int resultCode = db.delete(TABLE_NAME_TRANSACTION, COLUMN_TRANSACTION_ID + " = ?", new String[]{String.valueOf(transactionId)});
@@ -222,7 +222,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // grab the account row by accountId and subtract the transaction amount from the account balance
         Cursor account = getAccount(accountId);
         account.moveToFirst();
-        double balance = account.getDouble(2) - amount;
+        int balance = account.getInt(2) - amount;
         updateAccountBalance(accountId, balance);
     }
 
@@ -318,7 +318,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Returns a cursor object withe the query results from the SQL
+     * Returns a cursor object with the query results from the SQL
      * @param sql the SQL string to execute
      * @return a cursor object containing the query results
      */
