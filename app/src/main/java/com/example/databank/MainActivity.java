@@ -37,8 +37,8 @@ import java.util.ArrayList;
 
 /**
  * This is the main activity for the app and shows accounts.
- * 1/25/26
- * pie chart is functional. there needs to be some code clean up though.
+ * 5/10/26
+ * updated to use big decimal and integers instead of doubles. still needs code clean up.
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
