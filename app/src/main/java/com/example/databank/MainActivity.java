@@ -589,7 +589,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      * Shows the summary of all my transactions
      * This is another version of the original show summary
      * to test a different way of doing this. Instead of a pie chart
-     * I want a clickable drop down of everything
+     * I want a clickable drop-down of everything
      */
     private void showSummary2() {
         Intent intent = new Intent(this, TransactionSummary2.class);
