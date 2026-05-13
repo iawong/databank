@@ -240,6 +240,8 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                     showValues();
                 } else if (id == R.id.nav_summary) {
                     showSummary();
+                } else if (id == R.id.nav_summary_2) {
+                    showSummary2();
                 } else if (id == R.id.nav_export) {
                     exportDatabase();
                 } else if (id == R.id.nav_import) {
@@ -576,6 +578,17 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      */
     private void showSummary() {
         Intent intent = new Intent(this, TransactionSummary.class);
+        this.startActivity(intent);
+    }
+
+    /**
+     * Shows the summary of all my transactions
+     * This is another version of the original show summary
+     * to test a different way of doing this. Instead of a pie chart
+     * I want a clickable drop down of everything
+     */
+    private void showSummary2() {
+        Intent intent = new Intent(this, TransactionSummary2.class);
         this.startActivity(intent);
     }
 }

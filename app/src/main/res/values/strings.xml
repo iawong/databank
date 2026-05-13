@@ -49,6 +49,7 @@
     <string name="search">Search</string>
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
+    <string name="transaction_summary_2">Transaction Summary 2</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>
