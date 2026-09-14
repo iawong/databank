@@ -4,12 +4,12 @@ plugins {
 
 android {
     namespace = "com.example.databank"
-    compileSdk = 34
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.example.databank"
         minSdk = 26
-        targetSdk = 34
+        targetSdk = 37
         versionCode = 1
         versionName = "1.2.1"
 
