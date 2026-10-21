@@ -9,6 +9,7 @@
     android:focusableInTouchMode="true"
     android:focusable="true"
     android:clickable="true"
+    android:fitsSystemWindows="true"
     tools:context=".NewAccountActivity">
 
     <Toolbar
