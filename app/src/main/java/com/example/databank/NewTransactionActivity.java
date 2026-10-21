@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
+    private InputMethodManager imm;
     private ActivityNewTransactionBinding binding;
     private boolean isDebit;
 
@@ -40,13 +41,15 @@ public class NewTransactionActivity extends AppCompatActivity {
         binding = ActivityNewTransactionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        imm = (InputMethodManager) getSystemService(NewTransactionActivity.INPUT_METHOD_SERVICE);
+
         TextInputLayout textInputTransactionAmount = binding.textInputTransactionAmount;
         TextInputEditText newTransAmt = binding.newTransactionAmount;
 
         newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
+                Helper.hideKeyboard(v, imm);
             }
         });
 
@@ -55,7 +58,7 @@ public class NewTransactionActivity extends AppCompatActivity {
         newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
+                Helper.hideKeyboard(v, imm);
             }
         });
 
@@ -183,7 +186,6 @@ public class NewTransactionActivity extends AppCompatActivity {
                 }
 
                 String strDate = newTransDate.getText().toString().trim();
-
                 String strCategory = newTransCategory.getText().toString().trim();
 
                 int accountId = getIntent().getIntExtra("accountId", -1);
@@ -270,21 +272,10 @@ public class NewTransactionActivity extends AppCompatActivity {
         newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
+                Helper.hideKeyboard(v, imm);
             }
         });
 
         return newTransDate;
-    }
-
-    /**
-     * Hides the keyboard after tapping out of the edit text
-     * @param v view that the keyboard should be hidden from
-     */
-    private void hideKeyboard(View v) {
-        if (v != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(NewTransactionActivity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-        }
     }
 }
