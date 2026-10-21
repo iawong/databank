@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * This class creates the account and transactions database and
  * holds all the functions for getting/inserting/updating/deleting
@@ -26,6 +28,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_TRANSACTION_DESCRIPTION = "description";
     private static final String COLUMN_TRANSACTION_DATE = "date";
     private static final String COLUMN_TRANSACTION_CATEGORY = "category";
+    private static final String TABLE_NAME_CATEGORY = "categories";
+    private static final String COLUMN_CATEGORY_ID = "category_id";
+    private static final String COLUMN_CATEGORY_NAME = "category_name";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -55,9 +60,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "CREATE INDEX IF NOT EXISTS idx_transaction_date ON " + TABLE_NAME_TRANSACTION + " (" + COLUMN_ACCOUNT_ID +
                 ", " + COLUMN_TRANSACTION_DATE + ");";
 
+        String CREATE_CATEGORIES_TABLE =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_CATEGORY + " (" +
+            COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_CATEGORY_NAME + " TEXT NOT NULL UNIQUE);";
+
         db.execSQL(CREATE_ACCOUNTS_TABLE);
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
         db.execSQL(CREATE_INDEX_ON_DATE);
+        db.execSQL(CREATE_CATEGORIES_TABLE);
+        seedDefaultCategories(db);
+    }
+
+    private void seedDefaultCategories(SQLiteDatabase db) {
+        String[] defaultCategories = {
+            "Automotive", "Account Transfer", "Bills & Utilities", "Cash Deposit",
+            "Cash Withdraw", "Credit Card Payment", "Education", "Entertainment",
+            "Food & Drinks", "Gas", "Groceries", "Health & wellness",
+            "Home", "Investment", "Other", "Paycheck",
+            "Personal", "Professional Services", "Shopping", "Travel"
+        };
+        for (String cat : defaultCategories) {
+            ContentValues values = new ContentValues();
+            values.put(COLUMN_CATEGORY_NAME, cat);
+            db.insertWithOnConflict(TABLE_NAME_CATEGORY, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        }
     }
 
     @Override
@@ -332,5 +359,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         return cursor;
+    }
+
+    Cursor getAllCategories() {
+        String query = "SELECT * FROM " + TABLE_NAME_CATEGORY + " ORDER BY " + COLUMN_CATEGORY_NAME + " ASC";
+        return executeQuery(query);
+    }
+
+    ArrayList<String> getAllCategoryNames() {
+        ArrayList<String> names = new ArrayList<>();
+        Cursor cursor = getAllCategories();
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                names.add(cursor.getString(1));
+            }
+            cursor.close();
+        }
+        if (names.isEmpty()) {
+            names.add("Other");
+        }
+        return names;
+    }
+
+    long addCategory(String categoryName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_CATEGORY_NAME, categoryName);
+        long resultCode = db.insertWithOnConflict(TABLE_NAME_CATEGORY, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+        if (resultCode == -1) {
+            Toast.makeText(context, "Category already exists or failed to add", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Added category: " + categoryName, Toast.LENGTH_SHORT).show();
+        }
+        return resultCode;
+    }
+
+    void deleteCategory(int categoryId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int resultCode = db.delete(TABLE_NAME_CATEGORY, COLUMN_CATEGORY_ID + " = ?", new String[]{String.valueOf(categoryId)});
+        if (resultCode == -1) {
+            Toast.makeText(context, "Failed to delete category", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Deleted category", Toast.LENGTH_SHORT).show();
+        }
     }
 }

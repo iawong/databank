@@ -10,6 +10,9 @@
         android:id="@+id/nav_summary_2"
         android:title="@string/transaction_summary_2"/>
     <item
+        android:id="@+id/nav_categories"
+        android:title="@string/manage_categories"/>
+    <item
         android:id="@+id/nav_export"
         android:title="@string/export_data"/>
     <item

@@ -16,6 +16,10 @@
             android:name=".TransactionSummary2"
             android:exported="false" />
         <activity
+            android:name=".ManageCategoriesActivity"
+            android:exported="false"
+            android:parentActivityName=".MainActivity" />
+        <activity
             android:name=".TransactionSummary"
             android:exported="false" />
         <activity

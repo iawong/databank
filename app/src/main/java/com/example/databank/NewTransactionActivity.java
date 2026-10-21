@@ -26,6 +26,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -135,7 +136,10 @@ public class NewTransactionActivity extends AppCompatActivity {
 
         // Transaction category drop down
         AutoCompleteTextView newTransCategory = binding.newTransactionCategory;
-        String[] transactionCategories = getResources().getStringArray(R.array.transaction_categories);
+        ArrayList<String> transactionCategories;
+        try (DatabaseHelper db = new DatabaseHelper(this)) {
+            transactionCategories = db.getAllCategoryNames();
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(NewTransactionActivity.this, R.layout.dropdown_item, transactionCategories);
 
         newTransCategory.setAdapter(adapter);

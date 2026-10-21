@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
  * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
- * TODO: need to test the sql structure changes
+ * TODO: need to test the SQL structure changes
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
  * TODO: re-eval how I'm creating the date picker fields
@@ -246,6 +246,8 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                     showSummary();
                 } else if (id == R.id.nav_summary_2) {
                     showSummary2();
+                } else if (id == R.id.nav_categories) {
+                    showManageCategories();
                 } else if (id == R.id.nav_export) {
                     exportDatabase();
                 } else if (id == R.id.nav_import) {
@@ -593,6 +595,11 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      */
     private void showSummary2() {
         Intent intent = new Intent(this, TransactionSummary2.class);
+        this.startActivity(intent);
+    }
+
+    private void showManageCategories() {
+        Intent intent = new Intent(this, ManageCategoriesActivity.class);
         this.startActivity(intent);
     }
 }
