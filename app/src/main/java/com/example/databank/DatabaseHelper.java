@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private final Context context;
     private static final String DATABASE_NAME = "databank.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String TABLE_NAME_ACCOUNT = "accounts";
     private static final String COLUMN_ACCOUNT_ID = "account_id";
     private static final String COLUMN_ACCOUNT_NAME = "account_name";
@@ -39,7 +39,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // Table creation SQL
         String CREATE_ACCOUNTS_TABLE =
             "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_ACCOUNT + " (" +
             COLUMN_ACCOUNT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -104,6 +103,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNT + "_old");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_TRANSACTION + "_old");
+
+        if (oldVersion < newVersion) {
+            String CREATE_CATEGORIES_TABLE =
+                    "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_CATEGORY + " (" +
+                            COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            COLUMN_CATEGORY_NAME + " TEXT NOT NULL UNIQUE);";
+            db.execSQL(CREATE_CATEGORIES_TABLE);
+            seedDefaultCategories(db);
+        }
     }
 
     long addAccount(String name) {
@@ -271,8 +279,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         } else {
             Toast.makeText(context, "Deleted all transactions", Toast.LENGTH_SHORT).show();
         }
-
-        onUpgrade(db, DATABASE_VERSION, DATABASE_VERSION + 1);
     }
 
     Cursor getAllAccounts() {

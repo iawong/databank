@@ -37,11 +37,11 @@ import java.util.ArrayList;
 
 /**
  * This is the main activity for the app and shows accounts.
- * 5/13/26
- * decided to add a second trans sum button in the drop down in favor of
- * not touching the current pie chart functionality. the pie chart functionality
- * will eventually go, but I just didn't want to delete it yet. the database onUpgrade
- * will need to be changed since I can modify the contents of my database myself.
+ * 10/20/26
+ * second transaction summary exists now
+ * added a drawer to update categories
+ * added a categories database table
+ * updated database helper class
  * still needs code clean up.
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
