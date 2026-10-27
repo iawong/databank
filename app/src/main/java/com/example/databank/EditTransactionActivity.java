@@ -47,12 +47,9 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         TextInputEditText newTransAmt = binding.editTransactionAmount;
 
-        newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
-            }
-        });
+        InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);
+
+        newTransAmt.setOnFocusChangeListener((v, hasFocus) -> Helper.hideKeyboard(v, imm));
 
         int transAmtInCents = getIntent().getIntExtra("transactionAmount", 0);
         BigDecimal transAmt = BigDecimal.valueOf(transAmtInCents).movePointLeft(2);
@@ -143,12 +140,7 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         TextInputEditText newTransDesc = binding.editTransactionDescription;
 
-        newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
-            }
-        });
+        newTransDesc.setOnFocusChangeListener((v, hasFocus) -> Helper.hideKeyboard(v, imm));
 
         // makes sure the transaction description doesn't exceed 255 characters
         newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
@@ -156,37 +148,29 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         TextInputEditText newTransDate = binding.editTransactionDate;
 
-        newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
-            }
-        });
+        newTransDate.setOnFocusChangeListener((v, hasFocus) -> Helper.hideKeyboard(v, imm));
 
-        newTransDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+        newTransDate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                // Create and show the DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        EditTransactionActivity.this,
-                        (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in yyyy-MM-dd format
-                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
-                                    selectedYear,
-                                    selectedMonth + 1,
-                                    selectedDay);
-                            newTransDate.setText(formattedDate);
-                        },
-                        year, month, day
-                );
+            // Create and show the DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    EditTransactionActivity.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        // Update the TextInputEditText with the selected date in yyyy-MM-dd format
+                        String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
+                                selectedYear,
+                                selectedMonth + 1,
+                                selectedDay);
+                        newTransDate.setText(formattedDate);
+                    },
+                    year, month, day
+            );
 
-                datePickerDialog.show();
-            }
+            datePickerDialog.show();
         });
 
         newTransDate.setText(getIntent().getStringExtra("transactionDate"));
@@ -236,89 +220,78 @@ public class EditTransactionActivity extends AppCompatActivity {
 
         Button saveChanges = binding.saveEditTransactionButton;
         saveChanges.setText(R.string.edit);
-        saveChanges.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                edit = !edit;
+        saveChanges.setOnClickListener(v -> {
+            edit = !edit;
 
-                if (edit) {
-                    toolbar.setTitle(R.string.edit_transaction_appbar_2);
-                    saveChanges.setText(R.string.save);
-                    newTransAmt.setEnabled(true);
-                    debitRadioBtn.setEnabled(true);
-                    creditRadioBtn.setEnabled(true);
-                    newTransDesc.setEnabled(true);
-                    newTransDate.setEnabled(true);
-                    newTransCategoryLayout.setEnabled(true);
-                    newTransCategory.setEnabled(true);
-                } else {
-                    if (newTransAmt.getText() == null) {
-                        // can't be null
-                        return;
-                    }
-
-                    String changedTransAmt = newTransAmt.getText().toString().trim();
-
-                    if (newTransDesc.getText() == null) {
-                        // can't be null but can be empty
-                        return;
-                    }
-
-                    String changedTransDesc = newTransDesc.getText().toString().trim();
-
-                    if (newTransDate.getText() == null) {
-                        // can't be null but can be empty
-                        return;
-                    }
-
-                    String changedTransDate = newTransDate.getText().toString().trim();
-
-                    int changedAmount;
-
-                    try {
-                        changedAmount = Integer.parseInt(changedTransAmt.replaceAll("[$,.]", ""));
-
-                        if (isDebit) {
-                            changedAmount *= -1;
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(EditTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-
-                    String changedTransCategory = newTransCategory.getText().toString().trim();
-
-                    try (DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
-                        db.updateTransaction(accountId, transactionId, changedAmount, changedTransDesc, changedTransDate, changedTransCategory);
-                    } catch (Exception e) {
-                        Log.e("EditTransactionActivity", "Error editing transaction", e);
-                        Toast.makeText(EditTransactionActivity.this, "Failed to edit transaction. Please try again", Toast.LENGTH_SHORT).show();
-                    }
-
-                    Intent returnIntent = new Intent();
-
-                    setResult(RESULT_OK, returnIntent);
-                    finish();
+            if (edit) {
+                toolbar.setTitle(R.string.edit_transaction_appbar_2);
+                saveChanges.setText(R.string.save);
+                newTransAmt.setEnabled(true);
+                debitRadioBtn.setEnabled(true);
+                creditRadioBtn.setEnabled(true);
+                newTransDesc.setEnabled(true);
+                newTransDate.setEnabled(true);
+                newTransCategoryLayout.setEnabled(true);
+                newTransCategory.setEnabled(true);
+            } else {
+                if (newTransAmt.getText() == null) {
+                    // can't be null
+                    return;
                 }
+
+                String changedTransAmt = newTransAmt.getText().toString().trim();
+
+                if (newTransDesc.getText() == null) {
+                    // can't be null but can be empty
+                    return;
+                }
+
+                String changedTransDesc = newTransDesc.getText().toString().trim();
+
+                if (newTransDate.getText() == null) {
+                    // can't be null but can be empty
+                    return;
+                }
+
+                String changedTransDate = newTransDate.getText().toString().trim();
+
+                int changedAmount;
+
+                try {
+                    changedAmount = Integer.parseInt(changedTransAmt.replaceAll("[$,.]", ""));
+
+                    if (isDebit) {
+                        changedAmount *= -1;
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(EditTransactionActivity.this, "Invalid amount entered", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String changedTransCategory = newTransCategory.getText().toString().trim();
+
+                try (DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
+                    db.updateTransaction(accountId, transactionId, changedAmount, changedTransDesc, changedTransDate, changedTransCategory);
+                } catch (Exception e) {
+                    Log.e("EditTransactionActivity", "Error editing transaction", e);
+                    Toast.makeText(EditTransactionActivity.this, "Failed to edit transaction. Please try again", Toast.LENGTH_SHORT).show();
+                }
+
+                Intent returnIntent = new Intent();
+
+                setResult(RESULT_OK, returnIntent);
+                finish();
             }
         });
 
         FloatingActionButton deleteTrans = binding.deleteTransactionButton;
-        deleteTrans.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteTransaction(transactionPosition, accountId, transactionId, transAmtInCents);
-            }
-        });
+        deleteTrans.setOnClickListener(v -> deleteTransaction(transactionPosition, accountId, transactionId, transAmtInCents));
 
         Button back = binding.cancelEditTransactionButton;
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent returnToTransactions = new Intent();
-                setResult(RESULT_CANCELED, returnToTransactions);
-                finish();
-            }
+        back.setOnClickListener(v -> {
+            Intent returnToTransactions = new Intent();
+            setResult(RESULT_CANCELED, returnToTransactions);
+            finish();
         });
     }
 
@@ -339,48 +312,29 @@ public class EditTransactionActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .create();
 
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try(DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
-                    db.deleteTransaction(accId, transactionId, amount);
-                    dialog.dismiss();
-
-                    Intent returnIntent = new Intent();
-
-                    returnIntent.putExtra("deleteTransaction", true);
-                    returnIntent.putExtra("transactionPosition", transPos);
-                    setResult(RESULT_OK, returnIntent);
-                    finish();
-                } catch (Exception e) {
-                    Log.e("EditTransactionActivity", "Error deleting transaction", e);
-                    Toast.makeText(EditTransactionActivity.this, "Failed to delete transaction. Please try again", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        positiveButton.setOnClickListener(v -> {
+            try(DatabaseHelper db = new DatabaseHelper(EditTransactionActivity.this)) {
+                db.deleteTransaction(accId, transactionId, amount);
                 dialog.dismiss();
+
+                Intent returnIntent = new Intent();
+
+                returnIntent.putExtra("deleteTransaction", true);
+                returnIntent.putExtra("transactionPosition", transPos);
+                setResult(RESULT_OK, returnIntent);
+                finish();
+            } catch (Exception e) {
+                Log.e("EditTransactionActivity", "Error deleting transaction", e);
+                Toast.makeText(EditTransactionActivity.this, "Failed to delete transaction. Please try again", Toast.LENGTH_SHORT).show();
             }
         });
+
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
 
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-    }
-
-    /**
-     * Hides the keyboard after tapping out of the edit text
-     * @param v view that the keyboard should be hidden from
-     */
-    private void hideKeyboard(View v) {
-        if (v != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(EditTransactionActivity.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
         }
     }
 }

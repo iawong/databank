@@ -16,7 +16,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.ArrayList;
 
 public class ManageCategoriesActivity extends AppCompatActivity implements CategoryAdapter.OnCategoryDeleteListener {
-    private ActivityManageCategoriesBinding binding;
     private DatabaseHelper db;
     private ArrayList<Integer> categoryIds;
     private ArrayList<String> categoryNames;
@@ -25,7 +24,7 @@ public class ManageCategoriesActivity extends AppCompatActivity implements Categ
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityManageCategoriesBinding.inflate(getLayoutInflater());
+        ActivityManageCategoriesBinding binding = ActivityManageCategoriesBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         db = new DatabaseHelper(this);
@@ -46,13 +45,16 @@ public class ManageCategoriesActivity extends AppCompatActivity implements Categ
         addButton.setOnClickListener(v -> {
             if (inputEditText.getText() == null) return;
             String name = inputEditText.getText().toString().trim();
+
             if (name.isEmpty()) {
                 inputLayout.setError("Please enter a category name");
                 return;
             }
+
             inputLayout.setError(null);
 
             long id = db.addCategory(name);
+
             if (id != -1) {
                 categoryIds.add((int) id);
                 categoryNames.add(name);
@@ -67,11 +69,13 @@ public class ManageCategoriesActivity extends AppCompatActivity implements Categ
         Cursor cursor = db.getAllCategories();
         categoryIds.clear();
         categoryNames.clear();
+
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 categoryIds.add(cursor.getInt(0));
                 categoryNames.add(cursor.getString(1));
             }
+
             cursor.close();
         }
     }

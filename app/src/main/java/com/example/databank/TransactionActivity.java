@@ -1,10 +1,8 @@
 package com.example.databank;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -39,21 +37,18 @@ public class TransactionActivity extends AppCompatActivity{
     // get results from new transaction activity
     private final ActivityResultLauncher<Intent> addTransactionLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
+            activityResult -> {
+                int resultCode = activityResult.getResultCode();
 
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
+                if (resultCode == RESULT_OK) {
+                    Intent data = activityResult.getData();
 
-                        if (data == null) {
-                            Toast.makeText(TransactionActivity.this, "Transaction data not found", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        reloadTransactionData();
+                    if (data == null) {
+                        Toast.makeText(TransactionActivity.this, "Transaction data not found", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    reloadTransactionData();
                 }
             }
     );
@@ -120,22 +115,16 @@ public class TransactionActivity extends AppCompatActivity{
         }
 
         FloatingActionButton addTransaction = binding.addTransactionButton;
-        addTransaction.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(TransactionActivity.this, NewTransactionActivity.class);
-                intent.putExtra("accountId", accountId);
-                addTransactionLauncher.launch(intent);
-            }
+        addTransaction.setOnClickListener(v -> {
+            Intent intent = new Intent(TransactionActivity.this, NewTransactionActivity.class);
+            intent.putExtra("accountId", accountId);
+            addTransactionLauncher.launch(intent);
         });
 
         // back button to go back to the main activity aka
         // where all the accounts are
         Button back = binding.backToAccountsButton;
-        back.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                goBackToAccounts(accountPosition);
-            }
-        });
+        back.setOnClickListener(v -> goBackToAccounts(accountPosition));
 
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -191,7 +180,8 @@ public class TransactionActivity extends AppCompatActivity{
      * to the bottom, we show the next 10 and so on
      */
     private void loadTransactions() {
-        if (isLoading) return; // Prevent duplicate loads
+        // Prevent duplicate loads
+        if (isLoading) return;
         isLoading = true;
 
         Cursor cursor = db.getAccountTransactions(accountId, PAGE_SIZE, currentOffset);
@@ -233,7 +223,6 @@ public class TransactionActivity extends AppCompatActivity{
         isLoading = false;
     }
 
-
     /**
      * This will reload the transactions that have already been loaded
      * after adding a new transaction or updating a transaction
@@ -243,8 +232,9 @@ public class TransactionActivity extends AppCompatActivity{
      * I am suppressing the NotifyDataSetChanged because a transaction can be pushed
      * outside the 10 most recent transactions to anywhere else.
      */
-    @SuppressLint("NotifyDataSetChanged")
     private void reloadTransactionData() {
+        transactionAdapter.notifyItemRangeRemoved(0, transactionIds.size());
+
         // Reset offset and clear existing data
         currentOffset = 0;
         transactionIds.clear();
@@ -253,11 +243,7 @@ public class TransactionActivity extends AppCompatActivity{
         transactionDates.clear();
         transactionCategories.clear();
 
-        // Notify the adapter that the dataset has been cleared
-        transactionAdapter.notifyDataSetChanged();
-
         // Reset pagination state
-        currentOffset = 0;
         isLoading = false;
 
         // Load the first batch of transactions
@@ -272,9 +258,7 @@ public class TransactionActivity extends AppCompatActivity{
         super.onDestroy();
 
         // close the database connection when the app is closed
-        if (db != null) {
-            db.close();
-        }
+        if (db != null) db.close();
     }
 
     private void goBackToAccounts(int accountPosition) {

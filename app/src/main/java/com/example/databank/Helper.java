@@ -1,14 +1,9 @@
 package com.example.databank;
 
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.renderscript.ScriptGroup;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
-import androidx.annotation.NonNull;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -34,30 +29,27 @@ public class Helper {
 
         text.setText(runDate);
 
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+        text.setOnClickListener(v -> {
+            final Calendar calendar1 = Calendar.getInstance();
+            int year = calendar1.get(Calendar.YEAR);
+            int month = calendar1.get(Calendar.MONTH);
+            int day = calendar1.get(Calendar.DAY_OF_MONTH);
 
-                // Create and show the DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        context,
-                        (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
-                                    selectedYear,
-                                    selectedMonth + 1,
-                                    selectedDay);
-                            text.setText(formattedDate);
-                        },
-                        year, month, day
-                );
+            // Create and show the DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    context,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        // Update the TextInputEditText with the selected date in MM/DD/YYYY format
+                        String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
+                                selectedYear,
+                                selectedMonth + 1,
+                                selectedDay);
+                        text.setText(formattedDate);
+                    },
+                    year, month, day
+            );
 
-                datePickerDialog.show();
-            }
+            datePickerDialog.show();
         });
 
         text.setOnFocusChangeListener((v, hasFocus) -> hideKeyboard(v, imm));

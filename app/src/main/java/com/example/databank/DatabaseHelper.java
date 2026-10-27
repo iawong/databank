@@ -391,18 +391,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_CATEGORY_NAME, categoryName);
+
         long resultCode = db.insertWithOnConflict(TABLE_NAME_CATEGORY, null, values, SQLiteDatabase.CONFLICT_IGNORE);
+
         if (resultCode == -1) {
             Toast.makeText(context, "Category already exists or failed to add", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Added category: " + categoryName, Toast.LENGTH_SHORT).show();
         }
+
         return resultCode;
     }
 
     void deleteCategory(int categoryId) {
         SQLiteDatabase db = this.getWritableDatabase();
         int resultCode = db.delete(TABLE_NAME_CATEGORY, COLUMN_CATEGORY_ID + " = ?", new String[]{String.valueOf(categoryId)});
+
         if (resultCode == -1) {
             Toast.makeText(context, "Failed to delete category", Toast.LENGTH_SHORT).show();
         } else {

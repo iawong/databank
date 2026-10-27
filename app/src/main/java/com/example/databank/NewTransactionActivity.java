@@ -1,13 +1,11 @@
 package com.example.databank;
 
-import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -15,7 +13,6 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,19 +24,17 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Locale;
 
 public class NewTransactionActivity extends AppCompatActivity {
     private InputMethodManager imm;
-    private ActivityNewTransactionBinding binding;
     private boolean isDebit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityNewTransactionBinding.inflate(getLayoutInflater());
+        ActivityNewTransactionBinding binding = ActivityNewTransactionBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         imm = (InputMethodManager) getSystemService(NewTransactionActivity.INPUT_METHOD_SERVICE);
@@ -47,21 +42,11 @@ public class NewTransactionActivity extends AppCompatActivity {
         TextInputLayout textInputTransactionAmount = binding.textInputTransactionAmount;
         TextInputEditText newTransAmt = binding.newTransactionAmount;
 
-        newTransAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Helper.hideKeyboard(v, imm);
-            }
-        });
+        newTransAmt.setOnFocusChangeListener((v, hasFocus) -> Helper.hideKeyboard(v, imm));
 
         TextInputEditText newTransDesc = binding.newTransactionDescription;
 
-        newTransDesc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Helper.hideKeyboard(v, imm);
-            }
-        });
+        newTransDesc.setOnFocusChangeListener((v, hasFocus) -> Helper.hideKeyboard(v, imm));
 
         newTransAmt.setText(getString(R.string.default_currency));
 
@@ -132,7 +117,7 @@ public class NewTransactionActivity extends AppCompatActivity {
         // makes sure transaction description doesn't exceed 255 characters
         newTransDesc.setFilters(new InputFilter[]{new InputFilter.LengthFilter(255)});
 
-        TextInputEditText newTransDate = getTextInputEditText();
+        TextInputEditText newTransDate = Helper.getTextInputEditTextDate(this, binding.newTransactionDate, imm);
 
         // Transaction category drop down
         AutoCompleteTextView newTransCategory = binding.newTransactionCategory;
@@ -145,141 +130,84 @@ public class NewTransactionActivity extends AppCompatActivity {
         newTransCategory.setAdapter(adapter);
 
         Button saveNewTransaction = binding.saveNewTransactionButton;
-        saveNewTransaction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (newTransAmt.getText() == null) {
-                    // kick out of saving since user needs to enter a transaction amount
+        saveNewTransaction.setOnClickListener(v -> {
+            if (newTransAmt.getText() == null) {
+                // kick out of saving since user needs to enter a transaction amount
+                return;
+            }
+
+            String strAmount = newTransAmt.getText().toString().trim();
+
+            int amount;
+
+            try {
+                amount = Integer.parseInt(strAmount.replaceAll("[$,.]", ""));
+
+                if (amount == 0) {
+                    textInputTransactionAmount.setError("Please enter a transaction amount");
                     return;
+                } else {
+                    textInputTransactionAmount.setError(null);
                 }
 
-                String strAmount = newTransAmt.getText().toString().trim();
-
-                int amount;
-
-                try {
-                    amount = Integer.parseInt(strAmount.replaceAll("[$,.]", ""));
-
-                    if (amount == 0) {
-                        textInputTransactionAmount.setError("Please enter a transaction amount");
-                        return;
-                    } else {
-                        textInputTransactionAmount.setError(null);
-                    }
-
-                    if (isDebit) {
-                        amount *= -1;
-                    }
-                } catch (NumberFormatException e) {
-                    Toast.makeText(NewTransactionActivity.this, "Invalid transaction amount", Toast.LENGTH_SHORT).show();
-                    return;
+                if (isDebit) {
+                    amount *= -1;
                 }
+            } catch (NumberFormatException e) {
+                Toast.makeText(NewTransactionActivity.this, "Invalid transaction amount", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-                if (newTransDesc.getText() == null) {
-                    // kick out of saving because this should not be null even
-                    // if user has not entered a description
-                    return;
-                }
+            if (newTransDesc.getText() == null) {
+                // kick out of saving because this should not be null even
+                // if user has not entered a description
+                return;
+            }
 
-                String strDescription = newTransDesc.getText().toString().trim();
+            String strDescription = newTransDesc.getText().toString().trim();
 
-                if (newTransDate.getText() == null) {
-                    // kick out of saving because this should not be null even
-                    // if user has not entered a date
-                    return;
-                }
+            if (newTransDate.getText() == null) {
+                // kick out of saving because this should not be null even
+                // if user has not entered a date
+                return;
+            }
 
-                String strDate = newTransDate.getText().toString().trim();
-                String strCategory = newTransCategory.getText().toString().trim();
+            String strDate = newTransDate.getText().toString().trim();
+            String strCategory = newTransCategory.getText().toString().trim();
 
-                int accountId = getIntent().getIntExtra("accountId", -1);
+            int accountId = getIntent().getIntExtra("accountId", -1);
 
-                if (accountId == -1) {
-                    Toast.makeText(NewTransactionActivity.this, "Account not found", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
-                long transactionId;
-
-                try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
-                    transactionId = db.addTransaction(accountId, amount, strDescription, strDate, strCategory);
-
-                    if (transactionId == -1) {
-                        // failed to add transaction, try again
-                        return;
-                    }
-                } catch (Exception e) {
-                    Log.e("NewTransactionActivity", "Error adding transaction", e);
-                    Toast.makeText(NewTransactionActivity.this, "Failed to add transaction. Please try again.", Toast.LENGTH_SHORT).show();
-                }
-
-                Intent returnIntent = new Intent();
-
-                setResult(RESULT_OK, returnIntent);
-
+            if (accountId == -1) {
+                Toast.makeText(NewTransactionActivity.this, "Account not found", Toast.LENGTH_SHORT).show();
                 finish();
             }
+
+            long transactionId;
+
+            try (DatabaseHelper db = new DatabaseHelper(NewTransactionActivity.this)) {
+                transactionId = db.addTransaction(accountId, amount, strDescription, strDate, strCategory);
+
+                if (transactionId == -1) {
+                    // failed to add transaction, try again
+                    return;
+                }
+            } catch (Exception e) {
+                Log.e("NewTransactionActivity", "Error adding transaction", e);
+                Toast.makeText(NewTransactionActivity.this, "Failed to add transaction. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+
+            Intent returnIntent = new Intent();
+
+            setResult(RESULT_OK, returnIntent);
+
+            finish();
         });
 
         Button back = binding.cancelNewTransactionButton;
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent returnToTransactions = new Intent();
-                setResult(RESULT_CANCELED, returnToTransactions);
-                finish();
-            }
+        back.setOnClickListener(v -> {
+            Intent returnToTransactions = new Intent();
+            setResult(RESULT_CANCELED, returnToTransactions);
+            finish();
         });
-    }
-
-    /**
-     * Create formatted transaction date
-     * @return the TextInputEditText with the new transaction date
-     */
-    private @NonNull TextInputEditText getTextInputEditText() {
-        TextInputEditText newTransDate = binding.newTransactionDate;
-
-        Calendar calendar = Calendar.getInstance();
-        String runDate = String.format(Locale.US, "%d-%02d-%02d",
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH) + 1,
-                calendar.get(Calendar.DAY_OF_MONTH));
-
-        newTransDate.setText(runDate);
-
-        newTransDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-                // Create and show the DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        NewTransactionActivity.this,
-                        (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
-                                    selectedYear,
-                                    selectedMonth + 1,
-                                    selectedDay);
-                            newTransDate.setText(formattedDate);
-                        },
-                        year, month, day
-                );
-
-                datePickerDialog.show();
-            }
-        });
-
-        newTransDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                Helper.hideKeyboard(v, imm);
-            }
-        });
-
-        return newTransDate;
     }
 }

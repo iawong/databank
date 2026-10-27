@@ -82,7 +82,6 @@ public class TransactionSummary2 extends AppCompatActivity {
         });
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void loadSummary(String fromDate, String toDate) {
         Cursor cursor;
         if (!fromDate.isEmpty() && !toDate.isEmpty()) {
@@ -99,6 +98,7 @@ public class TransactionSummary2 extends AppCompatActivity {
                 categories.add(cursor.getString(0));
                 amounts.add(cursor.getInt(1));
             }
+
             cursor.close();
         }
 
@@ -110,7 +110,7 @@ public class TransactionSummary2 extends AppCompatActivity {
         }
 
         if (adapter != null) {
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemRangeChanged(0, categories.size());
         }
     }
 
@@ -133,10 +133,12 @@ public class TransactionSummary2 extends AppCompatActivity {
         for (int i = 0; i < categories.size(); i++) {
             list.add(new Pair<>(categories.get(i), amounts.get(i)));
         }
+
         list.sort((a, b) -> Integer.compare(Math.abs(b.second), Math.abs(a.second)));
 
         categories.clear();
         amounts.clear();
+
         for (Pair<String, Integer> p : list) {
             categories.add(p.first);
             amounts.add(p.second);

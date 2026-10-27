@@ -364,9 +364,7 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         super.onDestroy();
 
         // close the database connection when the app is closed
-        if (db != null) {
-            db.close();
-        }
+        if (db != null) db.close();
     }
 
     /**
@@ -411,7 +409,6 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
         }
     }
 
@@ -440,28 +437,20 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 .setCancelable(false)
                 .show();
 
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onClick(View v) {
-                db.deleteAll();
-                accountIds.clear();
-                accountNames.clear();
-                accountBalances.clear();
-                // using this instead of a more specific notify because we're
-                // deleting all accounts
-                accountAdapter.notifyDataSetChanged();
+        positiveButton.setOnClickListener(v -> {
+            db.deleteAll();
 
-                dialog.dismiss();
-            }
+            int numDeletedAccounts = accountIds.size();
+
+            accountIds.clear();
+            accountNames.clear();
+            accountBalances.clear();
+            accountAdapter.notifyItemRangeRemoved(0, numDeletedAccounts);
+
+            dialog.dismiss();
         });
 
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
 

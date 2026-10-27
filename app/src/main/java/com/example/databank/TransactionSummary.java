@@ -55,23 +55,20 @@ public class TransactionSummary extends AppCompatActivity {
 
     private void createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
         Button search = binding.saveDateRange;
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fromDate = "";
-                String toDate = "";
+        search.setOnClickListener(v -> {
+            String fromDate = "";
+            String toDate = "";
 
-                if (textInputFromDate.getText() != null) {
-                    fromDate = textInputFromDate.getText().toString().trim();
-                }
-
-                if (textInputToDate.getText() != null) {
-                    toDate = textInputToDate.getText().toString().trim();
-                }
-
-                getTransactions(fromDate, toDate);
-                updatePieChart();
+            if (textInputFromDate.getText() != null) {
+                fromDate = textInputFromDate.getText().toString().trim();
             }
+
+            if (textInputToDate.getText() != null) {
+                toDate = textInputToDate.getText().toString().trim();
+            }
+
+            getTransactions(fromDate, toDate);
+            updatePieChart();
         });
     }
 
@@ -275,38 +272,30 @@ public class TransactionSummary extends AppCompatActivity {
 
         text.setText(runDate);
 
-        text.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+        text.setOnClickListener(v -> {
+            final Calendar calendar1 = Calendar.getInstance();
+            int year = calendar1.get(Calendar.YEAR);
+            int month = calendar1.get(Calendar.MONTH);
+            int day = calendar1.get(Calendar.DAY_OF_MONTH);
 
-                // Create and show the DatePickerDialog
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        TransactionSummary.this,
-                        (view, selectedYear, selectedMonth, selectedDay) -> {
-                            // Update the TextInputEditText with the selected date in MM/DD/YYYY format
-                            String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
-                                    selectedYear,
-                                    selectedMonth + 1,
-                                    selectedDay);
-                            text.setText(formattedDate);
-                        },
-                        year, month, day
-                );
+            // Create and show the DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    TransactionSummary.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        // Update the TextInputEditText with the selected date in MM/DD/YYYY format
+                        String formattedDate = String.format(Locale.US, "%d-%02d-%02d",
+                                selectedYear,
+                                selectedMonth + 1,
+                                selectedDay);
+                        text.setText(formattedDate);
+                    },
+                    year, month, day
+            );
 
-                datePickerDialog.show();
-            }
+            datePickerDialog.show();
         });
 
-        text.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                hideKeyboard(v);
-            }
-        });
+        text.setOnFocusChangeListener((v, hasFocus) -> hideKeyboard(v));
 
         return text;
     }
