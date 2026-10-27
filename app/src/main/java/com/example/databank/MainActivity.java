@@ -32,12 +32,10 @@ import java.util.ArrayList;
 
 /**
  * This is the main activity for the app and shows accounts.
- * 10/20/26
- * second transaction summary exists now
- * added a drawer to update categories
- * added a categories database table
- * updated database helper class
- * still needs code clean up.
+ * 10/26/26
+ * added expected spendings and totals
+ * TODO: make expected spendings use number only for amount field
+ * TODO: clicking into the summary category should query all payments in date range and category
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
