@@ -93,11 +93,22 @@
         android:layout_height="0px"
         android:scrollbars="vertical"
         app:layout_constraintTop_toBottomOf="@id/saveDateRange"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/totalSummaryText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
     </androidx.recyclerview.widget.RecyclerView>
 
-<!--    text field showing the total amount from the search
-date range-->
+    <TextView
+        android:id="@+id/totalSummaryText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/appbar"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

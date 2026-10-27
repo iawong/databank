@@ -157,7 +157,16 @@ public class ExpectedSpendingActivity extends AppCompatActivity implements Expec
             long id = db.addExpectedSpending(name, amount, day);
             if (id != -1) {
                 loadSpending();
-                adapter.notifyDataSetChanged();
+                int position;
+
+                try {
+                    position = spendingIds.indexOf((int)id);
+                } catch (Exception e) {
+                    Toast.makeText(this, "Error adding expected spending", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                adapter.notifyItemInserted(position);
                 updateTotalSum();
 
                 nameInput.setText("");
@@ -195,7 +204,7 @@ public class ExpectedSpendingActivity extends AppCompatActivity implements Expec
 
         BigDecimal totalDecimal = BigDecimal.valueOf(total).movePointLeft(2);
         String formattedTotal = NumberFormat.getCurrencyInstance(Locale.US).format(totalDecimal);
-        String displayText = getString(R.string.total_expected_spending) + formattedTotal;
+        String displayText = getString(R.string.total_expected_spending) + " " + formattedTotal;
         totalSpendingText.setText(displayText);
     }
 

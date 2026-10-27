@@ -1,6 +1,5 @@
 package com.example.databank;
 
-import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Pair;
@@ -16,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.databank.databinding.ActivityTransactionSummary2Binding;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class TransactionSummary2 extends AppCompatActivity {
 
@@ -49,7 +51,7 @@ public class TransactionSummary2 extends AppCompatActivity {
         createSearchButton(fromDate, toDate);
 
         String fromDateText = fromDate.getText() == null ? "" : fromDate.getText().toString().trim();
-        String toDateText = toDate.getText() == null ? "" : toDate.getText().toString().trim();;
+        String toDateText = toDate.getText() == null ? "" : toDate.getText().toString().trim();
 
         loadSummary(fromDateText, toDateText);
     }
@@ -63,22 +65,19 @@ public class TransactionSummary2 extends AppCompatActivity {
 
     private void createSearchButton(TextInputEditText textInputFromDate, TextInputEditText textInputToDate) {
         Button search = binding.saveDateRange;
-        search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String fromDate = "";
-                String toDate = "";
+        search.setOnClickListener(v -> {
+            String fromDate = "";
+            String toDate = "";
 
-                if (textInputFromDate.getText() != null) {
-                    fromDate = textInputFromDate.getText().toString().trim();
-                }
-
-                if (textInputToDate.getText() != null) {
-                    toDate = textInputToDate.getText().toString().trim();
-                }
-
-                loadSummary(fromDate, toDate);
+            if (textInputFromDate.getText() != null) {
+                fromDate = textInputFromDate.getText().toString().trim();
             }
+
+            if (textInputToDate.getText() != null) {
+                toDate = textInputToDate.getText().toString().trim();
+            }
+
+            loadSummary(fromDate, toDate);
         });
     }
 
@@ -104,6 +103,7 @@ public class TransactionSummary2 extends AppCompatActivity {
 
         removeExcludedCategories();
         sortCategoriesByAmount();
+        updateTotalSum();
 
         if (categories.isEmpty()) {
             Toast.makeText(this, "No transactions found for the selected date range", Toast.LENGTH_SHORT).show();
@@ -143,5 +143,16 @@ public class TransactionSummary2 extends AppCompatActivity {
             categories.add(p.first);
             amounts.add(p.second);
         }
+    }
+
+    private void updateTotalSum() {
+        int total = 0;
+        for (int amount : amounts) {
+            total += Math.abs(amount);
+        }
+        BigDecimal totalDecimal = BigDecimal.valueOf(total).movePointLeft(2);
+        String formattedTotal = NumberFormat.getCurrencyInstance(Locale.US).format(totalDecimal);
+        String displayText = getString(R.string.total_summary) + " " + formattedTotal;
+        binding.totalSummaryText.setText(displayText);
     }
 }

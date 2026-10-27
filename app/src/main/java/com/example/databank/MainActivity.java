@@ -41,14 +41,14 @@ import java.util.ArrayList;
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
- * TODO: need to test the SQL structure changes
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
  * TODO: re-eval how I'm creating the date picker fields
  * TODO: override back button to finish activities. This should replace the back buttons I've added.
  */
 public class MainActivity extends AppCompatActivity implements OnDeleteListener {
-    private AccountAdapter accountAdapter; // for populating the recycler view which goes into the main activity
+    // for populating the recycler view which goes into the main activity
+    private AccountAdapter accountAdapter;
     private DatabaseHelper db;
     private ArrayList<Integer> accountIds;
     private ArrayList<String> accountNames;
