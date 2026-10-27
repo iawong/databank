@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/expectedSpendingsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
+    tools:context=".ExpectedSpendingActivity">
+
+    <Toolbar
+        android:id="@+id/spendingsAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/appbar"
+        android:elevation="4dp"
+        android:title="@string/expected_spending"
+        android:titleTextAppearance="@style/AppbarTitle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputSpendingName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/spendingsAppbar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/spendingNameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/rowItem"
+            android:textColor="@color/white"
+            android:hint="@string/spending_name_hint"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputSpendingAmount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/textInputSpendingName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textInputSpendingDate">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/spendingAmountInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/rowItem"
+            android:textColor="@color/white"
+            android:hint="@string/spending_amount_hint"
+            android:inputType="text" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputSpendingDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="8dp"
+        android:textColorHint="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/textInputSpendingName"
+        app:layout_constraintStart_toEndOf="@id/textInputSpendingAmount"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/spendingDateInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/rowItem"
+            android:textColor="@color/white"
+            android:hint="@string/spending_date_hint"
+            android:inputType="number" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/addSpendingButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="@string/add"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/rowItem"
+        app:layout_constraintTop_toBottomOf="@id/textInputSpendingAmount"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/totalSpendingsText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/appbar"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/spendingsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="12dp"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/addSpendingButton"
+        app:layout_constraintBottom_toTopOf="@id/totalSpendingsText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

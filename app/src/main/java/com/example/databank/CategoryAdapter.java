@@ -42,9 +42,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.categoryName.setText(categoryNames.get(position));
 
-        holder.deleteButton.setOnClickListener(v -> {
-            deleteListener.onCategoryDelete(holder.getAdapterPosition(), categoryIds.get(holder.getAdapterPosition()));
-        });
+        holder.deleteButton.setOnClickListener(v -> deleteListener.onCategoryDelete(holder.getAdapterPosition(), categoryIds.get(holder.getAdapterPosition())));
     }
 
     @Override

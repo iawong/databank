@@ -1,22 +1,17 @@
 package com.example.databank;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -46,7 +41,6 @@ import java.util.ArrayList;
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
- * TODO: change onUpgrade method in databaseHelper to create a temp table before dropping old table
  * TODO: need to test the SQL structure changes
  * TODO: update account balance "hidden" string to be grey
  * TODO: update settings to open up like SAO settings on bottom right
@@ -64,24 +58,21 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // ActivityResultLauncher for adding accounts
     private final ActivityResultLauncher<Intent> addAccountLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
+            activityResult -> {
+                int resultCode = activityResult.getResultCode();
 
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
+                if (resultCode == RESULT_OK) {
+                    Intent data = activityResult.getData();
 
-                        if (data == null) {
-                            Toast.makeText(MainActivity.this, "Account could not be added", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        long accountId = data.getLongExtra("accountId", -1);
-                        String accountName = data.getStringExtra("accountName");
-
-                        insertItemIntoAccounts((int) accountId, accountName);
+                    if (data == null) {
+                        Toast.makeText(MainActivity.this, "Account could not be added", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    long accountId = data.getLongExtra("accountId", -1);
+                    String accountName = data.getStringExtra("accountName");
+
+                    insertItemIntoAccounts((int) accountId, accountName);
                 }
             }
     );
@@ -89,30 +80,27 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // ActivityResultLauncher for changing account details
     private final ActivityResultLauncher<Intent> accountChangeResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
+            activityResult -> {
+                int resultCode = activityResult.getResultCode();
 
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
+                if (resultCode == RESULT_OK) {
+                    Intent data = activityResult.getData();
 
-                        if (data == null) {
-                            Toast.makeText(MainActivity.this, "Account changed data not found", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        int accountPosition = data.getIntExtra("accountPosition", -1);
-
-                        if (accountPosition == -1) {
-                            Toast.makeText(MainActivity.this, "Account to change not found", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        String changedAccountName = data.getStringExtra("accountName");
-
-                        updateAccount(accountPosition, changedAccountName);
+                    if (data == null) {
+                        Toast.makeText(MainActivity.this, "Account changed data not found", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    int accountPosition = data.getIntExtra("accountPosition", -1);
+
+                    if (accountPosition == -1) {
+                        Toast.makeText(MainActivity.this, "Account to change not found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String changedAccountName = data.getStringExtra("accountName");
+
+                    updateAccount(accountPosition, changedAccountName);
                 }
             }
     );
@@ -120,35 +108,32 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // ActivityResultLauncher for adding transactions
     private final ActivityResultLauncher<Intent> transactionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
+            activityResult -> {
+                int resultCode = activityResult.getResultCode();
 
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
+                if (resultCode == RESULT_OK) {
+                    Intent data = activityResult.getData();
 
-                        if (data == null) {
-                            Toast.makeText(MainActivity.this, "Transaction not found", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        int accountPosition = data.getIntExtra("position", -1);
-
-                        if (accountPosition == -1) {
-                            Toast.makeText(MainActivity.this, "Unable to add transaction", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        int accountId = data.getIntExtra("accountId", -1);
-
-                        if (accountId == -1) {
-                            Toast.makeText(MainActivity.this, "Unable to find account", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        reloadAccount(accountPosition, accountId);
+                    if (data == null) {
+                        Toast.makeText(MainActivity.this, "Transaction not found", Toast.LENGTH_SHORT).show();
+                        return;
                     }
+
+                    int accountPosition = data.getIntExtra("position", -1);
+
+                    if (accountPosition == -1) {
+                        Toast.makeText(MainActivity.this, "Unable to add transaction", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    int accountId = data.getIntExtra("accountId", -1);
+
+                    if (accountId == -1) {
+                        Toast.makeText(MainActivity.this, "Unable to find account", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    reloadAccount(accountPosition, accountId);
                 }
             }
     );
@@ -156,24 +141,21 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     // ActivityResultLauncher for getting the file path to save exported JSON files
     private final ActivityResultLauncher<Intent> exportDatabaseResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
+            activityResult -> {
+                int resultCode = activityResult.getResultCode();
 
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
+                if (resultCode == RESULT_OK) {
+                    Intent data = activityResult.getData();
 
-                        if (data == null) {
-                            Toast.makeText(MainActivity.this, "Unable to export file", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                    if (data == null) {
+                        Toast.makeText(MainActivity.this, "Unable to export file", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        Uri fileUri = data.getData();
+                    Uri fileUri = data.getData();
 
-                        if (fileUri != null) {
-                            saveDatabaseToUri(fileUri);
-                        }
+                    if (fileUri != null) {
+                        saveDatabaseToUri(fileUri);
                     }
                 }
             }
@@ -181,24 +163,21 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
     private final ActivityResultLauncher<Intent> importDatabaseResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult activityResult) {
-                    int resultCode = activityResult.getResultCode();
+            activityResult -> {
+                int resultCode = activityResult.getResultCode();
 
-                    if (resultCode == RESULT_OK) {
-                        Intent data = activityResult.getData();
+                if (resultCode == RESULT_OK) {
+                    Intent data = activityResult.getData();
 
-                        if (data == null) {
-                            Toast.makeText(MainActivity.this, "Unable to export file", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+                    if (data == null) {
+                        Toast.makeText(MainActivity.this, "Unable to export file", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        Uri fileUri = data.getData();
+                    Uri fileUri = data.getData();
 
-                        if (fileUri != null) {
-                            replaceDatabase(fileUri);
-                        }
+                    if (fileUri != null) {
+                        replaceDatabase(fileUri);
                     }
                 }
             }
@@ -235,40 +214,37 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
         toggle.syncState();
 
         // Set up navigation item actions
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
 
-                if(id == R.id.nav_show_values) {
-                    showValues();
-                } else if (id == R.id.nav_summary) {
-                    showSummary();
-                } else if (id == R.id.nav_summary_2) {
-                    showSummary2();
-                } else if (id == R.id.nav_categories) {
-                    showManageCategories();
-                } else if (id == R.id.nav_export) {
-                    exportDatabase();
-                } else if (id == R.id.nav_import) {
-                    importDatabase();
-                } else if (id == R.id.nav_delete_all) {
-                    deleteAllAlertView();
-                }
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
+            if(id == R.id.nav_show_values) {
+                showValues();
+            } else if (id == R.id.nav_summary) {
+                showSummary();
+            } else if (id == R.id.nav_summary_2) {
+                showSummary2();
+            } else if (id == R.id.nav_categories) {
+                showManageCategories();
+            } else if (id == R.id.nav_expected_spendings) {
+                showExpectedSpending();
+            } else if (id == R.id.nav_export) {
+                exportDatabase();
+            } else if (id == R.id.nav_import) {
+                importDatabase();
+            } else if (id == R.id.nav_delete_all) {
+                deleteAllAlertView();
             }
+
+            drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
 
         RecyclerView accountRecyclerView = binding.accountList;
 
         FloatingActionButton addAccountButton = binding.addAccountButton;
-        addAccountButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent addNewAccount = new Intent(MainActivity.this, NewAccountActivity.class);
-                addAccountLauncher.launch(addNewAccount);
-            }
+        addAccountButton.setOnClickListener(v -> {
+            Intent addNewAccount = new Intent(MainActivity.this, NewAccountActivity.class);
+            addAccountLauncher.launch(addNewAccount);
         });
 
         db = new DatabaseHelper(MainActivity.this);
@@ -384,26 +360,18 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 .setCancelable(false)
                 .create();
 
-        positiveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                db.deleteAccount(accountId);
+        positiveButton.setOnClickListener(v -> {
+            db.deleteAccount(accountId);
 
-                accountIds.remove(position);
-                accountNames.remove(position);
-                accountBalances.remove(position);
-                accountAdapter.notifyItemRemoved(position);
+            accountIds.remove(position);
+            accountNames.remove(position);
+            accountBalances.remove(position);
+            accountAdapter.notifyItemRemoved(position);
 
-                dialog.dismiss();
-            }
+            dialog.dismiss();
         });
 
-        negativeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
 
@@ -589,6 +557,11 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
     private void showManageCategories() {
         Intent intent = new Intent(this, ManageCategoriesActivity.class);
+        this.startActivity(intent);
+    }
+
+    private void showExpectedSpending() {
+        Intent intent = new Intent(this, ExpectedSpendingActivity.class);
         this.startActivity(intent);
     }
 }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private final Context context;
     private static final String DATABASE_NAME = "databank.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String TABLE_NAME_ACCOUNT = "accounts";
     private static final String COLUMN_ACCOUNT_ID = "account_id";
     private static final String COLUMN_ACCOUNT_NAME = "account_name";
@@ -31,6 +31,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_NAME_CATEGORY = "categories";
     private static final String COLUMN_CATEGORY_ID = "category_id";
     private static final String COLUMN_CATEGORY_NAME = "category_name";
+    private static final String TABLE_NAME_EXPECTED_SPENDING = "expected_spending";
+    private static final String COLUMN_SPENDING_ID = "spending_id";
+    private static final String COLUMN_SPENDING_NAME = "spending_name";
+    private static final String COLUMN_SPENDING_AMOUNT = "spending_amount";
+    private static final String COLUMN_SPENDING_DAY = "spending_day";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -64,10 +69,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             COLUMN_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
             COLUMN_CATEGORY_NAME + " TEXT NOT NULL UNIQUE);";
 
+        String CREATE_EXPECTED_SPENDING_TABLE =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_EXPECTED_SPENDING + " (" +
+            COLUMN_SPENDING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COLUMN_SPENDING_NAME + " TEXT NOT NULL, " +
+            COLUMN_SPENDING_AMOUNT + " INTEGER NOT NULL, " +
+            COLUMN_SPENDING_DAY + " INTEGER NOT NULL);";
+
         db.execSQL(CREATE_ACCOUNTS_TABLE);
         db.execSQL(CREATE_TRANSACTIONS_TABLE);
         db.execSQL(CREATE_INDEX_ON_DATE);
         db.execSQL(CREATE_CATEGORIES_TABLE);
+        db.execSQL(CREATE_EXPECTED_SPENDING_TABLE);
         seedDefaultCategories(db);
     }
 
@@ -111,6 +124,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                             COLUMN_CATEGORY_NAME + " TEXT NOT NULL UNIQUE);";
             db.execSQL(CREATE_CATEGORIES_TABLE);
             seedDefaultCategories(db);
+
+            String CREATE_EXPECTED_SPENDING_TABLE =
+                    "CREATE TABLE IF NOT EXISTS " + TABLE_NAME_EXPECTED_SPENDING + " (" +
+                            COLUMN_SPENDING_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                            COLUMN_SPENDING_NAME + " TEXT NOT NULL, " +
+                            COLUMN_SPENDING_AMOUNT + " INTEGER NOT NULL, " +
+                            COLUMN_SPENDING_DAY + " INTEGER NOT NULL);";
+            db.execSQL(CREATE_EXPECTED_SPENDING_TABLE);
         }
     }
 
@@ -312,11 +333,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    Cursor getAllTransactions() {
-        String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION;
-        return executeQuery(query);
-    }
-
     Cursor summarizeAllTransactionsByCategory() {
         String query = "SELECT " + COLUMN_TRANSACTION_CATEGORY + ", SUM(" + COLUMN_TRANSACTION_AMOUNT + ") " +
                 " FROM " + TABLE_NAME_TRANSACTION +
@@ -340,13 +356,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " FROM " + TABLE_NAME_TRANSACTION +
                 " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId +
                 " AND " + COLUMN_ACCOUNT_ID + " = " + accountId;
-        return executeQuery(query);
-    }
-
-    Cursor getTransaction(int accountId, int transactionId) {
-        String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION + " WHERE " +
-                COLUMN_ACCOUNT_ID + " = " + accountId + " AND " + COLUMN_TRANSACTION_ID +
-                " = " + transactionId;
         return executeQuery(query);
     }
 
@@ -411,6 +420,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Toast.makeText(context, "Failed to delete category", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, "Deleted category", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    Cursor getAllExpectedSpending() {
+        String query = "SELECT * FROM " + TABLE_NAME_EXPECTED_SPENDING + " ORDER BY " + COLUMN_SPENDING_DAY + " ASC";
+        return executeQuery(query);
+    }
+
+    long addExpectedSpending(String name, int amount, int day) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_SPENDING_NAME, name);
+        values.put(COLUMN_SPENDING_AMOUNT, amount);
+        values.put(COLUMN_SPENDING_DAY, day);
+
+        long resultCode = db.insert(TABLE_NAME_EXPECTED_SPENDING, null, values);
+
+        if (resultCode == -1) {
+            Toast.makeText(context, "Failed to add expected spending", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Added expected spending: " + name, Toast.LENGTH_SHORT).show();
+        }
+
+        return resultCode;
+    }
+
+    void deleteExpectedSpending(int spendingId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int resultCode = db.delete(TABLE_NAME_EXPECTED_SPENDING, COLUMN_SPENDING_ID + " = ?", new String[]{String.valueOf(spendingId)});
+
+        if (resultCode == -1) {
+            Toast.makeText(context, "Failed to delete expected spending", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, "Deleted expected spending", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -50,6 +50,16 @@
     <string name="drawer_open">Open Drawer</string>
     <string name="drawer_close">Close Drawer</string>
     <string name="transaction_summary_2">Transaction Summary 2</string>
+    <string name="manage_categories">Manage Categories</string>
+    <string name="category_name_hint">Enter category name</string>
+    <string name="delete_category">Delete category</string>
+    <string name="add">Add</string>
+    <string name="expected_spending">Expected Spending</string>
+    <string name="spending_name_hint">Expense name</string>
+    <string name="spending_amount_hint">Amount (e.g. $50.00)</string>
+    <string name="spending_date_hint">Day of month (1–31)</string>
+    <string name="total_expected_spending">Total Expected: </string>
+    <string name="delete_spending">Delete expected spending</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>
@@ -74,8 +84,5 @@
         <item>Travel</item>
     </string-array>
 
-    <string name="manage_categories">Manage Categories</string>
-    <string name="category_name_hint">Enter category name</string>
-    <string name="delete_category">Delete category</string>
-    <string name="add">Add</string>
+
 </resources>

@@ -88,33 +88,24 @@ public class AccountAdapter extends RecyclerView.Adapter<AccountAdapter.ViewHold
             }
         });
 
-        holder.editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent changeAccountDetails = new Intent(context, EditAccountActivity.class);
-                changeAccountDetails.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
-                changeAccountDetails.putExtra("accountName", accountNames.get(holder.getAdapterPosition()));
-                changeAccountDetails.putExtra("position", holder.getAdapterPosition());
-                accountChangeResultLauncher.launch(changeAccountDetails);
-            }
+        holder.editButton.setOnClickListener(v -> {
+            Intent changeAccountDetails = new Intent(context, EditAccountActivity.class);
+            changeAccountDetails.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
+            changeAccountDetails.putExtra("accountName", accountNames.get(holder.getAdapterPosition()));
+            changeAccountDetails.putExtra("position", holder.getAdapterPosition());
+            accountChangeResultLauncher.launch(changeAccountDetails);
         });
 
-        holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: I think this can be removed and a private method in the account adapter can be used.
-                deleteListener.onAccountDelete(holder.getAdapterPosition(), accountIds.get(holder.getAdapterPosition()));
-            }
+        holder.deleteButton.setOnClickListener(v -> {
+            // TODO: I think this can be removed and a private method in the account adapter can be used.
+            deleteListener.onAccountDelete(holder.getAdapterPosition(), accountIds.get(holder.getAdapterPosition()));
         });
 
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent viewTransactions = new Intent(context, TransactionActivity.class);
-                viewTransactions.putExtra("accountPosition", holder.getAdapterPosition());
-                viewTransactions.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
-                transactionResultLauncher.launch(viewTransactions);
-            }
+        holder.cardView.setOnClickListener(v -> {
+            Intent viewTransactions = new Intent(context, TransactionActivity.class);
+            viewTransactions.putExtra("accountPosition", holder.getAdapterPosition());
+            viewTransactions.putExtra("accountId", accountIds.get(holder.getAdapterPosition()));
+            transactionResultLauncher.launch(viewTransactions);
         });
     }
 
