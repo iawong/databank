@@ -94,6 +94,7 @@ public class EditTransactionActivity extends AppCompatActivity {
 
                         BigDecimal amount = new BigDecimal(BigInteger.valueOf(amountInCents)).movePointLeft(2);
                         String formatted = NumberFormat.getCurrencyInstance(Locale.US).format(amount);
+                        current = formatted;
                         newTransAmt.setText(formatted);
                         newTransAmt.setSelection(formatted.length()); // Move cursor to the end
                     } else {
@@ -101,9 +102,9 @@ public class EditTransactionActivity extends AppCompatActivity {
                         newTransAmt.setText(current);
                         newTransAmt.setSelection(current.length());
                     }
-                }
 
-                newTransAmt.addTextChangedListener(this);
+                    newTransAmt.addTextChangedListener(this);
+                }
             }
         });
 
