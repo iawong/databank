@@ -32,14 +32,14 @@ import java.util.ArrayList;
 
 /**
  * This is the main activity for the app and shows accounts.
- * 10/26/26
- * added expected spendings and totals
- * TODO: clicking into the summary category should query all payments in date range and category
+ * 10/28/26
+ * added a way to see what transactions fell under a specific category and
+ * date range. also added a way to recalculate the account balances if
+ * something is off
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
  * TODO: add search functionality for transactions
  * TODO: update account balance "hidden" string to be grey
- * TODO: update settings to open up like SAO settings on bottom right
  * TODO: re-eval how I'm creating the date picker fields
  * TODO: override back button to finish activities. This should replace the back buttons I've added.
  */
