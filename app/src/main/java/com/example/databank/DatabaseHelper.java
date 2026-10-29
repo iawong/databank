@@ -366,6 +366,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    Cursor getTransactionsByCategoryAndDate(String category, String from, String to) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        if (db != null) {
+            if (from != null && !from.isEmpty() && to != null && !to.isEmpty()) {
+                String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION +
+                        " WHERE " + COLUMN_TRANSACTION_CATEGORY + " = ?" +
+                        " AND " + COLUMN_TRANSACTION_DATE + " >= ?" +
+                        " AND " + COLUMN_TRANSACTION_DATE + " <= ?" +
+                        " ORDER BY " + COLUMN_TRANSACTION_DATE + " DESC";
+                cursor = db.rawQuery(query, new String[]{category, from, to});
+            } else {
+                String query = "SELECT * FROM " + TABLE_NAME_TRANSACTION +
+                        " WHERE " + COLUMN_TRANSACTION_CATEGORY + " = ?" +
+                        " ORDER BY " + COLUMN_TRANSACTION_DATE + " DESC";
+                cursor = db.rawQuery(query, new String[]{category});
+            }
+        }
+        return cursor;
+    }
+
     Cursor getTransactionAmount(int accountId, int transactionId) {
         String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT +
                 " FROM " + TABLE_NAME_TRANSACTION +

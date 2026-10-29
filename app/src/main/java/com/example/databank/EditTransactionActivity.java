@@ -200,15 +200,9 @@ public class EditTransactionActivity extends AppCompatActivity {
         }
 
         int accountPosition = getIntent().getIntExtra("accountPosition", -1);
-
-        if (accountPosition == -1) {
-            Toast.makeText(EditTransactionActivity.this, "Account position not found", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
         int transactionPosition = getIntent().getIntExtra("transactionPosition", -1);
 
-        if (transactionPosition == -1) {
+        if (accountPosition != -1 && transactionPosition == -1) {
             Toast.makeText(EditTransactionActivity.this, "Transaction position not found", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -320,7 +314,9 @@ public class EditTransactionActivity extends AppCompatActivity {
                 Intent returnIntent = new Intent();
 
                 returnIntent.putExtra("deleteTransaction", true);
-                returnIntent.putExtra("transactionPosition", transPos);
+                if (transPos != -1) {
+                    returnIntent.putExtra("transactionPosition", transPos);
+                }
                 setResult(RESULT_OK, returnIntent);
                 finish();
             } catch (Exception e) {

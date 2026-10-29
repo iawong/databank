@@ -23,11 +23,17 @@ public class TransactionSummaryAdapter extends RecyclerView.Adapter<TransactionS
     private final Context context;
     private final ArrayList<String> categories;
     private final ArrayList<Integer> amounts;
+    private final OnCategoryClickListener listener;
 
-    public TransactionSummaryAdapter(Context context, ArrayList<String> categories, ArrayList<Integer> amounts) {
+    public interface OnCategoryClickListener {
+        void onCategoryClick(String category);
+    }
+
+    public TransactionSummaryAdapter(Context context, ArrayList<String> categories, ArrayList<Integer> amounts, OnCategoryClickListener listener) {
         this.context = context;
         this.categories = categories;
         this.amounts = amounts;
+        this.listener = listener;
     }
 
     @NonNull
@@ -40,7 +46,8 @@ public class TransactionSummaryAdapter extends RecyclerView.Adapter<TransactionS
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.summaryCategory.setText(categories.get(position));
+        String category = categories.get(position);
+        holder.summaryCategory.setText(category);
 
         int amountInCents = amounts.get(position);
         int absAmountInCents = Math.abs(amountInCents);
@@ -61,6 +68,12 @@ public class TransactionSummaryAdapter extends RecyclerView.Adapter<TransactionS
         String amountAndPercentage = String.format(Locale.US, "%s (%.1f%%)", formattedAmount, percentage);
         holder.summaryAmount.setText(amountAndPercentage);
         holder.summaryAmount.setTextColor(Color.WHITE);
+
+        holder.cardView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onCategoryClick(category);
+            }
+        });
     }
 
     @Override

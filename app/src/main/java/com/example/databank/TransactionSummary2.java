@@ -1,5 +1,6 @@
 package com.example.databank;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Pair;
@@ -8,6 +9,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -56,10 +59,29 @@ public class TransactionSummary2 extends AppCompatActivity {
         loadSummary(fromDateText, toDateText);
     }
 
+    private final ActivityResultLauncher<Intent> categoryTransactionsLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            activityResult -> {
+                if (activityResult.getResultCode() == RESULT_OK) {
+                    String fromDateText = binding.transFromDate.getText() == null ? "" : binding.transFromDate.getText().toString().trim();
+                    String toDateText = binding.transToDate.getText() == null ? "" : binding.transToDate.getText().toString().trim();
+                    loadSummary(fromDateText, toDateText);
+                }
+            }
+    );
+
     private void setupRecyclerView() {
         RecyclerView recyclerView = binding.transSumList;
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new TransactionSummaryAdapter(this, categories, amounts);
+        adapter = new TransactionSummaryAdapter(this, categories, amounts, category -> {
+            String fromDateText = binding.transFromDate.getText() == null ? "" : binding.transFromDate.getText().toString().trim();
+            String toDateText = binding.transToDate.getText() == null ? "" : binding.transToDate.getText().toString().trim();
+            Intent intent = new Intent(TransactionSummary2.this, TransactionsByCategoryActivity.class);
+            intent.putExtra("category", category);
+            intent.putExtra("fromDate", fromDateText);
+            intent.putExtra("toDate", toDateText);
+            categoryTransactionsLauncher.launch(intent);
+        });
         recyclerView.setAdapter(adapter);
     }
 
@@ -110,7 +132,7 @@ public class TransactionSummary2 extends AppCompatActivity {
         }
 
         if (adapter != null) {
-            adapter.notifyItemRangeChanged(0, categories.size());
+            adapter.notifyDataSetChanged();
         }
     }
 

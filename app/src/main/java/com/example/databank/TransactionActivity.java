@@ -73,18 +73,15 @@ public class TransactionActivity extends AppCompatActivity{
                         if (deleteTrans) {
                             int position = data.getIntExtra("transactionPosition", -1);
 
-                            if (position == -1) {
-                                Toast.makeText(TransactionActivity.this, "Transaction position not found", Toast.LENGTH_SHORT).show();
-                                return;
+                            if (position != -1) {
+                                transactionIds.remove(position);
+                                transactionAmounts.remove(position);
+                                transactionDescriptions.remove(position);
+                                transactionDates.remove(position);
+                                transactionCategories.remove(position);
+
+                                transactionAdapter.notifyItemRemoved(position);
                             }
-
-                            transactionIds.remove(position);
-                            transactionAmounts.remove(position);
-                            transactionDescriptions.remove(position);
-                            transactionDates.remove(position);
-                            transactionCategories.remove(position);
-
-                            transactionAdapter.notifyItemRemoved(position);
                         }
 
                         reloadTransactionData();

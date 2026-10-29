@@ -25,6 +25,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     private final Context context;
     private final int accountId;
     private final int accountPosition;
+    private final ArrayList<Integer> accountIds;
     private final ArrayList<Integer> transactionIds;
     private final ArrayList<Integer> transactionAmounts;
     private final ArrayList<String> transactionDescriptions;
@@ -44,6 +45,27 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         this.context = context;
         this.accountId = accountId;
         this.accountPosition = accountPosition;
+        this.accountIds = null;
+        this.transactionIds = transactionIds;
+        this.transactionAmounts = transactionAmounts;
+        this.transactionDescriptions = transactionDescriptions;
+        this.transactionDates = transactionDates;
+        this.transactionCategories = transactionCategories;
+        this.transactionChangeResultLauncher = transactionChangeResultLauncher;
+    }
+
+    public TransactionAdapter (Context context,
+                               ArrayList<Integer> accountIds,
+                               ArrayList<Integer> transactionIds,
+                               ArrayList<Integer> transactionAmounts,
+                               ArrayList<String> transactionDescriptions,
+                               ArrayList<String> transactionDates,
+                               ArrayList<String> transactionCategories,
+                               ActivityResultLauncher<Intent> transactionChangeResultLauncher) {
+        this.context = context;
+        this.accountId = -1;
+        this.accountPosition = -1;
+        this.accountIds = accountIds;
         this.transactionIds = transactionIds;
         this.transactionAmounts = transactionAmounts;
         this.transactionDescriptions = transactionDescriptions;
@@ -62,7 +84,7 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TransactionAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int amountInCents = transactionAmounts.get(position);
         BigDecimal amount = BigDecimal.valueOf(Math.abs(amountInCents)).movePointLeft(2);
         String formattedAmount = NumberFormat.getCurrencyInstance(Locale.US).format(amount);
@@ -91,15 +113,21 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         holder.transactionCategory.setText(String.valueOf(transactionCategories.get(position)));
 
         holder.cardView.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos == RecyclerView.NO_POSITION || pos >= transactionIds.size()) {
+                return;
+            }
+
+            int currentAccountId = (accountIds != null && pos < accountIds.size()) ? accountIds.get(pos) : accountId;
             Intent changeTransactionDetails = new Intent(context, EditTransactionActivity.class);
-            changeTransactionDetails.putExtra("accountId", accountId);
-            changeTransactionDetails.putExtra("transactionId", transactionIds.get(holder.getAdapterPosition()));
-            changeTransactionDetails.putExtra("transactionAmount", transactionAmounts.get(holder.getAdapterPosition()));
-            changeTransactionDetails.putExtra("transactionDescription", transactionDescriptions.get(holder.getAdapterPosition()));
-            changeTransactionDetails.putExtra("transactionDate", transactionDates.get(holder.getAdapterPosition()));
-            changeTransactionDetails.putExtra("transactionCategory", transactionCategories.get(holder.getAdapterPosition()));
+            changeTransactionDetails.putExtra("accountId", currentAccountId);
+            changeTransactionDetails.putExtra("transactionId", transactionIds.get(pos));
+            changeTransactionDetails.putExtra("transactionAmount", transactionAmounts.get(pos));
+            changeTransactionDetails.putExtra("transactionDescription", transactionDescriptions.get(pos));
+            changeTransactionDetails.putExtra("transactionDate", transactionDates.get(pos));
+            changeTransactionDetails.putExtra("transactionCategory", transactionCategories.get(pos));
             changeTransactionDetails.putExtra("accountPosition", accountPosition);
-            changeTransactionDetails.putExtra("transactionPosition", holder.getAdapterPosition());
+            changeTransactionDetails.putExtra("transactionPosition", pos);
             transactionChangeResultLauncher.launch(changeTransactionDetails);
         });
     }
