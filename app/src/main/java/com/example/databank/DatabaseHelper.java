@@ -176,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         account.moveToFirst();
         int balance = account.getInt(2) + amount;
         updateAccountBalance(accountId, balance);
-
+        account.close();
         return resultCode;
     }
 
@@ -236,6 +236,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         account.moveToFirst();
         int balance = account.getInt(2) + newAmount - curAmount;
         updateAccountBalance(accountId, balance);
+        account.close();
     }
 
     void deleteAccount(int accountId) {
@@ -280,6 +281,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         account.moveToFirst();
         int balance = account.getInt(2) - amount;
         updateAccountBalance(accountId, balance);
+        account.close();
     }
 
     void deleteAll() {
@@ -309,8 +311,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     Cursor getAccount(int accountId) {
         String query = "SELECT * FROM " + TABLE_NAME_ACCOUNT +
-                " WHERE " + COLUMN_ACCOUNT_ID + " = " + accountId;
-        return executeQuery(query);
+                " WHERE " + COLUMN_ACCOUNT_ID + " = ? ";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        if (db != null) {
+            return db.rawQuery(query, new String[] {String.valueOf(accountId)});
+        }
+
+        return null;
     }
 
     Cursor getAccountTransactions(int accountId, int limit, int offset) {
@@ -344,19 +352,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     Cursor summarizeTransactionsByCategoryAndDate(String from, String to) {
         String query = "SELECT " + COLUMN_TRANSACTION_CATEGORY + ", SUM(" + COLUMN_TRANSACTION_AMOUNT + ") " +
                 " FROM " + TABLE_NAME_TRANSACTION +
-                " WHERE " + COLUMN_TRANSACTION_DATE + " >= '" + from + "'" +
-                " AND " + COLUMN_TRANSACTION_DATE + " <= '" + to + "'" +
+                " WHERE " + COLUMN_TRANSACTION_DATE + " >= ?" +
+                " AND " + COLUMN_TRANSACTION_DATE + " <= ?" +
                 " AND " + COLUMN_TRANSACTION_AMOUNT + " < 0" +
                 " GROUP BY " + COLUMN_TRANSACTION_CATEGORY;
-        return executeQuery(query);
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, new String[]{from, to});
+        }
+
+        return cursor;
     }
 
     Cursor getTransactionAmount(int accountId, int transactionId) {
         String query = "SELECT " + COLUMN_TRANSACTION_AMOUNT +
                 " FROM " + TABLE_NAME_TRANSACTION +
-                " WHERE " + COLUMN_TRANSACTION_ID + " = " + transactionId +
-                " AND " + COLUMN_ACCOUNT_ID + " = " + accountId;
-        return executeQuery(query);
+                " WHERE " + COLUMN_TRANSACTION_ID + " = ?" +
+                " AND " + COLUMN_ACCOUNT_ID + " = ?";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+
+        if (db != null) {
+            cursor = db.rawQuery(query, new String[]{
+                    String.valueOf(transactionId),
+                    String.valueOf(accountId)});
+        }
+
+        return cursor;
     }
 
     /**
