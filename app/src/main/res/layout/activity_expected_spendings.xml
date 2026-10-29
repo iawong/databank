@@ -62,7 +62,8 @@
             android:background="@color/rowItem"
             android:textColor="@color/white"
             android:hint="@string/spending_amount_hint"
-            android:inputType="text" />
+            android:inputType="number"
+            android:maxLength="15" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
