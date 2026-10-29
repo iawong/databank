@@ -34,7 +34,6 @@ import java.util.ArrayList;
  * This is the main activity for the app and shows accounts.
  * 10/26/26
  * added expected spendings and totals
- * TODO: make expected spendings use number only for amount field
  * TODO: clicking into the summary category should query all payments in date range and category
  * TODO: add transaction transfer/transfer (should not be available when editing)
  * TODO: consolidate hide and show for amounts
@@ -217,8 +216,6 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
 
             if(id == R.id.nav_show_values) {
                 showValues();
-            } else if (id == R.id.nav_summary) {
-                showSummary();
             } else if (id == R.id.nav_summary_2) {
                 showSummary2();
             } else if (id == R.id.nav_categories) {
@@ -532,14 +529,6 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
      */
     private void showValues() {
         // TODO: implement
-    }
-
-    /**
-     * Shows a summary of all my transactions.
-     */
-    private void showSummary() {
-        Intent intent = new Intent(this, TransactionSummary.class);
-        this.startActivity(intent);
     }
 
     /**
