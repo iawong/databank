@@ -13,6 +13,9 @@
         android:id="@+id/nav_expected_spendings"
         android:title="@string/expected_spending"/>
     <item
+        android:id="@+id/nav_recalculate"
+        android:title="@string/recalculate_balances"/>
+    <item
         android:id="@+id/nav_export"
         android:title="@string/export_data"/>
     <item

@@ -473,6 +473,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return executeQuery(query);
     }
 
+    void recalculateAllAccountBalances() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int updatedCount = 0;
+
+        String query = "SELECT a." + COLUMN_ACCOUNT_ID + ", a." + COLUMN_ACCOUNT_BALANCE + ", COALESCE(SUM(t." + COLUMN_TRANSACTION_AMOUNT + "), 0) " +
+                "FROM " + TABLE_NAME_ACCOUNT + " a " +
+                "LEFT JOIN " + TABLE_NAME_TRANSACTION + " t ON a." + COLUMN_ACCOUNT_ID + " = t." + COLUMN_ACCOUNT_ID + " " +
+                "GROUP BY a." + COLUMN_ACCOUNT_ID;
+
+        Cursor cursor = db.rawQuery(query, null);
+        while (cursor.moveToNext()) {
+            int accountId = cursor.getInt(0);
+            int currentBalance = cursor.getInt(1);
+            int calculatedBalance = cursor.getInt(2);
+
+            if (currentBalance != calculatedBalance) {
+                updateAccountBalance(accountId, calculatedBalance);
+                updatedCount++;
+            }
+        }
+        cursor.close();
+
+        Toast.makeText(context, "Recalculated balances for " + updatedCount + " account(s)", Toast.LENGTH_LONG).show();
+    }
+
     long addExpectedSpending(String name, int amount, int day) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

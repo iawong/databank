@@ -60,6 +60,7 @@
     <string name="spending_date_hint">Day of month (1–31)</string>
     <string name="total_expected_spending">Total Expected: </string>
     <string name="delete_spending">Delete expected spending</string>
+    <string name="recalculate_balances">Recalculate Balances</string>
 
     <string-array name="transaction_categories">
         <item>Automotive</item>

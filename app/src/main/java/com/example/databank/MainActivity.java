@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
                 showManageCategories();
             } else if (id == R.id.nav_expected_spendings) {
                 showExpectedSpending();
+            } else if (id == R.id.nav_recalculate) {
+                recalculateBalances();
             } else if (id == R.id.nav_export) {
                 exportDatabase();
             } else if (id == R.id.nav_import) {
@@ -550,5 +552,14 @@ public class MainActivity extends AppCompatActivity implements OnDeleteListener 
     private void showExpectedSpending() {
         Intent intent = new Intent(this, ExpectedSpendingActivity.class);
         this.startActivity(intent);
+    }
+
+    private void recalculateBalances() {
+        db.recalculateAllAccountBalances();
+        accountIds.clear();
+        accountNames.clear();
+        accountBalances.clear();
+        storeAccountData();
+        accountAdapter.notifyDataSetChanged();
     }
 }
